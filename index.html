@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mentic — Coming Soon</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://www.google.com/recaptcha/api.js?render=6Ldl23wsAAAAALU_SmSuijf2skLsOd6eZ74Dv4C2"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'DM Sans',sans-serif}
+body{
+  background:radial-gradient(ellipse at 20% 50%,#003C46 0%,#002830 35%,#1a1d1f 60%,#2B2D30 100%);
+  position:relative;
+}
+body::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:radial-gradient(ellipse 60% 40% at 85% 10%,rgba(139,242,211,0.12) 0%,transparent 70%);
+}
+
+#mist{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  animation:fadeIn 1.2s ease forwards;
+  animation-delay:0.2s;
+  opacity:0;
+}
+
+#content-stage{
+  position:relative;
+  z-index:10;
+  pointer-events:all;
+  width:100%;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:28px;
+  will-change:transform;
+  transform-style:preserve-3d;
+}
+
+.logo{
+  width:clamp(180px,35vw,280px);
+  animation:fadeUp 0.7s ease forwards;
+  animation-delay:0.1s;
+  opacity:0;
+}
+.logo img{
+  width:100%;
+  height:auto;
+  display:block;
+  filter:brightness(0) invert(1);
+}
+
+.coming-soon{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:clamp(10px,1.4vw,13px);
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  color:#8BF2D3;
+  opacity:0;
+  animation:fadeUp 0.7s ease forwards;
+  animation-delay:0.35s;
+}
+.coming-soon::before,.coming-soon::after{
+  content:'';
+  display:block;
+  width:40px;
+  height:1px;
+  background:#8BF2D3;
+  opacity:0.4;
+}
+
+.description{
+  font-family:'DM Sans',sans-serif;
+  font-size:clamp(15px,2.2vw,20px);
+  color:#E6E9EB;
+  opacity:0;
+  max-width:480px;
+  text-align:center;
+  line-height:1.6;
+  margin:0 auto;
+  animation:fadeUp 0.7s ease forwards;
+  animation-delay:0.55s;
+}
+
+.button-group{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+  justify-content:center;
+  opacity:0;
+  animation:fadeUp 0.7s ease forwards;
+  animation-delay:0.75s;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border-radius:9999px;
+  padding:13px 28px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  letter-spacing:0.03em;
+  cursor:pointer;
+  text-decoration:none;
+  transition:all 200ms cubic-bezier(0.4,0,0.2,1);
+}
+
+.btn-secondary{
+  background:transparent;
+  border:1.5px solid rgba(139,242,211,0.5);
+  color:#E6E9EB;
+}
+.btn-secondary:hover{
+  background:rgba(139,242,211,0.10);
+  border-color:rgba(139,242,211,0.9);
+  color:#8BF2D3;
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(139,242,211,0.15);
+}
+
+.btn-primary{
+  background:#FF6B5C;
+  border:1.5px solid #FF6B5C;
+  color:#F2F2F0;
+  font-weight:600;
+}
+.btn-primary:hover{
+  background:#ff8579;
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(255,107,92,0.40);
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes fadeIn{
+  to{opacity:1}
+}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:rgba(0,0,0,0.65);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 300ms cubic-bezier(0.4,0,0.2,1);
+  padding:20px;
+}
+.modal-overlay.active{
+  opacity:1;
+  pointer-events:all;
+}
+.modal-card{
+  background:#2B2D30;
+  border:1px solid rgba(139,242,211,0.15);
+  border-radius:20px;
+  padding:40px 36px;
+  width:100%;
+  max-width:440px;
+  position:relative;
+  transform:scale(0.92) translateY(16px);
+  transition:transform 300ms cubic-bezier(0.4,0,0.2,1);
+  max-height:calc(100vh - 40px);
+  overflow-y:auto;
+}
+.modal-overlay.active .modal-card{
+  transform:scale(1) translateY(0);
+}
+.modal-close{
+  position:absolute;
+  top:16px;
+  right:16px;
+  width:32px;
+  height:32px;
+  border:none;
+  background:rgba(255,255,255,0.06);
+  border-radius:50%;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:background 200ms;
+  color:#E6E9EB;
+}
+.modal-close:hover{
+  background:rgba(255,255,255,0.12);
+}
+.modal-close svg{
+  width:16px;
+  height:16px;
+}
+.modal-title{
+  font-family:'DM Sans',sans-serif;
+  font-size:22px;
+  font-weight:600;
+  color:#F2F2F0;
+  margin-bottom:6px;
+  text-align:center;
+}
+.modal-subtitle{
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  color:#E6E9EB;
+  opacity:0.7;
+  text-align:center;
+  margin-bottom:28px;
+  line-height:1.5;
+}
+.form-row{
+  display:flex;
+  gap:12px;
+  margin-bottom:16px;
+}
+.form-group{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.form-group.full{
+  width:100%;
+  margin-bottom:16px;
+}
+.form-label{
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  font-weight:500;
+  color:#E6E9EB;
+  opacity:0.7;
+  letter-spacing:0.03em;
+}
+.form-label .optional{
+  opacity:0.45;
+  font-weight:400;
+}
+.form-input{
+  background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(139,242,211,0.15);
+  border-radius:10px;
+  padding:12px 14px;
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  color:#F2F2F0;
+  outline:none;
+  transition:border-color 200ms,background 200ms;
+  width:100%;
+}
+.form-input::placeholder{
+  color:rgba(230,233,235,0.3);
+}
+.form-input:focus{
+  border-color:rgba(139,242,211,0.5);
+  background:rgba(255,255,255,0.08);
+}
+.form-input.error{
+  border-color:rgba(255,107,92,0.7);
+}
+.form-error-msg{
+  font-family:'DM Sans',sans-serif;
+  font-size:12px;
+  color:#FF6B5C;
+  min-height:18px;
+  margin-bottom:8px;
+  text-align:center;
+}
+.hp-field{
+  position:absolute;
+  left:-9999px;
+  opacity:0;
+  height:0;
+  width:0;
+  overflow:hidden;
+  tab-index:-1;
+}
+.btn-submit{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:#FF6B5C;
+  border:1.5px solid #FF6B5C;
+  color:#F2F2F0;
+  font-family:'DM Sans',sans-serif;
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:0.03em;
+  border-radius:9999px;
+  padding:14px 28px;
+  cursor:pointer;
+  transition:all 200ms cubic-bezier(0.4,0,0.2,1);
+  margin-top:8px;
+}
+.btn-submit:hover:not(:disabled){
+  background:#ff8579;
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(255,107,92,0.40);
+}
+.btn-submit:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+.spinner{
+  display:inline-block;
+  width:16px;
+  height:16px;
+  border:2px solid rgba(242,242,240,0.3);
+  border-top-color:#F2F2F0;
+  border-radius:50%;
+  animation:spin 0.6s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.modal-success{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:16px;
+  text-align:center;
+  padding:20px 0;
+}
+.modal-success.visible{
+  display:flex;
+}
+.modal-form.hidden{
+  display:none;
+}
+.success-icon{
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  background:rgba(139,242,211,0.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.success-icon svg{
+  width:28px;
+  height:28px;
+  color:#8BF2D3;
+}
+.success-title{
+  font-family:'DM Sans',sans-serif;
+  font-size:20px;
+  font-weight:600;
+  color:#F2F2F0;
+}
+.success-msg{
+  font-family:'DM Sans',sans-serif;
+  font-size:14px;
+  color:#E6E9EB;
+  opacity:0.8;
+  line-height:1.6;
+  max-width:320px;
+}
+.modal-footer-note{
+  font-family:'DM Sans',sans-serif;
+  font-size:11px;
+  color:#E6E9EB;
+  opacity:0.35;
+  text-align:center;
+  margin-top:20px;
+  line-height:1.5;
+}
+
+@media(max-width:767px){
+  .button-group{flex-direction:column;align-items:center;gap:12px}
+  .btn{width:100%;max-width:280px;justify-content:center}
+  .logo{width:clamp(160px,50vw,220px)}
+  .modal-card{padding:28px 20px;border-radius:16px}
+  .modal-title{font-size:19px}
+  .form-row{flex-direction:column;gap:0;margin-bottom:0}
+  .form-row .form-group{margin-bottom:16px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="mist"></canvas>
+
+<div id="content-stage">
+  <div class="logo">
+    <img src="logo.png" alt="Mentic">
+  </div>
+
+  <div class="coming-soon">COMING SOON</div>
+
+  <p class="description">Autonomous advertising from intent, not instruction. One subscription, zero agencies.</p>
+
+  <div class="button-group">
+    <a class="btn btn-secondary" href="https://www.linkedin.com/company/mentic-io/" target="_blank" rel="noopener noreferrer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      LinkedIn
+    </a>
+    <button class="btn btn-primary" id="cta-open" type="button">Get Early Access</button>
+  </div>
+</div>
+
+<!-- ── EARLY ACCESS MODAL ── -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-card">
+    <button class="modal-close" id="modal-close" type="button" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+
+    <div class="modal-form" id="modal-form">
+      <h2 class="modal-title">Get Early Access</h2>
+      <p class="modal-subtitle">Join the waitlist and we'll follow up with alpha access soon.</p>
+
+      <form id="signup-form" autocomplete="on" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="ea-first">First Name</label>
+            <input class="form-input" id="ea-first" name="firstName" type="text" placeholder="Jane" required autocomplete="given-name">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="ea-last">Last Name</label>
+            <input class="form-input" id="ea-last" name="lastName" type="text" placeholder="Doe" required autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="form-group full">
+          <label class="form-label" for="ea-email">Email</label>
+          <input class="form-input" id="ea-email" name="email" type="email" placeholder="jane@company.com" required autocomplete="email">
+        </div>
+
+        <div class="form-group full">
+          <label class="form-label" for="ea-company">Company <span class="optional">(optional)</span></label>
+          <input class="form-input" id="ea-company" name="company" type="text" placeholder="Acme Inc." autocomplete="organization">
+        </div>
+
+        <!-- Honeypot — hidden from humans, filled by bots -->
+        <div class="hp-field" aria-hidden="true">
+          <label for="ea-website">Website</label>
+          <input id="ea-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <div class="form-error-msg" id="form-error"></div>
+
+        <button class="btn-submit" id="btn-submit" type="submit">
+          <span id="btn-submit-text">Request Access</span>
+          <span class="spinner" id="btn-spinner" style="display:none"></span>
+        </button>
+
+        <p class="modal-footer-note">Protected by reCAPTCHA. Your data is safe — we only use it to grant access.</p>
+      </form>
+    </div>
+
+    <div class="modal-success" id="modal-success">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 class="success-title">You're on the list!</h2>
+      <p class="success-msg">Check your inbox for a confirmation. We'll reach out soon with alpha access.</p>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script>
+(function(){
+  const isMobile = window.innerWidth < 768;
+  const isTablet = window.innerWidth >= 768 && window.innerWidth <= 1024;
+  const PARTICLE_COUNT = isMobile ? 1200 : (isTablet ? 2000 : 3000);
+  const REVEAL_RADIUS = isMobile ? 80 : 130;
+  const RECOVERY_MS = 1200;
+  const BASE_ALPHA = 0.18;
+
+  const canvas = document.getElementById('mist');
+  const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  const camera = new THREE.OrthographicCamera(-w/2, w/2, h/2, -h/2, 0.1, 10);
+  camera.position.z = 1;
+
+  const scene = new THREE.Scene();
+
+  const positions = new Float32Array(PARTICLE_COUNT * 3);
+  const originals = new Float32Array(PARTICLE_COUNT * 3);
+  const velocities = new Float32Array(PARTICLE_COUNT * 2);
+  const alphas = new Float32Array(PARTICLE_COUNT);
+  const recoveryTimers = new Float32Array(PARTICLE_COUNT);
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const x = (Math.random() - 0.5) * w;
+    const y = (Math.random() - 0.5) * h;
+    positions[i * 3] = x;
+    positions[i * 3 + 1] = y;
+    positions[i * 3 + 2] = 0;
+    originals[i * 3] = x;
+    originals[i * 3 + 1] = y;
+    originals[i * 3 + 2] = 0;
+    alphas[i] = BASE_ALPHA;
+    recoveryTimers[i] = -1;
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
+
+  const material = new THREE.ShaderMaterial({
+    transparent: true,
+    depthWrite: false,
+    uniforms: {},
+    vertexShader: `
+      attribute float alpha;
+      varying float vAlpha;
+      void main(){
+        vAlpha = alpha;
+        vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+        gl_PointSize = 3.5;
+        gl_Position = projectionMatrix * mvPosition;
+      }
+    `,
+    fragmentShader: `
+      varying float vAlpha;
+      void main(){
+        float d = length(gl_PointCoord - vec2(0.5));
+        if(d > 0.5) discard;
+        float softness = 1.0 - smoothstep(0.3, 0.5, d);
+        gl_FragColor = vec4(0.88, 0.92, 0.94, vAlpha * softness);
+      }
+    `
+  });
+
+  const points = new THREE.Points(geometry, material);
+  scene.add(points);
+
+  let mouseX = -9999, mouseY = -9999;
+
+  document.addEventListener('mousemove', function(e) {
+    mouseX = e.clientX - w / 2;
+    mouseY = -(e.clientY - h / 2);
+  });
+
+  /* ── TILT ── */
+  const contentStage = document.getElementById('content-stage');
+  let targetRotX = 0, targetRotY = 0;
+  let currentRotX = 0, currentRotY = 0;
+  const maxRotY = isTablet ? 3 : 6;
+  const maxRotX = isTablet ? 2 : 4;
+
+  if (!isMobile) {
+    document.addEventListener('mousemove', function(e) {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      const dx = (e.clientX - cx) / cx;
+      const dy = (e.clientY - cy) / cy;
+      targetRotY = dx * maxRotY;
+      targetRotX = -dy * maxRotX;
+    });
+  }
+
+  function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
+
+  if (isMobile && window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', function(e) {
+      if (e.beta == null || e.gamma == null) return;
+      targetRotX = clamp(e.beta * 0.15, -4, 4);
+      targetRotY = clamp(e.gamma * 0.20, -6, 6);
+    });
+  }
+
+  /* ── ANIMATION LOOP ── */
+  let lastTime = performance.now();
+
+  function animate(now) {
+    requestAnimationFrame(animate);
+    const dt = now - lastTime;
+    lastTime = now;
+
+    const posArr = geometry.attributes.position.array;
+    const alphaArr = geometry.attributes.alpha.array;
+
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      const i3 = i * 3;
+      const i2 = i * 2;
+      const px = posArr[i3];
+      const py = posArr[i3 + 1];
+      const dx = px - mouseX;
+      const dy = py - mouseY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      if (dist < REVEAL_RADIUS) {
+        const force = (1 - dist / REVEAL_RADIUS) * 6;
+        const angle = Math.atan2(dy, dx);
+        velocities[i2] += Math.cos(angle) * force;
+        velocities[i2 + 1] += Math.sin(angle) * force;
+        alphaArr[i] = 0;
+        recoveryTimers[i] = RECOVERY_MS;
+      }
+
+      if (recoveryTimers[i] > 0) {
+        recoveryTimers[i] -= dt;
+        if (recoveryTimers[i] <= 0) {
+          recoveryTimers[i] = 0;
+        }
+        const t = 1 - (recoveryTimers[i] / RECOVERY_MS);
+        alphaArr[i] = BASE_ALPHA * t;
+      }
+
+      velocities[i2] *= 0.92;
+      velocities[i2 + 1] *= 0.92;
+
+      posArr[i3] += velocities[i2];
+      posArr[i3 + 1] += velocities[i2 + 1];
+
+      const homeX = originals[i3];
+      const homeY = originals[i3 + 1];
+      posArr[i3] += (homeX - posArr[i3]) * 0.015;
+      posArr[i3 + 1] += (homeY - posArr[i3 + 1]) * 0.015;
+    }
+
+    geometry.attributes.position.needsUpdate = true;
+    geometry.attributes.alpha.needsUpdate = true;
+
+    currentRotX += (targetRotX - currentRotX) * 0.06;
+    currentRotY += (targetRotY - currentRotY) * 0.06;
+    contentStage.style.transform =
+      'perspective(900px) rotateX(' + currentRotX + 'deg) rotateY(' + currentRotY + 'deg)';
+
+    renderer.render(scene, camera);
+  }
+
+  requestAnimationFrame(animate);
+
+  window.addEventListener('resize', function() {
+    const nw = window.innerWidth;
+    const nh = window.innerHeight;
+    renderer.setSize(nw, nh);
+    camera.left = -nw / 2;
+    camera.right = nw / 2;
+    camera.top = nh / 2;
+    camera.bottom = -nh / 2;
+    camera.updateProjectionMatrix();
+  });
+})();
+</script>
+
+<!-- EmailJS SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+<script>
+(function(){
+  var CFG = {
+    RECAPTCHA_SITE_KEY:     '6Ldl23wsAAAAALU_SmSuijf2skLsOd6eZ74Dv4C2',
+    EMAILJS_PUBLIC_KEY:     'vL-JN3gWKUaXsCkWK',
+    EMAILJS_SERVICE_ID:     'service_43fsg3n',
+    EMAILJS_TEMPLATE_USER:  'template_6i6qlv1',
+    EMAILJS_TEMPLATE_TEAM:  'template_ahcl5qh',
+    GOOGLE_SHEET_WEBHOOK:   'https://script.google.com/macros/s/AKfycbwVOGT0vm3drdkvPXfKlGLWXk7LQgcD05PoqtU1ekiQbFznCx6HeFuwJ1UMSvWisEPV/exec'
+  };
+
+  emailjs.init(CFG.EMAILJS_PUBLIC_KEY);
+
+  var overlay    = document.getElementById('modal-overlay');
+  var modalForm  = document.getElementById('modal-form');
+  var modalOk    = document.getElementById('modal-success');
+  var form       = document.getElementById('signup-form');
+  var errorEl    = document.getElementById('form-error');
+  var btnSubmit  = document.getElementById('btn-submit');
+  var btnText    = document.getElementById('btn-submit-text');
+  var btnSpinner = document.getElementById('btn-spinner');
+  var isModalOpen = false;
+
+  function openModal() {
+    isModalOpen = true;
+    overlay.classList.add('active');
+  }
+  function closeModal() {
+    isModalOpen = false;
+    overlay.classList.remove('active');
+  }
+  function resetModal() {
+    modalForm.classList.remove('hidden');
+    modalOk.classList.remove('visible');
+    form.reset();
+    clearError();
+    setLoading(false);
+  }
+
+  document.addEventListener('click', function(e) {
+    if (e.target.closest('#cta-open')) {
+      e.preventDefault();
+      e.stopPropagation();
+      resetModal();
+      openModal();
+    }
+  }, true);
+
+  document.getElementById('modal-close').addEventListener('click', function(e) {
+    e.stopPropagation();
+    closeModal();
+  });
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && isModalOpen) closeModal();
+  });
+
+  function showError(msg) { errorEl.textContent = msg; }
+  function clearError()   { errorEl.textContent = ''; }
+  function setLoading(on) {
+    btnSubmit.disabled = on;
+    btnText.textContent = on ? 'Submitting…' : 'Request Access';
+    btnSpinner.style.display = on ? 'inline-block' : 'none';
+  }
+
+  function validateEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  }
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    clearError();
+
+    var inputs = form.querySelectorAll('.form-input');
+    for (var i = 0; i < inputs.length; i++) inputs[i].classList.remove('error');
+
+    var firstName = form.firstName.value.trim();
+    var lastName  = form.lastName.value.trim();
+    var email     = form.email.value.trim();
+    var company   = form.company.value.trim();
+    var honeypot  = form.website.value;
+
+    if (honeypot) return;
+
+    var valid = true;
+    if (!firstName) { document.getElementById('ea-first').classList.add('error'); valid = false; }
+    if (!lastName)  { document.getElementById('ea-last').classList.add('error'); valid = false; }
+    if (!email || !validateEmail(email)) { document.getElementById('ea-email').classList.add('error'); valid = false; }
+
+    if (!valid) {
+      if (!firstName || !lastName) showError('Please enter your full name.');
+      else showError('Please enter a valid email address.');
+      return;
+    }
+
+    setLoading(true);
+    var timestamp = new Date().toISOString();
+
+    grecaptcha.ready(function() {
+      grecaptcha.execute(CFG.RECAPTCHA_SITE_KEY, { action: 'signup' }).then(function(token) {
+
+        var payload = {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          company: company,
+          recaptchaToken: token,
+          timestamp: timestamp
+        };
+
+        var emailParams = {
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          to_email: email,
+          reply_to: email,
+          company: company || 'N/A',
+          timestamp: timestamp
+        };
+
+        fetch(CFG.GOOGLE_SHEET_WEBHOOK, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain' },
+          body: JSON.stringify(payload)
+        })
+        .then(function() {
+          return Promise.all([
+            emailjs.send(CFG.EMAILJS_SERVICE_ID, CFG.EMAILJS_TEMPLATE_USER, emailParams),
+            emailjs.send(CFG.EMAILJS_SERVICE_ID, CFG.EMAILJS_TEMPLATE_TEAM, emailParams)
+          ]);
+        })
+        .then(function() {
+          setLoading(false);
+          modalForm.classList.add('hidden');
+          modalOk.classList.add('visible');
+        })
+        .catch(function(err) {
+          setLoading(false);
+          showError('Something went wrong. Please try again.');
+          console.error('Signup error:', err);
+        });
+
+      }).catch(function(err) {
+        setLoading(false);
+        showError('reCAPTCHA verification failed. Please refresh and try again.');
+        console.error('reCAPTCHA error:', err);
+      });
+    });
+  });
+})();
+</script>
+<script>
+(function(){
+  var originalTitle = document.title;
+  var missTimer = null;
+
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      missTimer = setTimeout(function() {
+        document.title = 'We miss you...';
+      }, 4000);
+    } else {
+      if (missTimer) { clearTimeout(missTimer); missTimer = null; }
+      document.title = originalTitle;
+    }
+  });
+})();
+</script>
+</body>
+</html>
