@@ -86,7 +86,7 @@ body {
 .gradient-blob {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(60px);
   pointer-events: none;
   will-change: transform, opacity;
   transform: translateZ(0);
@@ -95,18 +95,20 @@ body {
 .gradient-blob-coral {
   background: radial-gradient(
     ellipse at center,
-    rgba(255, 107, 92, 0.7) 0%,
-    rgba(255, 107, 92, 0.3) 40%,
-    transparent 70%
+    rgba(255, 107, 92, 0.85) 0%,
+    rgba(255, 107, 92, 0.45) 35%,
+    rgba(255, 107, 92, 0.1) 60%,
+    transparent 75%
   );
 }
 
 .gradient-blob-mint {
   background: radial-gradient(
     ellipse at center,
-    rgba(139, 242, 211, 0.5) 0%,
-    rgba(139, 242, 211, 0.2) 40%,
-    transparent 70%
+    rgba(139, 242, 211, 0.7) 0%,
+    rgba(139, 242, 211, 0.35) 35%,
+    rgba(139, 242, 211, 0.1) 60%,
+    transparent 75%
   );
 }
 

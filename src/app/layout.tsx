@@ -11,7 +11,7 @@ const nunitoSans = Nunito_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Mentic — The Autonomous Advertising Agent",
+  title: "mentic",
   description:
     "Mentic builds your strategy, launches your campaigns, and optimises them autonomously.",
   icons: {

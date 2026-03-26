@@ -2,20 +2,18 @@
 
 import { useEffect, useRef } from "react";
 
-const ORIGINAL_TITLE = "Mentic — The Autonomous Advertising Agent";
+const ORIGINAL_TITLE = "mentic";
 const AWAY_TITLE = "We Miss You...";
 
 export default function TabAttention() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const frameRef = useRef(0);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Create offscreen canvas for animated favicon
     const canvas = document.createElement("canvas");
     canvas.width = 32;
     canvas.height = 32;
-    canvasRef.current = canvas;
+    let frame = 0;
 
     const originalFavicon = "/favicon.png";
     const faviconImg = new Image();
@@ -47,11 +45,11 @@ export default function TabAttention() {
     };
 
     const startAnimation = () => {
-      frameRef.current = 0;
+      frame = 0;
       intervalRef.current = setInterval(() => {
-        frameRef.current = (frameRef.current + 8) % 360;
-        drawFavicon(frameRef.current);
-      }, 100);
+        frame = (frame + 20) % 360;
+        drawFavicon(frame);
+      }, 50);
     };
 
     const stopAnimation = () => {
@@ -59,19 +57,28 @@ export default function TabAttention() {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
-      // Restore original favicon
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
       getLinkEl().href = originalFavicon;
     };
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        document.title = AWAY_TITLE;
         startAnimation();
+        // Wait 3 seconds before changing title
+        timeoutRef.current = setTimeout(() => {
+          document.title = AWAY_TITLE;
+        }, 3000);
       } else {
         document.title = ORIGINAL_TITLE;
         stopAnimation();
       }
     };
+
+    // Set initial title
+    document.title = ORIGINAL_TITLE;
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
