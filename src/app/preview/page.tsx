@@ -650,6 +650,76 @@ export default function PreviewLanding() {
     } catch (e) { /* silent */ }
   }
 
+  // Satisfying button press sound — descending tone + thump to complement the hover's rising tone
+  function sfxPress() {
+    try {
+      const a = audioRef.current;
+      if (!a || a.ctx.state !== "running") return;
+      if (navigator.vibrate) navigator.vibrate(10);
+      const ctx = a.ctx;
+      const t = ctx.currentTime;
+
+      // Descending sine tone (inverse of hover's rising tone)
+      const osc = ctx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(1200, t);
+      osc.frequency.exponentialRampToValueAtTime(600, t + 0.1);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.06, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
+      const lp = ctx.createBiquadFilter();
+      lp.type = "lowpass";
+      lp.frequency.value = 2500;
+      osc.connect(lp).connect(g).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 0.12);
+
+      // Short low thump for weight
+      const thump = ctx.createOscillator();
+      thump.type = "sine";
+      thump.frequency.setValueAtTime(180, t);
+      thump.frequency.exponentialRampToValueAtTime(80, t + 0.06);
+      const tg = ctx.createGain();
+      tg.gain.setValueAtTime(0.05, t);
+      tg.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+      thump.connect(tg).connect(ctx.destination);
+      thump.start(t);
+      thump.stop(t + 0.06);
+    } catch (e) { /* silent */ }
+  }
+
+  // Subtle mechanical key-press sound for typing in inputs
+  function sfxType() {
+    try {
+      const a = audioRef.current;
+      if (!a || a.ctx.state !== "running") return;
+      const ctx = a.ctx;
+      const t = ctx.currentTime;
+
+      // Short noise burst — like a soft key click
+      const dur = 0.03 + Math.random() * 0.015; // 30-45ms, slight variation
+      const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d.length * 0.08));
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+
+      // Bandpass to keep it clicky, not hissy
+      const bp = ctx.createBiquadFilter();
+      bp.type = "bandpass";
+      bp.frequency.value = 3000 + Math.random() * 1500; // randomise pitch slightly
+      bp.Q.value = 1.2;
+
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.035, t);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+
+      src.connect(bp).connect(g).connect(ctx.destination);
+      src.start(t);
+      src.stop(t + dur);
+    } catch (e) { /* silent */ }
+  }
+
   useEffect(() => {
     const BASE_VOL = 0.12;
     const SCROLL_VOL = 0.25;
@@ -909,6 +979,7 @@ export default function PreviewLanding() {
           <button
             id="icon-teal"
             onClick={() => {
+              sfxPress();
               const vp = viewportRef.current;
               if (!vp) return;
 
@@ -1097,7 +1168,7 @@ export default function PreviewLanding() {
             }}>
               mentic
             </div>
-            <button onClick={openSignup} id="hero-btn" style={{
+            <button onClick={() => { sfxPress(); openSignup(); }} id="hero-btn" style={{
               position: "absolute",
               top: m ? MY(493) : Y(774), left: m ? MX(177) : X(1164),
               width: m ? MW(165.338) : W(229.913), height: m ? MH(64.838) : H(90.162),
@@ -1464,7 +1535,7 @@ export default function PreviewLanding() {
             }}>
               Alpha releasing <span style={{ fontWeight: 600 }}>soon!</span>
             </div>
-            <button onClick={openSignup} id="cta-button" style={{
+            <button onClick={() => { sfxPress(); openSignup(); }} id="cta-button" style={{
               position: "absolute",
               top: m ? MY(368) : Y(777), left: m ? MX(99) : X(1190),
               width: m ? MW(195) : W(195), height: m ? MH(78) : H(78),
@@ -1540,7 +1611,7 @@ export default function PreviewLanding() {
                 <div style={{ fontSize: m ? "clamp(24px, 8.5vw, 34px)" : 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>Sign</div>
                 <div style={{ fontSize: m ? "clamp(36px, 12.7vw, 50px)" : 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>UP</div>
               </div>
-              <form id="signup-form" onSubmit={handleFormSubmit} noValidate>
+              <form id="signup-form" onSubmit={(e) => { sfxPress(); handleFormSubmit(e); }} noValidate>
                 {formError && (
                   <div style={{
                     background: "#003c46", color: "#8bf2d3", fontSize: m ? 11 : 13, fontWeight: 600,
@@ -1551,20 +1622,20 @@ export default function PreviewLanding() {
                 <div style={{ display: "flex", gap: m ? "6.8%" : 20, marginBottom: m ? "4%" : 16 }}>
                   <div style={{ flex: 1 }}>
                     <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Name: <span style={{ color: "#8bf2d3" }}>*</span></label>
-                    <input className="modal-input" placeholder="John" value={formData.firstName} onChange={(e) => { setFormData(p => ({ ...p, firstName: e.target.value })); setFieldErrors(p => ({ ...p, firstName: false })); }} style={{ ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.firstName ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
+                    <input className="modal-input" placeholder="John" value={formData.firstName} onKeyDown={() => sfxType()} onChange={(e) => { setFormData(p => ({ ...p, firstName: e.target.value })); setFieldErrors(p => ({ ...p, firstName: false })); }} style={{ ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.firstName ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
                   </div>
                   <div style={{ flex: 1 }}>
                     <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Surname: <span style={{ color: "#8bf2d3" }}>*</span></label>
-                    <input className="modal-input" placeholder="Doe" value={formData.lastName} onChange={(e) => { setFormData(p => ({ ...p, lastName: e.target.value })); setFieldErrors(p => ({ ...p, lastName: false })); }} style={{ ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.lastName ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
+                    <input className="modal-input" placeholder="Doe" value={formData.lastName} onKeyDown={() => sfxType()} onChange={(e) => { setFormData(p => ({ ...p, lastName: e.target.value })); setFieldErrors(p => ({ ...p, lastName: false })); }} style={{ ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.lastName ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
                   </div>
                 </div>
                 <div style={{ marginBottom: m ? "4%" : 16 }}>
                   <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Email: <span style={{ color: "#8bf2d3" }}>*</span></label>
-                  <input className="modal-input" type="email" placeholder="example@company.com" value={formData.email} onChange={(e) => { setFormData(p => ({ ...p, email: e.target.value })); setFieldErrors(p => ({ ...p, email: false })); }} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.email ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
+                  <input className="modal-input" type="email" placeholder="example@company.com" value={formData.email} onKeyDown={() => sfxType()} onChange={(e) => { setFormData(p => ({ ...p, email: e.target.value })); setFieldErrors(p => ({ ...p, email: false })); }} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.email ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
                 </div>
                 <div style={{ marginBottom: m ? "5.6%" : 24 }}>
                   <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company: <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400, fontSize: m ? "clamp(8px, 2.5vw, 10px)" : 11 }}>(optional)</span></label>
-                  <input className="modal-input" placeholder="Example Inc." value={formData.company} onChange={(e) => setFormData(p => ({ ...p, company: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
+                  <input className="modal-input" placeholder="Example Inc." value={formData.company} onKeyDown={() => sfxType()} onChange={(e) => setFormData(p => ({ ...p, company: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
                 </div>
                 <button type="submit" disabled={formStatus === "submitting"} className="modal-submit" style={{ ...(m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : {}), ...(formStatus === "submitting" ? { opacity: 0.6, cursor: "not-allowed" } : {}), transition: "all 300ms cubic-bezier(0.165, 0.84, 0.44, 1)" }}
                   onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.transform = "scale(1.06)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(139,242,211,0.35)"; }}
@@ -1576,7 +1647,7 @@ export default function PreviewLanding() {
             </div>
 
             {/* Back button */}
-            <button onClick={closeSignup} style={{
+            <button onClick={() => { sfxPress(); closeSignup(); }} style={{
               position: "absolute", top: m ? 16 : 24, left: m ? 16 : 28,
               background: "none", border: "none", padding: m ? 10 : 14,
               cursor: "pointer", zIndex: 25,
@@ -1660,7 +1731,7 @@ export default function PreviewLanding() {
         }}>The Autonomous Advertising Agent</div>
         <button
           id="splash-btn"
-          onClick={handleBegin}
+          onClick={() => { sfxPress(); handleBegin(); }}
           style={{
             position: "relative", background: "rgba(255,255,255,0.06)",
             border: "1.5px solid rgba(255,255,255,0.35)",
