@@ -426,6 +426,143 @@ export default function PreviewLanding() {
     return () => ctx.revert();
   }, [isMobile]);
 
+  /* ── Ambient audio engine ── */
+  useEffect(() => {
+    let audioCtx: AudioContext | null = null;
+    let masterGain: GainNode | null = null;
+    let started = false;
+    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+    const BASE_VOL = 0.018;
+    const SCROLL_VOL = 0.06;
+    const FADE_IN = 0.8;
+    const FADE_OUT = 1.6;
+
+    function initAudio() {
+      if (started) return;
+      started = true;
+      audioCtx = new AudioContext();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0;
+      masterGain.connect(audioCtx.destination);
+
+      // Deep drone: two slightly detuned sine oscillators
+      const drone1 = audioCtx.createOscillator();
+      drone1.type = "sine";
+      drone1.frequency.value = 55; // A1
+      const drone1Gain = audioCtx.createGain();
+      drone1Gain.gain.value = 0.35;
+      drone1.connect(drone1Gain).connect(masterGain);
+      drone1.start();
+
+      const drone2 = audioCtx.createOscillator();
+      drone2.type = "sine";
+      drone2.frequency.value = 55.3; // Slight detune for beating
+      const drone2Gain = audioCtx.createGain();
+      drone2Gain.gain.value = 0.35;
+      drone2.connect(drone2Gain).connect(masterGain);
+      drone2.start();
+
+      // Mid-range pad: triangle wave with slow LFO modulation
+      const pad = audioCtx.createOscillator();
+      pad.type = "triangle";
+      pad.frequency.value = 110;
+      const padGain = audioCtx.createGain();
+      padGain.gain.value = 0.12;
+      const padFilter = audioCtx.createBiquadFilter();
+      padFilter.type = "lowpass";
+      padFilter.frequency.value = 400;
+      padFilter.Q.value = 2;
+      pad.connect(padFilter).connect(padGain).connect(masterGain);
+      pad.start();
+
+      // LFO on pad filter for movement
+      const lfo = audioCtx.createOscillator();
+      lfo.type = "sine";
+      lfo.frequency.value = 0.08; // Very slow sweep
+      const lfoGain = audioCtx.createGain();
+      lfoGain.gain.value = 200;
+      lfo.connect(lfoGain).connect(padFilter.frequency);
+      lfo.start();
+
+      // High shimmer: very quiet sine with vibrato
+      const shimmer = audioCtx.createOscillator();
+      shimmer.type = "sine";
+      shimmer.frequency.value = 880;
+      const shimmerGain = audioCtx.createGain();
+      shimmerGain.gain.value = 0.03;
+      const shimmerFilter = audioCtx.createBiquadFilter();
+      shimmerFilter.type = "bandpass";
+      shimmerFilter.frequency.value = 900;
+      shimmerFilter.Q.value = 8;
+      shimmer.connect(shimmerFilter).connect(shimmerGain).connect(masterGain);
+      shimmer.start();
+
+      const vibrato = audioCtx.createOscillator();
+      vibrato.type = "sine";
+      vibrato.frequency.value = 4.5;
+      const vibratoGain = audioCtx.createGain();
+      vibratoGain.gain.value = 3;
+      vibrato.connect(vibratoGain).connect(shimmer.frequency);
+      vibrato.start();
+
+      // Filtered noise for texture
+      const bufferSize = audioCtx.sampleRate * 2;
+      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const output = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = noiseBuffer;
+      noise.loop = true;
+      const noiseFilter = audioCtx.createBiquadFilter();
+      noiseFilter.type = "bandpass";
+      noiseFilter.frequency.value = 300;
+      noiseFilter.Q.value = 3;
+      const noiseGain = audioCtx.createGain();
+      noiseGain.gain.value = 0.04;
+      noise.connect(noiseFilter).connect(noiseGain).connect(masterGain);
+      noise.start();
+
+      // Fade in to base volume
+      masterGain.gain.linearRampToValueAtTime(BASE_VOL, audioCtx.currentTime + 2);
+    }
+
+    function onScroll() {
+      if (!audioCtx || !masterGain) return;
+      // Swell up when scrolling
+      masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+      masterGain.gain.setTargetAtTime(SCROLL_VOL, audioCtx.currentTime, FADE_IN * 0.3);
+      // Set timeout to fade back down when scrolling stops
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        if (!audioCtx || !masterGain) return;
+        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+        masterGain.gain.setTargetAtTime(BASE_VOL, audioCtx.currentTime, FADE_OUT * 0.3);
+      }, 150);
+    }
+
+    // Start audio on first interaction (browser autoplay policy)
+    function onFirstInteraction() {
+      initAudio();
+      window.removeEventListener("scroll", onFirstInteraction);
+      window.removeEventListener("click", onFirstInteraction);
+      window.removeEventListener("touchstart", onFirstInteraction);
+    }
+
+    window.addEventListener("scroll", onFirstInteraction, { once: false });
+    window.addEventListener("click", onFirstInteraction, { once: false });
+    window.addEventListener("touchstart", onFirstInteraction, { once: false });
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onFirstInteraction);
+      window.removeEventListener("click", onFirstInteraction);
+      window.removeEventListener("touchstart", onFirstInteraction);
+      window.removeEventListener("scroll", onScroll);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+      if (audioCtx) audioCtx.close();
+    };
+  }, []);
+
   const m = isMobile;
 
   return (
