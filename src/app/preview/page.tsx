@@ -48,8 +48,9 @@ export default function PreviewLanding() {
     tl.fromTo("#signup-bg", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
     tl.fromTo("#signup-blobs > div", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.1 }, "<0.1");
     tl.fromTo("#signup-glass", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, "<0.1");
-    tl.fromTo("#signup-icon", { opacity: 0, scale: 0.3, rotation: -90 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.4)" }, "<0.1");
-    tl.fromTo("#signup-card", { opacity: 0, x: 60, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "power2.out" }, "<0.15");
+    const mob = window.innerWidth < 1024;
+    tl.fromTo("#signup-icon", { opacity: 0, scale: 0.3, rotation: -90, ...(mob && { xPercent: -50 }) }, { opacity: 1, scale: 1, rotation: 0, ...(mob && { xPercent: -50 }), duration: 0.5, ease: "back.out(1.4)" }, "<0.1");
+    tl.fromTo("#signup-card", { opacity: 0, x: 60, scale: 0.95, ...(mob && { xPercent: -50 }) }, { opacity: 1, x: 0, scale: 1, ...(mob && { xPercent: -50 }), duration: 0.5, ease: "power2.out" }, "<0.15");
     tl.fromTo("#signup-form > *", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", stagger: 0.06 }, "<0.2");
   }, []);
 
@@ -62,9 +63,10 @@ export default function PreviewLanding() {
         lenisRef.current?.start();
       },
     });
+    const mob = window.innerWidth < 1024;
     tl.to(signup.querySelectorAll("#signup-form > *"), { opacity: 0, y: -10, duration: 0.2, ease: "power2.in", stagger: 0.03 });
-    tl.to(signup.querySelector("#signup-card"), { opacity: 0, x: 40, duration: 0.3, ease: "power2.in" }, "<0.1");
-    tl.to(signup.querySelector("#signup-icon"), { opacity: 0, scale: 0.5, duration: 0.3, ease: "power2.in" }, "<");
+    tl.to(signup.querySelector("#signup-card"), { opacity: 0, x: 40, ...(mob && { xPercent: -50 }), duration: 0.3, ease: "power2.in" }, "<0.1");
+    tl.to(signup.querySelector("#signup-icon"), { opacity: 0, scale: 0.5, ...(mob && { xPercent: -50 }), duration: 0.3, ease: "power2.in" }, "<");
     tl.to(signup.querySelector("#signup-glass"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
     tl.to(signup.querySelectorAll("#signup-blobs > div"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
     tl.to(signup.querySelector("#signup-bg"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
