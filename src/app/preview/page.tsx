@@ -42,6 +42,7 @@ export default function PreviewLanding() {
   const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", company: "" });
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 1024);
@@ -64,10 +65,21 @@ export default function PreviewLanding() {
   const handleFormSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError("");
+    setFieldErrors({});
 
     const { firstName, lastName, email, company } = formData;
-    if (!firstName.trim() || !lastName.trim()) { setFormError("Please enter your full name."); return; }
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setFormError("Please enter a valid email."); return; }
+    const errors: Record<string, boolean> = {};
+
+    if (!firstName.trim()) errors.firstName = true;
+    if (!lastName.trim()) errors.lastName = true;
+    if (!email.trim() || !/^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email.trim())) errors.email = true;
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      if (errors.firstName || errors.lastName) setFormError(errors.email ? "Please fill in your name and a valid email." : "Please enter your full name.");
+      else setFormError("Please enter a valid email address.");
+      return;
+    }
 
     setFormStatus("submitting");
     const timestamp = new Date().toISOString();
@@ -115,6 +127,8 @@ export default function PreviewLanding() {
         setTimeout(() => {
           setFormStatus("idle");
           setFormData({ firstName: "", lastName: "", email: "", company: "" });
+          setFieldErrors({});
+          setFormError("");
           gsap.set("#signup-card", { display: "block", opacity: 1, y: 0, scale: 1 });
           gsap.set("#signup-icon", { display: "block", opacity: 1 });
           gsap.set("#success-screen", { opacity: 0 });
@@ -1094,24 +1108,30 @@ export default function PreviewLanding() {
                 <div style={{ fontSize: m ? "clamp(24px, 8.5vw, 34px)" : 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>Sign</div>
                 <div style={{ fontSize: m ? "clamp(36px, 12.7vw, 50px)" : 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>UP</div>
               </div>
-              <form id="signup-form" onSubmit={handleFormSubmit}>
-                {formError && <div style={{ color: "#003c46", fontSize: m ? 11 : 13, marginBottom: 8, fontWeight: 600 }}>{formError}</div>}
+              <form id="signup-form" onSubmit={handleFormSubmit} noValidate>
+                {formError && (
+                  <div style={{
+                    background: "#003c46", color: "#8bf2d3", fontSize: m ? 11 : 13, fontWeight: 600,
+                    padding: m ? "6px 12px" : "8px 14px", borderRadius: m ? 6 : 8,
+                    marginBottom: m ? 10 : 12, lineHeight: 1.4,
+                  }}>{formError}</div>
+                )}
                 <div style={{ display: "flex", gap: m ? "6.8%" : 20, marginBottom: m ? "4%" : 16 }}>
                   <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Name:</label>
-                    <input className="modal-input" placeholder="John" value={formData.firstName} onChange={(e) => setFormData(p => ({ ...p, firstName: e.target.value }))} style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
+                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Name: <span style={{ color: "#8bf2d3" }}>*</span></label>
+                    <input className="modal-input" placeholder="John" value={formData.firstName} onChange={(e) => { setFormData(p => ({ ...p, firstName: e.target.value })); setFieldErrors(p => ({ ...p, firstName: false })); }} style={{ ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.firstName ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
                   </div>
                   <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Surname:</label>
-                    <input className="modal-input" placeholder="Doe" value={formData.lastName} onChange={(e) => setFormData(p => ({ ...p, lastName: e.target.value }))} style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
+                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Surname: <span style={{ color: "#8bf2d3" }}>*</span></label>
+                    <input className="modal-input" placeholder="Doe" value={formData.lastName} onChange={(e) => { setFormData(p => ({ ...p, lastName: e.target.value })); setFieldErrors(p => ({ ...p, lastName: false })); }} style={{ ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.lastName ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
                   </div>
                 </div>
                 <div style={{ marginBottom: m ? "4%" : 16 }}>
-                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Email:</label>
-                  <input className="modal-input" type="email" placeholder="example@company.com" value={formData.email} onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
+                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Email: <span style={{ color: "#8bf2d3" }}>*</span></label>
+                  <input className="modal-input" type="email" placeholder="example@company.com" value={formData.email} onChange={(e) => { setFormData(p => ({ ...p, email: e.target.value })); setFieldErrors(p => ({ ...p, email: false })); }} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.email ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
                 </div>
                 <div style={{ marginBottom: m ? "5.6%" : 24 }}>
-                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company:</label>
+                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company: <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400, fontSize: m ? "clamp(8px, 2.5vw, 10px)" : 11 }}>(optional)</span></label>
                   <input className="modal-input" placeholder="Example Inc." value={formData.company} onChange={(e) => setFormData(p => ({ ...p, company: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
                 </div>
                 <button type="submit" disabled={formStatus === "submitting"} className="modal-submit" style={{ ...(m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : {}), ...(formStatus === "submitting" ? { opacity: 0.6, cursor: "not-allowed" } : {}) }}>
