@@ -55,6 +55,8 @@ html {
   scroll-behavior: auto;
   scrollbar-width: none;
   cursor: none !important;
+  height: -webkit-fill-available;
+  overscroll-behavior: none;
 }
 
 html::-webkit-scrollbar {
@@ -64,11 +66,13 @@ html::-webkit-scrollbar {
 body {
   margin: 0;
   padding: 0;
-  background: var(--off-white);
+  background: var(--light-pink);
   color: var(--dark-teal);
   font-family: var(--font-nunito), "Nunito Sans", sans-serif;
   overflow-x: hidden;
   cursor: none !important;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
 }
 
 /* ── Hide native cursor everywhere ── */
@@ -189,4 +193,10 @@ body {
 /* Hide reCAPTCHA badge — attribution text added to form per Google's TOS */
 .grecaptcha-badge {
   visibility: hidden !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  position: fixed !important;
+  right: -9999px !important;
 }

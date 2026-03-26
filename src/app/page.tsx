@@ -971,7 +971,7 @@ export default function PreviewLanding() {
         </div>
       )}
       <div ref={wrapperRef} style={{ height: `${TOTAL_FRAMES * 23}vh`, position: "relative" }}>
-        <div ref={viewportRef} style={{ position: "sticky", top: 0, width: "100vw", height: "100vh", overflow: "hidden" }}>
+        <div ref={viewportRef} style={{ position: "sticky", top: 0, width: "100vw", height: "100dvh", overflow: "hidden" }}>
 
           {/* ── Background ── */}
           <div id="bg" style={{ position: "absolute", inset: 0, backgroundColor: "#ffe5e5", zIndex: 0 }} />
