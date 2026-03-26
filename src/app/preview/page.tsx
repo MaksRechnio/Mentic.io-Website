@@ -24,8 +24,7 @@ export default function PreviewLanding() {
   const signupLayerRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<InstanceType<typeof Lenis> | null>(null);
   const openSignup = useCallback(() => {
-    if (!viewportRef.current || !signupLayerRef.current) return;
-    const vp = viewportRef.current;
+    if (!signupLayerRef.current) return;
     const signup = signupLayerRef.current;
 
     // Pause scroll
@@ -33,21 +32,12 @@ export default function PreviewLanding() {
 
     const tl = gsap.timeline();
 
-    // Fade out all current layers
-    tl.to(vp.querySelectorAll("[id$='-layer']:not(#signup-layer)"), {
-      opacity: 0, duration: 0.4, ease: "power2.in",
-    });
-    tl.to(vp.querySelector("#glass-card"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
-    tl.to(vp.querySelector("#icon-teal"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
-
-    // Transition background to white
-    tl.to(vp.querySelector("#bg"), { backgroundColor: "#ffffff", duration: 0.5, ease: "power2.out" }, "<0.1");
-
-    // Show signup layer
+    // Show signup layer (covers everything underneath via its own bg)
     tl.set(signup, { opacity: 1, pointerEvents: "auto" });
 
     // Animate signup elements in
-    tl.fromTo("#signup-blobs > div", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.1 });
+    tl.fromTo("#signup-bg", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
+    tl.fromTo("#signup-blobs > div", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.1 }, "<0.1");
     tl.fromTo("#signup-glass", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, "<0.1");
     tl.fromTo("#signup-icon", { opacity: 0, scale: 0.3, rotation: -90 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.4)" }, "<0.1");
     tl.fromTo("#signup-card", { opacity: 0, x: 60, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "power2.out" }, "<0.15");
@@ -55,25 +45,13 @@ export default function PreviewLanding() {
   }, []);
 
   const closeSignup = useCallback(() => {
-    if (!viewportRef.current || !signupLayerRef.current) return;
+    if (!signupLayerRef.current) return;
     const signup = signupLayerRef.current;
 
     const tl = gsap.timeline({
       onComplete: () => {
-        // Hide signup layer fully
         gsap.set(signup, { opacity: 0, pointerEvents: "none" });
-
-        // Resume scroll
         lenisRef.current?.start();
-
-        // Force ScrollTrigger to re-render all tweens at current scroll position
-        // by nudging scroll 1px and back
-        const currentScroll = window.scrollY;
-        window.scrollTo(0, currentScroll + 1);
-        requestAnimationFrame(() => {
-          window.scrollTo(0, currentScroll);
-          ScrollTrigger.refresh();
-        });
       },
     });
 
@@ -83,6 +61,7 @@ export default function PreviewLanding() {
     tl.to(signup.querySelector("#signup-icon"), { opacity: 0, scale: 0.5, duration: 0.3, ease: "power2.in" }, "<");
     tl.to(signup.querySelector("#signup-glass"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
     tl.to(signup.querySelectorAll("#signup-blobs > div"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
+    tl.to(signup.querySelector("#signup-bg"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
   }, []);
 
   /* ── Loading screen + hero entrance (time-based, on page load) ── */
@@ -1210,6 +1189,9 @@ export default function PreviewLanding() {
               opacity: 0, pointerEvents: "none",
             }}
           >
+            {/* Own white background — covers everything underneath */}
+            <div id="signup-bg" style={{ position: "absolute", inset: 0, background: "#ffffff" }} />
+
             {/* Gradient blobs */}
             <div id="signup-blobs">
               <div
