@@ -6,7 +6,7 @@ const ORIGINAL_TITLE = "mentic";
 const AWAY_TITLE = "We Miss You...";
 
 export default function TabAttention() {
-  const rafRef = useRef<number | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -28,14 +28,18 @@ export default function TabAttention() {
       return link;
     };
 
-    const drawFavicon = (rotation: number) => {
+    let angle = 0;
+    const SPEED = 0.05; // radians per frame (~30fps → ~1.5 rad/s)
+
+    const drawFavicon = () => {
       const ctx = canvas.getContext("2d");
       if (!ctx || !faviconImg.complete) return;
 
+      angle = (angle + SPEED) % (Math.PI * 2);
       ctx.clearRect(0, 0, 32, 32);
       ctx.save();
       ctx.translate(16, 16);
-      ctx.rotate(rotation);
+      ctx.rotate(angle);
       ctx.translate(-16, -16);
       ctx.drawImage(faviconImg, 0, 0, 32, 32);
       ctx.restore();
@@ -43,26 +47,16 @@ export default function TabAttention() {
       getLinkEl().href = canvas.toDataURL("image/png");
     };
 
-    let startTime = 0;
-    const SPEED = 1.5; // radians per second — smooth, steady spin
-
-    const tick = (time: number) => {
-      if (!startTime) startTime = time;
-      const elapsed = (time - startTime) / 1000;
-      const angle = (elapsed * SPEED) % (Math.PI * 2);
-      drawFavicon(angle);
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
     const startAnimation = () => {
-      startTime = 0;
-      rafRef.current = requestAnimationFrame(tick);
+      angle = 0;
+      // Use setInterval instead of rAF — setInterval runs even when tab is hidden
+      intervalRef.current = setInterval(drawFavicon, 33); // ~30fps
     };
 
     const stopAnimation = () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);

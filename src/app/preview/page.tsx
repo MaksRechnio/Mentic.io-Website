@@ -6,7 +6,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import Image from "next/image";
 import emailjs from "@emailjs/browser";
-
 gsap.registerPlugin(ScrollTrigger);
 
 const EMAILJS_PUBLIC_KEY = "vL-JN3gWKUaXsCkWK";
@@ -620,6 +619,37 @@ export default function PreviewLanding() {
     } catch (e) { /* silent */ }
   }
 
+  // Soft tonal hover sound — gentle rising tone for button interactions
+  function sfxHover() {
+    try {
+      const a = audioRef.current;
+      if (!a || a.ctx.state !== "running") return;
+      if (navigator.vibrate) navigator.vibrate(5);
+      const ctx = a.ctx;
+      const t = ctx.currentTime;
+      const dur = 0.12;
+
+      const osc = ctx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(800, t);
+      osc.frequency.exponentialRampToValueAtTime(1200, t + dur);
+
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.03, t);
+      g.gain.linearRampToValueAtTime(0.05, t + dur * 0.3);
+      g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+
+      const lp = ctx.createBiquadFilter();
+      lp.type = "lowpass";
+      lp.frequency.value = 2000;
+      lp.Q.value = 0.7;
+
+      osc.connect(lp).connect(g).connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + dur);
+    } catch (e) { /* silent */ }
+  }
+
   useEffect(() => {
     const BASE_VOL = 0.12;
     const SCROLL_VOL = 0.25;
@@ -910,11 +940,36 @@ export default function PreviewLanding() {
               gsap.set(vp.querySelector("#hero-layer"), { opacity: 1, pointerEvents: "auto" });
               gsap.set(vp.querySelector("#hero-card"), { backgroundColor: "#ff6b5c", clipPath: "none", boxShadow: "0 6px 32px rgba(0,0,0,0.08)", backdropFilter: "none" });
 
-              // 5. Show viewport + restart Lenis after a frame
+              // 5. Show viewport, replay hero entrance animation, restart Lenis
               requestAnimationFrame(() => {
                 gsap.set(vp, { opacity: 1 });
                 ScrollTrigger.refresh();
                 lenisRef.current?.start();
+
+                // Replay hero entrance animation (same as handleBegin onComplete)
+                const heroLayer = vp.querySelector("#hero-layer") as HTMLElement;
+                const heroCard = vp.querySelector("#hero-card") as HTMLElement;
+                const heroIcon = vp.querySelector("#hero-icon") as HTMLElement;
+                const heroAlpha = vp.querySelector("#hero-alpha") as HTMLElement;
+                const heroLogo = vp.querySelector("#hero-logo") as HTMLElement;
+                const heroHeadline = vp.querySelector("#hero-headline") as HTMLElement;
+                const heroBtn = vp.querySelector("#hero-btn") as HTMLElement;
+
+                gsap.set(heroLayer, { opacity: 1 });
+                gsap.set([heroCard, heroIcon, heroAlpha, heroLogo, heroHeadline, heroBtn], { opacity: 0 });
+                gsap.set(heroCard, { clipPath: "inset(100% 0 0 0)" });
+                gsap.set(heroLogo, { clipPath: "inset(0 100% 0 0)" });
+                gsap.set(heroHeadline, { clipPath: "inset(0 0 100% 0)" });
+
+                const hero = gsap.timeline();
+                hero.to(heroCard, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power4.out" });
+                hero.fromTo(heroIcon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, "-=0.5");
+                hero.to(heroLogo, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power3.out" }, "-=0.4");
+                hero.to(heroHeadline, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "power3.out" }, "-=0.5");
+                hero.fromTo(heroAlpha, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
+                hero.fromTo(heroBtn, { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.5)" }, "-=0.2");
+                hero.call(() => sfxClick(), [], 0.4);
+                hero.call(() => sfxClick(), [], 0.7);
               });
             }}
             style={{
@@ -924,7 +979,10 @@ export default function PreviewLanding() {
               zIndex: 10, opacity: 0,
               background: "none", border: "none", padding: 0, cursor: "pointer",
               filter: "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.25))",
+              transition: "transform 300ms cubic-bezier(0.165, 0.84, 0.44, 1), filter 300ms ease",
             }}
+            onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.transform = "scale(1.12) rotate(-8deg)"; e.currentTarget.style.filter = "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.25)) drop-shadow(0 0 12px rgba(139,242,211,0.4))"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1) rotate(0)"; e.currentTarget.style.filter = "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.25))"; }}
           >
             <Image src="/images/mentic-icon-teal.png" alt="Mentic" width={65} height={65} style={{ width: "100%", height: "auto" }} />
           </button>
@@ -989,7 +1047,7 @@ export default function PreviewLanding() {
             }}>
               {/* Instagram */}
               <a href="https://www.instagram.com/mentic.io/" target="_blank" rel="noopener noreferrer" style={{ display: "flex", opacity: 0.7, transition: "opacity 200ms, transform 200ms" }}
-                onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.15)"; }}
+                onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.15)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.7"; e.currentTarget.style.transform = "scale(1)"; }}>
                 <svg width={m ? 22 : 26} height={m ? 22 : 26} viewBox="0 0 24 24" fill="none" stroke="#8bf2d3" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
@@ -999,7 +1057,7 @@ export default function PreviewLanding() {
               </a>
               {/* LinkedIn */}
               <a href="https://www.linkedin.com/company/mentic-io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", opacity: 0.7, transition: "opacity 200ms, transform 200ms" }}
-                onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.15)"; }}
+                onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.15)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.7"; e.currentTarget.style.transform = "scale(1)"; }}>
                 <svg width={m ? 22 : 26} height={m ? 22 : 26} viewBox="0 0 24 24" fill="none" stroke="#8bf2d3" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
@@ -1009,7 +1067,7 @@ export default function PreviewLanding() {
               </a>
               {/* X / Twitter */}
               <a href="https://x.com/Mentic_io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", opacity: 0.7, transition: "opacity 200ms, transform 200ms" }}
-                onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.15)"; }}
+                onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.15)"; }}
                 onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.7"; e.currentTarget.style.transform = "scale(1)"; }}>
                 <svg width={m ? 20 : 24} height={m ? 20 : 24} viewBox="0 0 24 24" fill="#8bf2d3">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -1043,16 +1101,31 @@ export default function PreviewLanding() {
               position: "absolute",
               top: m ? MY(493) : Y(774), left: m ? MX(177) : X(1164),
               width: m ? MW(165.338) : W(229.913), height: m ? MH(64.838) : H(90.162),
-              background: "white", border: "none",
+              background: "white", border: "2px solid transparent",
               borderRadius: m ? MFS(43.226) : "60.108px",
               boxShadow: "4.508px 4.508px 24.795px rgba(0,0,0,0.13), inset -1.503px -1.503px 17.131px rgba(0,0,0,0.11)",
               fontSize: m ? MFS(21.613) : FS(30.054), fontWeight: 700,
               color: "#003c46", letterSpacing: "0.9px", cursor: "pointer", zIndex: 2,
               fontFamily: "'Nunito Sans', sans-serif",
-              transition: "transform 200ms cubic-bezier(0.165, 0.84, 0.44, 1)",
+              transition: "all 350ms cubic-bezier(0.165, 0.84, 0.44, 1)",
             }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              onMouseEnter={(e) => {
+                sfxHover();
+                const el = e.currentTarget;
+                el.style.transform = "scale(1.08) translateY(-3px)";
+                el.style.boxShadow = "0 8px 32px rgba(139,242,211,0.4), 0 0 20px rgba(139,242,211,0.25), inset -1.503px -1.503px 17.131px rgba(0,0,0,0.11)";
+                el.style.borderColor = "#8bf2d3";
+                el.style.background = "#f0fdf8";
+                el.style.letterSpacing = "2px";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget;
+                el.style.transform = "scale(1) translateY(0)";
+                el.style.boxShadow = "4.508px 4.508px 24.795px rgba(0,0,0,0.13), inset -1.503px -1.503px 17.131px rgba(0,0,0,0.11)";
+                el.style.borderColor = "transparent";
+                el.style.background = "white";
+                el.style.letterSpacing = "0.9px";
+              }}
             >
               Sign up!
             </button>
@@ -1395,17 +1468,32 @@ export default function PreviewLanding() {
               position: "absolute",
               top: m ? MY(368) : Y(777), left: m ? MX(99) : X(1190),
               width: m ? MW(195) : W(195), height: m ? MH(78) : H(78),
-              background: m ? "#003c46" : "#8bf2d3", border: "none",
+              background: m ? "#003c46" : "#8bf2d3", border: "2px solid transparent",
               borderRadius: m ? "15px" : "20px",
               boxShadow: "2px 2px 16.9px rgba(0,0,0,0.25)",
               fontSize: m ? MFS(30) : FS(30), fontWeight: 700,
               color: m ? "#ff6b5c" : "#003c46",
               fontFamily: "'Nunito Sans', sans-serif",
               cursor: "pointer", zIndex: 2, opacity: 0,
-              transition: "transform 200ms cubic-bezier(0.165, 0.84, 0.44, 1)",
+              transition: "all 350ms cubic-bezier(0.165, 0.84, 0.44, 1)",
             }}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              onMouseEnter={(e) => {
+                sfxHover();
+                const el = e.currentTarget;
+                el.style.transform = "scale(1.08) translateY(-3px)";
+                el.style.boxShadow = m
+                  ? "0 8px 32px rgba(255,107,92,0.4), 0 0 20px rgba(255,107,92,0.25)"
+                  : "0 8px 32px rgba(139,242,211,0.5), 0 0 24px rgba(139,242,211,0.3)";
+                el.style.borderColor = m ? "#ff6b5c" : "#003c46";
+                el.style.letterSpacing = "2px";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget;
+                el.style.transform = "scale(1) translateY(0)";
+                el.style.boxShadow = "2px 2px 16.9px rgba(0,0,0,0.25)";
+                el.style.borderColor = "transparent";
+                el.style.letterSpacing = "normal";
+              }}
             >
               Sign up!
             </button>
@@ -1478,7 +1566,10 @@ export default function PreviewLanding() {
                   <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company: <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400, fontSize: m ? "clamp(8px, 2.5vw, 10px)" : 11 }}>(optional)</span></label>
                   <input className="modal-input" placeholder="Example Inc." value={formData.company} onChange={(e) => setFormData(p => ({ ...p, company: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
                 </div>
-                <button type="submit" disabled={formStatus === "submitting"} className="modal-submit" style={{ ...(m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : {}), ...(formStatus === "submitting" ? { opacity: 0.6, cursor: "not-allowed" } : {}) }}>
+                <button type="submit" disabled={formStatus === "submitting"} className="modal-submit" style={{ ...(m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : {}), ...(formStatus === "submitting" ? { opacity: 0.6, cursor: "not-allowed" } : {}), transition: "all 300ms cubic-bezier(0.165, 0.84, 0.44, 1)" }}
+                  onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.transform = "scale(1.06)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(139,242,211,0.35)"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.boxShadow = "0.841px 0.841px 7.107px rgba(0,0,0,0.25)"; }}
+                >
                   {formStatus === "submitting" ? "Submitting..." : "Submit!"}
                 </button>
               </form>
@@ -1584,6 +1675,7 @@ export default function PreviewLanding() {
             transition: "all 400ms cubic-bezier(0.165, 0.84, 0.44, 1)",
           }}
           onMouseEnter={(e) => {
+            sfxHover();
             const el = e.currentTarget;
             el.style.borderColor = "rgba(139,242,211,0.6)";
             el.style.background = "rgba(139,242,211,0.1)";
