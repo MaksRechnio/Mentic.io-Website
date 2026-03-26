@@ -849,38 +849,38 @@ export default function PreviewLanding() {
             <div id="signup-card" style={{
               position: "absolute",
               ...(m
-                ? { top: MY(352), left: MX(44), width: MW(307), height: MH(415) }
+                ? { top: MY(352), left: MX(44), width: MW(307) }
                 : { top: "50%", right: "8%", transform: "translateY(-50%)", width: 361 }),
               background: "#ff6b5c",
               borderRadius: m ? "15.199px" : "17.872px",
               boxShadow: m ? "2.551px 2.551px 8.759px rgba(0,0,0,0.25)" : "3px 3px 10.3px rgba(0,0,0,0.25)",
-              padding: m ? `${MH(23)} ${MW(29)}` : "32px 34px",
+              padding: m ? "7.5% 9.4%" : "32px 34px",
               boxSizing: "border-box" as const,
             }}>
-              <div style={{ marginBottom: m ? 16 : 28 }}>
-                <div style={{ fontSize: m ? MFS(33.353) : 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>Sign</div>
-                <div style={{ fontSize: m ? MFS(50.03) : 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>UP</div>
+              <div style={{ marginBottom: m ? "3.8%" : 28 }}>
+                <div style={{ fontSize: m ? "clamp(24px, 8.5vw, 34px)" : 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>Sign</div>
+                <div style={{ fontSize: m ? "clamp(36px, 12.7vw, 50px)" : 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>UP</div>
               </div>
               <form id="signup-form" onSubmit={(e) => { e.preventDefault(); closeSignup(); }}>
-                <div style={{ display: "flex", gap: m ? MW(17) : 20, marginBottom: m ? 10 : 16 }}>
-                  <div style={{ width: m ? MW(116.506) : undefined, flex: m ? undefined : 1 }}>
-                    <label style={{ display: "block", fontSize: m ? MFS(11.906) : 14, fontWeight: 600, color: "white", marginBottom: 6 }}>Name:</label>
-                    <input className="modal-input" placeholder="John" style={m ? { height: 27.213, borderRadius: "4.252px", fontSize: MFS(11.906) } : undefined} />
+                <div style={{ display: "flex", gap: m ? "6.8%" : 20, marginBottom: m ? "4%" : 16 }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Name:</label>
+                    <input className="modal-input" placeholder="John" style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
                   </div>
-                  <div style={{ width: m ? MW(116.506) : undefined, flex: m ? undefined : 1 }}>
-                    <label style={{ display: "block", fontSize: m ? MFS(11.906) : 14, fontWeight: 600, color: "white", marginBottom: 6 }}>Surname:</label>
-                    <input className="modal-input" placeholder="Doe" style={m ? { height: 27.213, borderRadius: "4.252px", fontSize: MFS(11.906) } : undefined} />
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Surname:</label>
+                    <input className="modal-input" placeholder="Doe" style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
                   </div>
                 </div>
-                <div style={{ marginBottom: m ? 10 : 16 }}>
-                  <label style={{ display: "block", fontSize: m ? MFS(11.906) : 14, fontWeight: 600, color: "white", marginBottom: 6 }}>Email:</label>
-                  <input className="modal-input" type="email" placeholder="example@company.com" style={{ width: m ? MW(250.02) : "100%", ...(m ? { height: 27.213, borderRadius: "4.252px", fontSize: MFS(11.906) } : {}) }} />
+                <div style={{ marginBottom: m ? "4%" : 16 }}>
+                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Email:</label>
+                  <input className="modal-input" type="email" placeholder="example@company.com" style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
                 </div>
-                <div style={{ marginBottom: m ? 14 : 24 }}>
-                  <label style={{ display: "block", fontSize: m ? MFS(11.906) : 14, fontWeight: 600, color: "white", marginBottom: 6 }}>Company:</label>
-                  <input className="modal-input" placeholder="Example Inc." style={{ width: m ? MW(250.02) : "100%", ...(m ? { height: 27.213, borderRadius: "4.252px", fontSize: MFS(11.906) } : {}) }} />
+                <div style={{ marginBottom: m ? "5.6%" : 24 }}>
+                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company:</label>
+                  <input className="modal-input" placeholder="Example Inc." style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
                 </div>
-                <button type="submit" className="modal-submit" style={m ? { fontSize: MFS(10.728), padding: "6px 16px", borderRadius: "7.152px", width: MW(69.734), height: 27.893 } : undefined}>Submit!</button>
+                <button type="submit" className="modal-submit" style={m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : undefined}>Submit!</button>
               </form>
             </div>
 
