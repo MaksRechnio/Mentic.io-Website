@@ -876,7 +876,7 @@ export default function PreviewLanding() {
                 zIndex: 2, opacity: 0,
               }}
             >
-              with <span style={{ fontWeight: 500 }}>intelligence</span> based on an vast{" "}
+              with <span style={{ fontWeight: 500 }}>intelligence</span> based on a vast{" "}
               <span style={{ fontWeight: 800, color: "#ff6b5c" }}>agentic</span> infrastructure.
             </div>
           </div>
