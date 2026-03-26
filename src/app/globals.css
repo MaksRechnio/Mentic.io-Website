@@ -185,3 +185,8 @@ body {
 .modal-submit:hover {
   transform: scale(1.05);
 }
+
+/* Hide reCAPTCHA badge — attribution text added to form per Google's TOS */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}

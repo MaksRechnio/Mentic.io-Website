@@ -1644,6 +1644,11 @@ export default function PreviewLanding() {
                 >
                   {formStatus === "submitting" ? "Submitting..." : "Submit!"}
                 </button>
+                <p style={{ margin: "8px 0 0", fontSize: m ? 8 : 9, color: "rgba(255,255,255,0.35)", lineHeight: 1.4, fontFamily: "'Nunito Sans', sans-serif" }}>
+                  Protected by reCAPTCHA. Google{" "}
+                  <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "underline" }}>Privacy</a>{" & "}
+                  <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "underline" }}>Terms</a>.
+                </p>
               </form>
             </div>
 
