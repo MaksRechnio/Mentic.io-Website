@@ -453,7 +453,7 @@ export default function PreviewLanding() {
   const audioRef = useRef<{ ctx: AudioContext; gain: GainNode; fadeUntil: number } | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const lastSwooshRef = useRef(0);
+  const swooshPlayedRef = useRef(false);
 
   // SFX functions — plain functions using refs, no closure issues
   function sfxClick() {
@@ -497,9 +497,9 @@ export default function PreviewLanding() {
     try {
       const a = audioRef.current;
       if (!a || a.ctx.state !== "running") return;
-      const now = performance.now();
-      if (now - lastSwooshRef.current < 300) return;
-      lastSwooshRef.current = now;
+      // Only play once per scroll session — reset when scrolling stops
+      if (swooshPlayedRef.current) return;
+      swooshPlayedRef.current = true;
 
       const ctx = a.ctx;
       const t = ctx.currentTime;
@@ -613,19 +613,20 @@ export default function PreviewLanding() {
       master.gain.setTargetAtTime(BASE_VOL, ctx.currentTime, 1.0);
     }
 
-    // Synchronous — no async race conditions, no boolean flags
+    // Resume AudioContext and init oscillators — uses .then() to catch async resume
     function tryStartAudio() {
       try {
         const ctx = getOrCreateCtx();
 
-        // If suspended, try to resume (only succeeds on real user gesture)
-        if (ctx.state === "suspended") {
-          ctx.resume().catch(() => {});
-        }
-
-        // If now running, set up oscillators
         if (ctx.state === "running") {
           initOscillators(ctx);
+          return;
+        }
+
+        if (ctx.state === "suspended") {
+          ctx.resume().then(() => {
+            if (ctx.state === "running") initOscillators(ctx);
+          }).catch(() => {});
         }
       } catch (e) { /* silent */ }
     }
@@ -642,27 +643,17 @@ export default function PreviewLanding() {
         if (!a2 || a2.ctx.state !== "running") return;
         a2.gain.gain.cancelScheduledValues(a2.ctx.currentTime);
         a2.gain.gain.setTargetAtTime(BASE_VOL, a2.ctx.currentTime, 0.4);
+        // Reset swoosh flag when scrolling stops
+        swooshPlayedRef.current = false;
       }, 200);
     }
 
-    // For real user gestures: click, pointerdown, keydown, touchstart
     function onGesture() {
       tryStartAudio();
-      // ctx.resume() is async — oscillators may not init until next event.
-      // Listen for statechange to catch the transition.
-      const ctx = audioCtxRef.current;
-      if (ctx && ctx.state !== "running") {
-        ctx.onstatechange = () => {
-          if (ctx.state === "running") {
-            initOscillators(ctx);
-            ctx.onstatechange = null;
-          }
-        };
-      }
     }
 
     function onWheel() {
-      onGesture();
+      tryStartAudio();
       onScrollActivity();
       try {
         const a = audioRef.current;
