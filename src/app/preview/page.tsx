@@ -16,7 +16,7 @@ const W = (w: number) => `${(w / 1491) * 100}%`;
 const H = (h: number) => `${(h / 967) * 100}%`;
 const FS = (px: number) => `${(px / 1491) * 100}vw`;
 
-const TOTAL_FRAMES = 65;
+const TOTAL_FRAMES = 67;
 
 export default function PreviewLanding() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -108,26 +108,28 @@ export default function PreviewLanding() {
        *   f(33)       solText2 + solText1 OUT
        *   f(34)–f(37) Transition → NO
        *   f(38)       noText IN
-       *   f(39)       noItem1 + noItem2 IN
-       *   f(40)       noItem3 + noItem4 + dot IN
-       *   f(41)       HOLD NO
-       *   f(42)       noItems OUT
-       *   f(43)       noText OUT
-       *   f(44)–f(46) Transition → How
-       *   f(47)       howStep1 IN
-       *   f(48)       howStep2 + howStep3 IN
-       *   f(49)       howMentic + howRest IN
-       *   f(50)       HOLD How
-       *   f(51)       how elements OUT
-       *   f(52)–f(54) Transition → Value
-       *   f(55)       valOne IN
-       *   f(56)       valEvery + valAll IN
-       *   f(57)       HOLD Value
-       *   f(58)       value OUT
-       *   f(59)–f(61) Transition → CTA
-       *   f(62)       ctaIcon + ctaSign/ctaUp IN
-       *   f(63)       ctaNow + ctaAlpha + ctaButton IN
-       *   f(65)       HOLD CTA (end)
+       *   f(39)       noItem1 IN
+       *   f(40)       noItem2 IN
+       *   f(41)       noItem3 IN
+       *   f(42)       noItem4 + dot IN
+       *   f(43)       HOLD NO
+       *   f(44)       noItems OUT
+       *   f(45)       noText OUT
+       *   f(46)–f(48) Transition → How
+       *   f(49)       howStep1 IN
+       *   f(50)       howStep2 + howStep3 IN
+       *   f(51)       howMentic + howRest IN
+       *   f(52)       HOLD How
+       *   f(53)       how elements OUT
+       *   f(54)–f(56) Transition → Value
+       *   f(57)       valOne IN
+       *   f(58)       valEvery + valAll IN
+       *   f(59)       HOLD Value
+       *   f(60)       value OUT
+       *   f(61)–f(63) Transition → CTA
+       *   f(64)       ctaIcon + ctaSign/ctaUp IN
+       *   f(65)       ctaNow + ctaAlpha + ctaButton IN
+       *   f(67)       HOLD CTA (end)
        */
 
       const f = (n: number) => (n - 1) / (TOTAL_FRAMES - 1);
@@ -144,10 +146,10 @@ export default function PreviewLanding() {
         f(7), f(8), f(9), f(10),       // Pain IN + Hold
         f(17), f(18), f(19), f(20),    // Calc IN + Hold
         f(28), f(29), f(30), f(31),    // Solution IN + Hold
-        f(38), f(39), f(40), f(41),    // NO IN + Hold
-        f(47), f(48), f(49), f(50),    // How IN + Hold
-        f(55), f(56), f(57),           // Value IN + Hold
-        f(62), f(63), f(65),           // CTA IN + Hold
+        f(38), f(39), f(40), f(41), f(42), f(43), // NO IN (each item) + Hold
+        f(49), f(50), f(51), f(52),    // How IN + Hold
+        f(57), f(58), f(59),           // Value IN + Hold
+        f(64), f(65), f(67),           // CTA IN + Hold
       ];
 
       const master = gsap.timeline({
@@ -356,106 +358,110 @@ export default function PreviewLanding() {
       master.to(noLayer, { opacity: 1, duration: d1 * 2, ease }, f(35.5));
 
       /* ═══════════════════════════════════════
-         SECTION: NO IN
+         SECTION: NO IN — each item on its own frame
          f(38): noText
-         f(39): noItem1 + noItem2
-         f(40): noItem3 + noItem4 + dot
-         f(41): HOLD
+         f(39): noItem1
+         f(40): noItem2
+         f(41): noItem3
+         f(42): noItem4 + dot
+         f(43): HOLD
       ═══════════════════════════════════════ */
       master.fromTo(noText, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: ds, ease }, f(38));
 
       master.fromTo(noItem1, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(39));
-      master.fromTo(noItem2, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(39));
 
-      master.fromTo(noItem3, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(40));
-      master.fromTo(noItem4, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(40));
-      master.fromTo(noDot, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: ds, ease }, f(40));
+      master.fromTo(noItem2, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(40));
+
+      master.fromTo(noItem3, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(41));
+
+      master.fromTo(noItem4, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(42));
+      master.fromTo(noDot, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: ds, ease }, f(42));
 
       /* NO OUT — reverse order
-         f(42): noItems OUT
-         f(43): noText OUT
+         f(44): noItems OUT
+         f(45): noText OUT
       */
-      master.to(noItem4, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(42));
-      master.to(noItem3, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(42));
-      master.to(noItem2, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(42));
-      master.to(noItem1, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(42));
-      master.to(noDot, { opacity: 0, scale: 0, duration: ds, ease: easeOut }, f(42));
+      master.to(noItem4, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(44));
+      master.to(noDot, { opacity: 0, scale: 0, duration: ds, ease: easeOut }, f(44));
+      master.to(noItem3, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(44));
+      master.to(noItem2, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(44));
+      master.to(noItem1, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(44));
 
-      master.to(noText, { opacity: 0, scale: 0.5, duration: ds, ease: easeOut }, f(43));
+      master.to(noText, { opacity: 0, scale: 0.5, duration: ds, ease: easeOut }, f(45));
 
       /* ═══════════════════════════════════════
-         TRANSITION: NO → How  (f(44) → f(46))
+         TRANSITION: NO → How  (f(46) → f(48))
       ═══════════════════════════════════════ */
-      master.to(noLayer, { opacity: 0, duration: d1 * 2, ease }, f(44));
-      master.to(howLayer, { opacity: 1, duration: d1 * 2, ease }, f(44.5));
+      master.to(noLayer, { opacity: 0, duration: d1 * 2, ease }, f(46));
+      master.to(howLayer, { opacity: 1, duration: d1 * 2, ease }, f(46.5));
 
       /* ═══════════════════════════════════════
          SECTION: How IN
-         f(47): howStep1
-         f(48): howStep2 + howStep3
-         f(49): howMentic + howRest
-         f(50): HOLD
+         f(49): howStep1
+         f(50): howStep2 + howStep3
+         f(51): howMentic + howRest
+         f(52): HOLD
       ═══════════════════════════════════════ */
-      master.fromTo(howStep1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(47));
+      master.fromTo(howStep1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(49));
 
-      master.fromTo(howStep2, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(48));
-      master.fromTo(howStep3, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(48));
+      master.fromTo(howStep2, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(50));
+      master.fromTo(howStep3, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(50));
 
-      master.fromTo(howMentic, { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: ds, ease }, f(49));
-      master.fromTo(howRest, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: ds, ease }, f(49));
+      master.fromTo(howMentic, { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: ds, ease }, f(51));
+      master.fromTo(howRest, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: ds, ease }, f(51));
 
       /* How OUT
-         f(51): all how elements OUT
+         f(53): all how elements OUT
       */
-      master.to(howStep3, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(51));
-      master.to(howStep2, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(51));
-      master.to(howStep1, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(51));
-      master.to(howMentic, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(51));
-      master.to(howRest, { opacity: 0, y: -10, duration: ds, ease: easeOut }, f(51));
+      master.to(howStep3, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(53));
+      master.to(howStep2, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(53));
+      master.to(howStep1, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(53));
+      master.to(howMentic, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(53));
+      master.to(howRest, { opacity: 0, y: -10, duration: ds, ease: easeOut }, f(53));
 
       /* ═══════════════════════════════════════
-         TRANSITION: How → Value  (f(52) → f(54))
+         TRANSITION: How → Value  (f(54) → f(56))
       ═══════════════════════════════════════ */
-      master.to(howLayer, { opacity: 0, duration: d1 * 2, ease }, f(52));
-      master.to(valLayer, { opacity: 1, duration: d1 * 2, ease }, f(52.5));
+      master.to(howLayer, { opacity: 0, duration: d1 * 2, ease }, f(54));
+      master.to(valLayer, { opacity: 1, duration: d1 * 2, ease }, f(54.5));
 
       /* ═══════════════════════════════════════
          SECTION: Value IN
-         f(55): valOne
-         f(56): valEvery + valAll
-         f(57): HOLD
+         f(57): valOne
+         f(58): valEvery + valAll
+         f(59): HOLD
       ═══════════════════════════════════════ */
-      master.fromTo(valOne, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(55));
+      master.fromTo(valOne, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(57));
 
-      master.fromTo(valEvery, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(56));
-      master.fromTo(valAll, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(56));
+      master.fromTo(valEvery, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(58));
+      master.fromTo(valAll, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(58));
 
       /* Value OUT
-         f(58): all value OUT
+         f(60): all value OUT
       */
-      master.to(valAll, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(58));
-      master.to(valEvery, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(58));
-      master.to(valOne, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(58));
+      master.to(valAll, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(60));
+      master.to(valEvery, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(60));
+      master.to(valOne, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(60));
 
       /* ═══════════════════════════════════════
-         TRANSITION: Value → CTA  (f(59) → f(61))
+         TRANSITION: Value → CTA  (f(61) → f(63))
       ═══════════════════════════════════════ */
-      master.to(valLayer, { opacity: 0, duration: d1 * 1.5, ease }, f(59));
-      master.to(ctaLayer, { opacity: 1, duration: d1 * 1.5, ease }, f(59.5));
+      master.to(valLayer, { opacity: 0, duration: d1 * 1.5, ease }, f(61));
+      master.to(ctaLayer, { opacity: 1, duration: d1 * 1.5, ease }, f(61.5));
 
       /* ═══════════════════════════════════════
          SECTION: CTA IN
-         f(62): ctaIcon + ctaSign + ctaUp
-         f(63): ctaNow + ctaAlpha + ctaButton
-         f(65): HOLD (end of page)
+         f(64): ctaIcon + ctaSign + ctaUp
+         f(65): ctaNow + ctaAlpha + ctaButton
+         f(67): HOLD (end of page)
       ═══════════════════════════════════════ */
-      master.fromTo(ctaIcon, { opacity: 0, scale: 0.3, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: ds * 2, ease }, f(62));
-      master.fromTo(ctaSign, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: ds, ease }, f(62));
-      master.fromTo(ctaUp, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: ds, ease }, f(62));
+      master.fromTo(ctaIcon, { opacity: 0, scale: 0.3, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: ds * 2, ease }, f(64));
+      master.fromTo(ctaSign, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: ds, ease }, f(64));
+      master.fromTo(ctaUp, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: ds, ease }, f(64));
 
-      master.fromTo(ctaNow, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: ds, ease }, f(63));
-      master.fromTo(ctaAlpha, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: ds, ease }, f(63));
-      master.fromTo(ctaButton, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: ds, ease: "back.out(1.4)" }, f(63));
+      master.fromTo(ctaNow, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: ds, ease }, f(65));
+      master.fromTo(ctaAlpha, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: ds, ease }, f(65));
+      master.fromTo(ctaButton, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: ds, ease: "back.out(1.4)" }, f(65));
 
     }, wrapperRef);
 
