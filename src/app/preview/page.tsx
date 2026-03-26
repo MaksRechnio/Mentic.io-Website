@@ -427,144 +427,144 @@ export default function PreviewLanding() {
   }, [isMobile]);
 
   /* ── Ambient audio engine ── */
+  const audioRef = useRef<{ ctx: AudioContext; gain: GainNode } | null>(null);
+  const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
-    let audioCtx: AudioContext | null = null;
-    let masterGain: GainNode | null = null;
-    let started = false;
-    let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
     const BASE_VOL = 0.15;
     const SCROLL_VOL = 0.4;
-    const FADE_IN = 0.8;
-    const FADE_OUT = 1.6;
 
-    function initAudio() {
-      if (started) return;
-      started = true;
-      audioCtx = new AudioContext();
-      masterGain = audioCtx.createGain();
-      masterGain.gain.value = 0;
-      masterGain.connect(audioCtx.destination);
+    function startAudio() {
+      if (audioRef.current) return;
+
+      const ctx = new AudioContext();
+      const master = ctx.createGain();
+      master.gain.value = BASE_VOL;
+      master.connect(ctx.destination);
 
       // Deep drone: two slightly detuned sine oscillators
-      const drone1 = audioCtx.createOscillator();
+      const drone1 = ctx.createOscillator();
       drone1.type = "sine";
-      drone1.frequency.value = 55; // A1
-      const drone1Gain = audioCtx.createGain();
-      drone1Gain.gain.value = 0.35;
-      drone1.connect(drone1Gain).connect(masterGain);
+      drone1.frequency.value = 55;
+      const d1g = ctx.createGain();
+      d1g.gain.value = 0.4;
+      drone1.connect(d1g).connect(master);
       drone1.start();
 
-      const drone2 = audioCtx.createOscillator();
+      const drone2 = ctx.createOscillator();
       drone2.type = "sine";
-      drone2.frequency.value = 55.3; // Slight detune for beating
-      const drone2Gain = audioCtx.createGain();
-      drone2Gain.gain.value = 0.35;
-      drone2.connect(drone2Gain).connect(masterGain);
+      drone2.frequency.value = 55.3;
+      const d2g = ctx.createGain();
+      d2g.gain.value = 0.4;
+      drone2.connect(d2g).connect(master);
       drone2.start();
 
-      // Mid-range pad: triangle wave with slow LFO modulation
-      const pad = audioCtx.createOscillator();
+      // Mid pad: triangle wave + LFO-swept lowpass
+      const pad = ctx.createOscillator();
       pad.type = "triangle";
       pad.frequency.value = 110;
-      const padGain = audioCtx.createGain();
-      padGain.gain.value = 0.12;
-      const padFilter = audioCtx.createBiquadFilter();
+      const padGain = ctx.createGain();
+      padGain.gain.value = 0.15;
+      const padFilter = ctx.createBiquadFilter();
       padFilter.type = "lowpass";
       padFilter.frequency.value = 400;
       padFilter.Q.value = 2;
-      pad.connect(padFilter).connect(padGain).connect(masterGain);
+      pad.connect(padFilter).connect(padGain).connect(master);
       pad.start();
 
-      // LFO on pad filter for movement
-      const lfo = audioCtx.createOscillator();
+      const lfo = ctx.createOscillator();
       lfo.type = "sine";
-      lfo.frequency.value = 0.08; // Very slow sweep
-      const lfoGain = audioCtx.createGain();
+      lfo.frequency.value = 0.08;
+      const lfoGain = ctx.createGain();
       lfoGain.gain.value = 200;
       lfo.connect(lfoGain).connect(padFilter.frequency);
       lfo.start();
 
-      // High shimmer: very quiet sine with vibrato
-      const shimmer = audioCtx.createOscillator();
+      // High shimmer with vibrato
+      const shimmer = ctx.createOscillator();
       shimmer.type = "sine";
       shimmer.frequency.value = 880;
-      const shimmerGain = audioCtx.createGain();
-      shimmerGain.gain.value = 0.03;
-      const shimmerFilter = audioCtx.createBiquadFilter();
+      const shimmerGain = ctx.createGain();
+      shimmerGain.gain.value = 0.04;
+      const shimmerFilter = ctx.createBiquadFilter();
       shimmerFilter.type = "bandpass";
       shimmerFilter.frequency.value = 900;
       shimmerFilter.Q.value = 8;
-      shimmer.connect(shimmerFilter).connect(shimmerGain).connect(masterGain);
+      shimmer.connect(shimmerFilter).connect(shimmerGain).connect(master);
       shimmer.start();
 
-      const vibrato = audioCtx.createOscillator();
+      const vibrato = ctx.createOscillator();
       vibrato.type = "sine";
       vibrato.frequency.value = 4.5;
-      const vibratoGain = audioCtx.createGain();
-      vibratoGain.gain.value = 3;
-      vibrato.connect(vibratoGain).connect(shimmer.frequency);
+      const vibGain = ctx.createGain();
+      vibGain.gain.value = 3;
+      vibrato.connect(vibGain).connect(shimmer.frequency);
       vibrato.start();
 
-      // Filtered noise for texture
-      const bufferSize = audioCtx.sampleRate * 2;
-      const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      const output = noiseBuffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
-      const noise = audioCtx.createBufferSource();
-      noise.buffer = noiseBuffer;
+      // Filtered noise texture
+      const bufSize = ctx.sampleRate * 2;
+      const noiseBuf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+      const data = noiseBuf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+      const noise = ctx.createBufferSource();
+      noise.buffer = noiseBuf;
       noise.loop = true;
-      const noiseFilter = audioCtx.createBiquadFilter();
+      const noiseFilter = ctx.createBiquadFilter();
       noiseFilter.type = "bandpass";
       noiseFilter.frequency.value = 300;
       noiseFilter.Q.value = 3;
-      const noiseGain = audioCtx.createGain();
-      noiseGain.gain.value = 0.04;
-      noise.connect(noiseFilter).connect(noiseGain).connect(masterGain);
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.value = 0.06;
+      noise.connect(noiseFilter).connect(noiseGain).connect(master);
       noise.start();
 
-      // Fade in to base volume
-      masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
-      masterGain.gain.linearRampToValueAtTime(BASE_VOL, audioCtx.currentTime + 2);
-      console.log("[ambient] Audio started, ctx state:", audioCtx.state);
+      audioRef.current = { ctx, gain: master };
+
+      // Resume if browser suspended it
+      if (ctx.state === "suspended") ctx.resume();
+      console.log("[ambient] started — state:", ctx.state, "sampleRate:", ctx.sampleRate);
     }
 
-    function onScroll() {
-      if (!audioCtx || !masterGain) return;
-      // Swell up when scrolling
-      masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-      masterGain.gain.setTargetAtTime(SCROLL_VOL, audioCtx.currentTime, FADE_IN * 0.3);
-      // Set timeout to fade back down when scrolling stops
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        if (!audioCtx || !masterGain) return;
-        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-        masterGain.gain.setTargetAtTime(BASE_VOL, audioCtx.currentTime, FADE_OUT * 0.3);
-      }, 150);
+    function onScrollActivity() {
+      const a = audioRef.current;
+      if (!a) return;
+      a.gain.gain.cancelScheduledValues(a.ctx.currentTime);
+      a.gain.gain.setTargetAtTime(SCROLL_VOL, a.ctx.currentTime, 0.15);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+      scrollTimerRef.current = setTimeout(() => {
+        const a2 = audioRef.current;
+        if (!a2) return;
+        a2.gain.gain.cancelScheduledValues(a2.ctx.currentTime);
+        a2.gain.gain.setTargetAtTime(BASE_VOL, a2.ctx.currentTime, 0.5);
+      }, 200);
     }
 
-    // Start audio on first interaction (browser autoplay policy)
-    function onFirstInteraction() {
-      initAudio();
-      if (audioCtx && audioCtx.state === "suspended") {
-        audioCtx.resume();
-      }
-      window.removeEventListener("scroll", onFirstInteraction);
-      window.removeEventListener("click", onFirstInteraction);
-      window.removeEventListener("touchstart", onFirstInteraction);
+    // Use wheel/pointerdown/touchstart — NOT scroll (Lenis intercepts native scroll)
+    function onInteraction() {
+      startAudio();
+      document.removeEventListener("wheel", onInteraction);
+      document.removeEventListener("pointerdown", onInteraction);
+      document.removeEventListener("touchstart", onInteraction);
     }
 
-    window.addEventListener("scroll", onFirstInteraction);
-    window.addEventListener("click", onFirstInteraction);
-    window.addEventListener("touchstart", onFirstInteraction);
-    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("wheel", onInteraction, { passive: true });
+    document.addEventListener("pointerdown", onInteraction);
+    document.addEventListener("touchstart", onInteraction, { passive: true });
+    // Scroll volume swell — use wheel (fires before Lenis) + native scroll as backup
+    document.addEventListener("wheel", onScrollActivity, { passive: true });
+    window.addEventListener("scroll", onScrollActivity, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", onFirstInteraction);
-      window.removeEventListener("click", onFirstInteraction);
-      window.removeEventListener("touchstart", onFirstInteraction);
-      window.removeEventListener("scroll", onScroll);
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-      if (audioCtx) audioCtx.close();
+      document.removeEventListener("wheel", onInteraction);
+      document.removeEventListener("pointerdown", onInteraction);
+      document.removeEventListener("touchstart", onInteraction);
+      document.removeEventListener("wheel", onScrollActivity);
+      window.removeEventListener("scroll", onScrollActivity);
+      if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
+      if (audioRef.current) {
+        audioRef.current.ctx.close();
+        audioRef.current = null;
+      }
     };
   }, []);
 
