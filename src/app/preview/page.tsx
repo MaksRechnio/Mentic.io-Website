@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import Image from "next/image";
-import SignupModal from "@/components/SignupModal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -22,10 +21,61 @@ export default function PreviewLanding() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
-  const [showModal, setShowModal] = useState(false);
+  const signupLayerRef = useRef<HTMLDivElement>(null);
+  const lenisRef = useRef<InstanceType<typeof Lenis> | null>(null);
+  const openSignup = useCallback(() => {
+    if (!viewportRef.current || !signupLayerRef.current) return;
+    const vp = viewportRef.current;
+    const signup = signupLayerRef.current;
 
-  const openModal = useCallback(() => setShowModal(true), []);
-  const closeModal = useCallback(() => setShowModal(false), []);
+    // Pause scroll
+    lenisRef.current?.stop();
+
+    const tl = gsap.timeline();
+
+    // Fade out all current layers
+    tl.to(vp.querySelectorAll("[id$='-layer']:not(#signup-layer)"), {
+      opacity: 0, duration: 0.4, ease: "power2.in",
+    });
+    tl.to(vp.querySelector("#glass-card"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
+    tl.to(vp.querySelector("#icon-teal"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
+
+    // Transition background to white
+    tl.to(vp.querySelector("#bg"), { backgroundColor: "#ffffff", duration: 0.5, ease: "power2.out" }, "<0.1");
+
+    // Show signup layer
+    tl.set(signup, { opacity: 1, pointerEvents: "auto" });
+
+    // Animate signup elements in
+    tl.fromTo("#signup-blobs > div", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out", stagger: 0.1 });
+    tl.fromTo("#signup-glass", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, "<0.1");
+    tl.fromTo("#signup-icon", { opacity: 0, scale: 0.3, rotation: -90 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.4)" }, "<0.1");
+    tl.fromTo("#signup-card", { opacity: 0, x: 60, scale: 0.95 }, { opacity: 1, x: 0, scale: 1, duration: 0.5, ease: "power2.out" }, "<0.15");
+    tl.fromTo("#signup-form > *", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out", stagger: 0.06 }, "<0.2");
+  }, []);
+
+  const closeSignup = useCallback(() => {
+    if (!viewportRef.current || !signupLayerRef.current) return;
+    const signup = signupLayerRef.current;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        lenisRef.current?.start();
+        ScrollTrigger.refresh();
+      },
+    });
+
+    // Fade out signup
+    tl.to(signup.querySelectorAll("#signup-form > *"), { opacity: 0, y: -10, duration: 0.2, ease: "power2.in", stagger: 0.03 });
+    tl.to(signup.querySelector("#signup-card"), { opacity: 0, x: 40, duration: 0.3, ease: "power2.in" }, "<0.1");
+    tl.to(signup.querySelector("#signup-icon"), { opacity: 0, scale: 0.5, duration: 0.3, ease: "power2.in" }, "<");
+    tl.to(signup.querySelector("#signup-glass"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
+    tl.to(signup.querySelectorAll("#signup-blobs > div"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
+    tl.set(signup, { opacity: 0, pointerEvents: "none" });
+
+    // Restore scroll layers — refresh ScrollTrigger to restore correct state
+    tl.call(() => ScrollTrigger.refresh());
+  }, []);
 
   /* ── Loading screen + hero entrance (time-based, on page load) ── */
   useEffect(() => {
@@ -66,10 +116,11 @@ export default function PreviewLanding() {
       easing: (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
+    lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
     gsap.ticker.lagSmoothing(0);
-    return () => { lenis.destroy(); };
+    return () => { lenis.destroy(); lenisRef.current = null; };
   }, []);
 
   /* ── Master scroll-scrubbed timeline ── */
@@ -649,7 +700,7 @@ export default function PreviewLanding() {
             </div>
             {/* Sign up button */}
             <button
-              onClick={openModal}
+              onClick={openSignup}
               id="hero-btn"
               style={{
                 position: "absolute",
@@ -1111,7 +1162,7 @@ export default function PreviewLanding() {
               Alpha releasing <span style={{ fontWeight: 600 }}>soon!</span>
             </div>
             <button
-              onClick={openModal}
+              onClick={openSignup}
               id="cta-button"
               style={{
                 position: "absolute",
@@ -1130,6 +1181,159 @@ export default function PreviewLanding() {
               onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
               Sign up!
+            </button>
+          </div>
+
+          {/* ═══════════════════════════════════════
+              SIGNUP LAYER (click-triggered, not scroll)
+          ═══════════════════════════════════════ */}
+          <div
+            ref={signupLayerRef}
+            id="signup-layer"
+            style={{
+              position: "absolute", inset: 0, zIndex: 20,
+              opacity: 0, pointerEvents: "none",
+            }}
+          >
+            {/* Gradient blobs */}
+            <div id="signup-blobs">
+              <div
+                className="gradient-blob gradient-blob-coral"
+                style={{
+                  width: W(1219), height: H(1213),
+                  left: X(-586), top: Y(-586),
+                  transform: "rotate(-134.46deg)",
+                }}
+              />
+              <div
+                className="gradient-blob gradient-blob-mint"
+                style={{
+                  width: W(1076), height: H(1072),
+                  left: X(929), top: Y(307),
+                  transform: "rotate(-134.46deg)",
+                }}
+              />
+            </div>
+
+            {/* Glass card background */}
+            <div
+              id="signup-glass"
+              style={{
+                position: "absolute",
+                top: Y(24), left: X(24),
+                width: W(1443), height: H(919),
+                background: "rgba(255,255,255,0.08)",
+                backdropFilter: "blur(12px)",
+                WebkitBackdropFilter: "blur(12px)",
+                border: "1px solid rgba(255,255,255,0.18)",
+                borderRadius: "17.872px",
+                boxShadow: "inset 0 0 30px rgba(255,255,255,0.05)",
+              }}
+            />
+
+            {/* Mentic orange icon */}
+            <div
+              id="signup-icon"
+              style={{
+                position: "absolute",
+                top: Y(374), left: X(414),
+                width: W(219), height: H(219),
+              }}
+            >
+              <Image
+                src="/images/mentic-icon-orange.png"
+                alt="Mentic"
+                fill
+                style={{ objectFit: "contain" }}
+              />
+            </div>
+
+            {/* Coral signup card with form */}
+            <div
+              id="signup-card"
+              style={{
+                position: "absolute",
+                top: Y(265), left: X(1025),
+                width: W(361), height: H(488),
+                background: "#ff6b5c",
+                borderRadius: "17.872px",
+                boxShadow: "3px 3px 10.3px rgba(0,0,0,0.25)",
+                padding: `${H(27)} ${W(33)}`,
+                boxSizing: "border-box",
+              }}
+            >
+              {/* Title */}
+              <div style={{ marginBottom: H(40) }}>
+                <div style={{ fontSize: FS(39.22), fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>
+                  Sign
+                </div>
+                <div style={{ fontSize: FS(58.83), fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>
+                  UP
+                </div>
+              </div>
+
+              {/* Form */}
+              <form
+                id="signup-form"
+                onSubmit={(e) => { e.preventDefault(); closeSignup(); }}
+              >
+                {/* Name + Surname */}
+                <div style={{ display: "flex", gap: W(20), marginBottom: H(16) }}>
+                  <div style={{ width: W(137) }}>
+                    <label style={{ display: "block", fontSize: FS(14), fontWeight: 600, color: "white", marginBottom: H(6) }}>
+                      Name:
+                    </label>
+                    <input className="modal-input" placeholder="John" />
+                  </div>
+                  <div style={{ width: W(137) }}>
+                    <label style={{ display: "block", fontSize: FS(14), fontWeight: 600, color: "white", marginBottom: H(6) }}>
+                      Surname:
+                    </label>
+                    <input className="modal-input" placeholder="Doe" />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div style={{ marginBottom: H(16) }}>
+                  <label style={{ display: "block", fontSize: FS(14), fontWeight: 600, color: "white", marginBottom: H(6) }}>
+                    Email:
+                  </label>
+                  <input className="modal-input" type="email" placeholder="example@company.com" style={{ width: W(294) }} />
+                </div>
+
+                {/* Company */}
+                <div style={{ marginBottom: H(24) }}>
+                  <label style={{ display: "block", fontSize: FS(14), fontWeight: 600, color: "white", marginBottom: H(6) }}>
+                    Company:
+                  </label>
+                  <input className="modal-input" placeholder="Example Inc." style={{ width: W(294) }} />
+                </div>
+
+                {/* Submit */}
+                <button type="submit" className="modal-submit">
+                  Submit!
+                </button>
+              </form>
+            </div>
+
+            {/* Back button */}
+            <button
+              onClick={closeSignup}
+              style={{
+                position: "absolute",
+                top: Y(53), left: X(61),
+                width: W(65), height: H(65),
+                background: "none", border: "none",
+                cursor: "pointer", zIndex: 25,
+                fontSize: FS(30), color: "#003c46",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                opacity: 0.6,
+                transition: "opacity 200ms",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.6")}
+            >
+              ←
             </button>
           </div>
 
@@ -1171,8 +1375,6 @@ export default function PreviewLanding() {
         </div>
       </div>
 
-      {/* Signup Modal */}
-      {showModal && <SignupModal onClose={closeModal} />}
     </>
   );
 }
