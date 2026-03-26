@@ -16,7 +16,7 @@ const W = (w: number) => `${(w / 1491) * 100}%`;
 const H = (h: number) => `${(h / 967) * 100}%`;
 const FS = (px: number) => `${(px / 1491) * 100}vw`;
 
-const TOTAL_FRAMES = 30;
+const TOTAL_FRAMES = 40;
 
 export default function PreviewLanding() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -80,37 +80,55 @@ export default function PreviewLanding() {
       const vp = viewportRef.current!;
 
       /*
-       * 30-frame layout. Elements appear in tight clusters (tiny scroll).
-       * Transitions between sections take many frames (big scroll).
+       * 40-frame layout. Each text element gets its own frame.
+       * Snap stops at every element AND section entry.
+       * Transitions between sections = multi-frame cross-fades.
        *
        *   f(1)        Hero (on-load animated)
-       *   f(1.5)–f(5) Transition → Pain
-       *   f(5)        Pain elements appear
-       *   f(6)–f(10)  Transition → Calc
-       *   f(10)–f(11) Calc elements appear
-       *   f(12)–f(17) Transition → Solution
-       *   f(17)       Solution elements appear
-       *   f(18)–f(21) Transition → NO
-       *   f(21)–f(22) NO elements appear
-       *   f(23)–f(25) Transition → How
-       *   f(25)       How elements appear
-       *   f(26)–f(28) Transition → Value
-       *   f(28)       Value elements appear
-       *   f(29)–f(30) Transition → CTA
-       *   f(30)       CTA elements appear
+       *   f(2)–f(5)   Transition → Pain
+       *   f(5)        painText1 + blob
+       *   f(6)        painText2 + strip1
+       *   f(7)        painText3 + strip2
+       *   f(8)–f(11)  Transition → Calc
+       *   f(11)       calcPanel + heading
+       *   f(12)       calcAmount + fifty
+       *   f(13)       calcFees + notads
+       *   f(14)–f(18) Transition → Solution
+       *   f(18)       solText1
+       *   f(19)       solText2 + solText3
+       *   f(20)–f(23) Transition → NO
+       *   f(23)       noText
+       *   f(24)       noItem1 + noItem2
+       *   f(25)       noItem3 + noItem4 + dot
+       *   f(26)–f(28) Transition → How
+       *   f(28)       howStep1
+       *   f(29)       howStep2 + howStep3
+       *   f(30)       howMentic + howRest
+       *   f(31)–f(33) Transition → Value
+       *   f(33)       valOne
+       *   f(34)       valEvery + valAll
+       *   f(35)–f(37) Transition → CTA
+       *   f(37)       ctaIcon + ctaSign/ctaUp
+       *   f(38)       ctaNow + ctaAlpha + ctaButton
        */
 
       const f = (n: number) => (n - 1) / (TOTAL_FRAMES - 1);
       const d1 = 1 / (TOTAL_FRAMES - 1);
       const ease = "power2.out";
 
-      /* Element reveals: FAST (tiny scroll distance) */
-      const ds = d1 * 0.4;
-      const stg = d1 * 0.06;
+      /* Element reveal duration — snappy fade-in within one frame */
+      const ds = d1 * 0.6;
 
-      /* Snap stops at each section */
+      /* Snap stops: every element frame + section starts */
       const sectionStops = [
-        f(1), f(5), f(10), f(17), f(21), f(25), f(28), f(30),
+        f(1),
+        f(5), f(6), f(7),           // Pain elements
+        f(11), f(12), f(13),         // Calc elements
+        f(18), f(19),                // Solution elements
+        f(23), f(24), f(25),         // NO elements
+        f(28), f(29), f(30),         // How elements
+        f(33), f(34),                // Value elements
+        f(37), f(38),                // CTA elements
       ];
 
       const master = gsap.timeline({
@@ -121,8 +139,8 @@ export default function PreviewLanding() {
           scrub: 1,
           snap: {
             snapTo: sectionStops,
-            duration: { min: 0.3, max: 0.7 },
-            delay: 0.1,
+            duration: { min: 0.2, max: 0.6 },
+            delay: 0.08,
             ease: "power1.inOut",
             directional: true,
           },
@@ -196,134 +214,161 @@ export default function PreviewLanding() {
       const ctaLayer = vp.querySelector("#cta-layer") as HTMLElement;
 
       /* ═══════════════════════════════════════
-         TRANSITION: Hero → Pain  (f(1.5) → f(5))
-         Long cross-fade over ~3.5 frames
+         TRANSITION: Hero → Pain  (f(2) → f(5))
       ═══════════════════════════════════════ */
-      master.to(heroAlpha, { opacity: 0, duration: d1 * 2, ease }, f(1.5));
-      master.to(heroHeadline, { opacity: 0, duration: d1 * 2, ease }, f(1.5));
-      master.to(heroLogo, { opacity: 0, duration: d1 * 2, ease }, f(1.5));
-      master.to(heroBtn, { opacity: 0, duration: d1 * 2, ease }, f(1.5));
+      master.to(heroAlpha, { opacity: 0, duration: d1 * 2, ease }, f(2));
+      master.to(heroHeadline, { opacity: 0, duration: d1 * 2, ease }, f(2));
+      master.to(heroLogo, { opacity: 0, duration: d1 * 2, ease }, f(2));
+      master.to(heroBtn, { opacity: 0, duration: d1 * 2, ease }, f(2));
       master.to(heroCard, {
         backgroundColor: "rgba(255,255,255,0.1)", boxShadow: "none",
         backdropFilter: "blur(12px)", duration: d1 * 2.5, ease,
-      }, f(2));
-      master.to(heroIcon, { opacity: 0, duration: d1 * 1.5, ease }, f(2));
+      }, f(2.5));
+      master.to(heroIcon, { opacity: 0, duration: d1 * 1.5, ease }, f(2.5));
       master.set(heroLayer, { opacity: 0 }, f(4.5));
-      master.to(painLayer, { opacity: 1, duration: d1 * 2.5, ease }, f(2.5));
-      master.to(iconTeal, { opacity: 1, duration: d1 * 2, ease }, f(2.5));
-      master.to(glassCard, { opacity: 1, duration: d1 * 2, ease }, f(2.5));
+      master.to(painLayer, { opacity: 1, duration: d1 * 2.5, ease }, f(3));
+      master.to(iconTeal, { opacity: 1, duration: d1 * 2, ease }, f(3));
+      master.to(glassCard, { opacity: 1, duration: d1 * 2, ease }, f(3));
 
       /* ═══════════════════════════════════════
-         SECTION: Pain  (at f(5))
-         Tight cluster — tiny scroll to reveal all
+         SECTION: Pain — one element per frame
+         f(5): painText1 + blob
+         f(6): painText2 + strip1 + blob grows
+         f(7): painText3 + strip2 + blob grows
       ═══════════════════════════════════════ */
       master.fromTo(painText1, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(5));
       master.fromTo(painBlob, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: ds, ease }, f(5));
-      master.fromTo(glassStrip1, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(5) + stg);
-      master.fromTo(painText2, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(5) + stg * 2);
-      master.to(painBlob, { width: W(1051), height: H(666), left: X(220), top: Y(813), duration: ds, ease }, f(5) + stg * 2);
-      master.fromTo(painText3, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(5) + stg * 3);
-      master.fromTo(glassStrip2, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(5) + stg * 3);
-      master.to(painBlob, { width: W(1232), height: H(848), left: X(130), top: Y(908), duration: ds, ease }, f(5) + stg * 3);
+
+      master.fromTo(painText2, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(6));
+      master.fromTo(glassStrip1, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(6));
+      master.to(painBlob, { width: W(1051), height: H(666), left: X(220), top: Y(813), duration: ds, ease }, f(6));
+
+      master.fromTo(painText3, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(7));
+      master.fromTo(glassStrip2, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(7));
+      master.to(painBlob, { width: W(1232), height: H(848), left: X(130), top: Y(908), duration: ds, ease }, f(7));
 
       /* ═══════════════════════════════════════
-         TRANSITION: Pain → Calc  (f(6) → f(10))
+         TRANSITION: Pain → Calc  (f(8) → f(11))
          bg: #ffe5e5 → #ff6b5c
       ═══════════════════════════════════════ */
-      master.to(painLayer, { opacity: 0, duration: d1 * 2.5, ease }, f(6));
-      master.to(glassStrip1, { opacity: 0, duration: d1 * 2, ease }, f(6));
-      master.to(glassStrip2, { opacity: 0, duration: d1 * 2, ease }, f(6));
-      master.to(bg, { backgroundColor: "#ff6b5c", duration: d1 * 3.5, ease }, f(6));
-      master.to(calcLayer, { opacity: 1, duration: d1 * 2.5, ease }, f(7.5));
+      master.to(painLayer, { opacity: 0, duration: d1 * 2, ease }, f(8));
+      master.to(glassStrip1, { opacity: 0, duration: d1 * 1.5, ease }, f(8));
+      master.to(glassStrip2, { opacity: 0, duration: d1 * 1.5, ease }, f(8));
+      master.to(bg, { backgroundColor: "#ff6b5c", duration: d1 * 3, ease }, f(8));
+      master.to(calcLayer, { opacity: 1, duration: d1 * 2, ease }, f(9.5));
 
       /* ═══════════════════════════════════════
-         SECTION: Calc  (at f(10)–f(11))
+         SECTION: Calc — one element per frame
+         f(11): calcPanel + heading
+         f(12): calcAmount + fifty
+         f(13): calcFees + notads
       ═══════════════════════════════════════ */
-      master.fromTo(calcPanel, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(10));
-      master.fromTo(calcHeading, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(10) + stg);
-      master.fromTo(calcAmount, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: ds, ease }, f(10) + stg * 2);
-      master.fromTo(calcFifty, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: ds, ease }, f(10) + stg * 3);
-      master.fromTo(calcFees, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: ds, ease }, f(11));
-      master.fromTo(calcNotads, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: ds, ease }, f(11) + stg);
+      master.fromTo(calcPanel, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(11));
+      master.fromTo(calcHeading, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(11));
+
+      master.fromTo(calcAmount, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: ds, ease }, f(12));
+      master.fromTo(calcFifty, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: ds, ease }, f(12));
+
+      master.fromTo(calcFees, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: ds, ease }, f(13));
+      master.fromTo(calcNotads, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: ds, ease }, f(13));
 
       /* ═══════════════════════════════════════
-         TRANSITION: Calc → Solution  (f(12) → f(17))
+         TRANSITION: Calc → Solution  (f(14) → f(18))
          bg: #ff6b5c → white, blobs appear
       ═══════════════════════════════════════ */
-      master.to(calcLayer, { opacity: 0, duration: d1 * 2.5, ease }, f(12));
-      master.to(iconTeal, { opacity: 0, duration: d1 * 1.5, ease }, f(12));
-      master.to(bg, { backgroundColor: "#ffffff", duration: d1 * 3.5, ease }, f(12));
-      master.to(solLayer, { opacity: 1, duration: d1 * 2.5, ease }, f(14));
-      master.fromTo(blobCoral, { opacity: 0 }, { opacity: 1, duration: d1 * 3.5, ease }, f(13));
-      master.fromTo(blobMint, { opacity: 0 }, { opacity: 1, duration: d1 * 3.5, ease }, f(13));
-      master.to(iconTeal, { opacity: 1, duration: d1 * 2, ease }, f(14.5));
+      master.to(calcLayer, { opacity: 0, duration: d1 * 2, ease }, f(14));
+      master.to(iconTeal, { opacity: 0, duration: d1 * 1.5, ease }, f(14));
+      master.to(bg, { backgroundColor: "#ffffff", duration: d1 * 3.5, ease }, f(14));
+      master.fromTo(blobCoral, { opacity: 0 }, { opacity: 1, duration: d1 * 3, ease }, f(15));
+      master.fromTo(blobMint, { opacity: 0 }, { opacity: 1, duration: d1 * 3, ease }, f(15));
+      master.to(solLayer, { opacity: 1, duration: d1 * 2, ease }, f(16));
+      master.to(iconTeal, { opacity: 1, duration: d1 * 2, ease }, f(16.5));
 
       /* ═══════════════════════════════════════
-         SECTION: Solution  (at f(17))
+         SECTION: Solution — one element per frame
+         f(18): solText1
+         f(19): solText2 + solText3
       ═══════════════════════════════════════ */
-      master.fromTo(solText1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(17));
-      master.fromTo(solText2, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(17) + stg);
-      master.fromTo(solText3, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(17) + stg * 2);
+      master.fromTo(solText1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(18));
+
+      master.fromTo(solText2, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(19));
+      master.fromTo(solText3, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(19));
 
       /* ═══════════════════════════════════════
-         TRANSITION: Solution → NO  (f(18) → f(21))
+         TRANSITION: Solution → NO  (f(20) → f(23))
       ═══════════════════════════════════════ */
-      master.to(solLayer, { opacity: 0, duration: d1 * 2.5, ease }, f(18));
-      master.to(noLayer, { opacity: 1, duration: d1 * 2.5, ease }, f(19));
+      master.to(solLayer, { opacity: 0, duration: d1 * 2, ease }, f(20));
+      master.to(noLayer, { opacity: 1, duration: d1 * 2, ease }, f(21));
 
       /* ═══════════════════════════════════════
-         SECTION: NO  (at f(21)–f(22))
+         SECTION: NO — one element per frame
+         f(23): noText
+         f(24): noItem1 + noItem2
+         f(25): noItem3 + noItem4 + dot
       ═══════════════════════════════════════ */
-      master.fromTo(noText, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: ds, ease }, f(21));
-      master.fromTo(noItem1, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(21) + stg);
-      master.fromTo(noItem2, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(21) + stg * 2);
-      master.fromTo(noItem3, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(22));
-      master.fromTo(noItem4, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(22) + stg);
-      master.fromTo(noDot, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: ds, ease }, f(22) + stg * 2);
+      master.fromTo(noText, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: ds, ease }, f(23));
+
+      master.fromTo(noItem1, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(24));
+      master.fromTo(noItem2, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(24));
+
+      master.fromTo(noItem3, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(25));
+      master.fromTo(noItem4, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(25));
+      master.fromTo(noDot, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: ds, ease }, f(25));
 
       /* ═══════════════════════════════════════
-         TRANSITION: NO → How  (f(23) → f(25))
+         TRANSITION: NO → How  (f(26) → f(28))
       ═══════════════════════════════════════ */
-      master.to(noLayer, { opacity: 0, duration: d1 * 2, ease }, f(23));
-      master.to(howLayer, { opacity: 1, duration: d1 * 2, ease }, f(23.5));
+      master.to(noLayer, { opacity: 0, duration: d1 * 2, ease }, f(26));
+      master.to(howLayer, { opacity: 1, duration: d1 * 2, ease }, f(26.5));
 
       /* ═══════════════════════════════════════
-         SECTION: How  (at f(25))
+         SECTION: How — one element per frame
+         f(28): howStep1
+         f(29): howStep2 + howStep3
+         f(30): howMentic + howRest
       ═══════════════════════════════════════ */
-      master.fromTo(howStep1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(25));
-      master.fromTo(howStep2, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(25) + stg);
-      master.fromTo(howStep3, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(25) + stg * 2);
-      master.fromTo(howMentic, { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: ds, ease }, f(25) + stg * 3);
-      master.fromTo(howRest, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: ds, ease }, f(25) + stg * 4);
+      master.fromTo(howStep1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(28));
+
+      master.fromTo(howStep2, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(29));
+      master.fromTo(howStep3, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(29));
+
+      master.fromTo(howMentic, { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: ds, ease }, f(30));
+      master.fromTo(howRest, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: ds, ease }, f(30));
 
       /* ═══════════════════════════════════════
-         TRANSITION: How → Value  (f(26) → f(28))
+         TRANSITION: How → Value  (f(31) → f(33))
       ═══════════════════════════════════════ */
-      master.to(howLayer, { opacity: 0, duration: d1 * 2, ease }, f(26));
-      master.to(valLayer, { opacity: 1, duration: d1 * 2, ease }, f(26.5));
+      master.to(howLayer, { opacity: 0, duration: d1 * 2, ease }, f(31));
+      master.to(valLayer, { opacity: 1, duration: d1 * 2, ease }, f(31.5));
 
       /* ═══════════════════════════════════════
-         SECTION: Value  (at f(28))
+         SECTION: Value — one element per frame
+         f(33): valOne
+         f(34): valEvery + valAll
       ═══════════════════════════════════════ */
-      master.fromTo(valOne, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(28));
-      master.fromTo(valEvery, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(28) + stg);
-      master.fromTo(valAll, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(28) + stg * 2);
+      master.fromTo(valOne, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(33));
+
+      master.fromTo(valEvery, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(34));
+      master.fromTo(valAll, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(34));
 
       /* ═══════════════════════════════════════
-         TRANSITION: Value → CTA  (f(29) → f(30))
+         TRANSITION: Value → CTA  (f(35) → f(37))
       ═══════════════════════════════════════ */
-      master.to(valLayer, { opacity: 0, duration: d1 * 1.5, ease }, f(29));
-      master.to(ctaLayer, { opacity: 1, duration: d1 * 1.5, ease }, f(29));
+      master.to(valLayer, { opacity: 0, duration: d1 * 1.5, ease }, f(35));
+      master.to(ctaLayer, { opacity: 1, duration: d1 * 1.5, ease }, f(35.5));
 
       /* ═══════════════════════════════════════
-         SECTION: CTA  (at f(30))
+         SECTION: CTA — one element per frame
+         f(37): ctaIcon + ctaSign + ctaUp
+         f(38): ctaNow + ctaAlpha + ctaButton
       ═══════════════════════════════════════ */
-      master.fromTo(ctaIcon, { opacity: 0, scale: 0.3, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: ds * 2, ease }, f(30));
-      master.fromTo(ctaSign, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: ds, ease }, f(30) + stg);
-      master.fromTo(ctaUp, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: ds, ease }, f(30) + stg);
-      master.fromTo(ctaNow, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: ds, ease }, f(30) + stg * 2);
-      master.fromTo(ctaAlpha, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: ds, ease }, f(30) + stg * 2);
-      master.fromTo(ctaButton, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: ds, ease: "back.out(1.4)" }, f(30) + stg * 3);
+      master.fromTo(ctaIcon, { opacity: 0, scale: 0.3, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: ds * 2, ease }, f(37));
+      master.fromTo(ctaSign, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: ds, ease }, f(37));
+      master.fromTo(ctaUp, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: ds, ease }, f(37));
+
+      master.fromTo(ctaNow, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: ds, ease }, f(38));
+      master.fromTo(ctaAlpha, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: ds, ease }, f(38));
+      master.fromTo(ctaButton, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: ds, ease: "back.out(1.4)" }, f(38));
 
     }, wrapperRef);
 
