@@ -969,18 +969,15 @@ export default function PreviewLanding() {
 
             {/* Back button */}
             <button onClick={closeSignup} style={{
-              position: "absolute", top: m ? 12 : 20, left: m ? 12 : 24,
-              width: m ? 44 : 50, height: m ? 44 : 50,
-              background: "rgba(255,255,255,0.15)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-              border: "1px solid rgba(255,255,255,0.2)", borderRadius: "50%",
+              position: "absolute", top: m ? 16 : 24, left: m ? 16 : 28,
+              background: "none", border: "none", padding: 0,
               cursor: "pointer", zIndex: 25,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              transition: "background 200ms, transform 200ms",
+              transition: "transform 200ms, opacity 200ms",
             }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.3)"; e.currentTarget.style.transform = "scale(1.1)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.15)"; e.currentTarget.style.transform = "scale(1)"; }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.1)"; e.currentTarget.style.opacity = "0.7"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width={m ? 28 : 32} height={m ? 28 : 32} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
             </button>
