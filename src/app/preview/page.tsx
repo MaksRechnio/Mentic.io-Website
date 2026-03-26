@@ -202,8 +202,8 @@ export default function PreviewLanding() {
       master.to(heroBtn, { opacity: 0, duration: d1 * 2, ease: easeOut }, f(3));
       master.to(heroCard, { backgroundColor: "rgba(255,255,255,0.1)", boxShadow: "none", backdropFilter: "blur(12px)", duration: d1 * 2.5, ease }, f(3.5));
       master.to(heroIcon, { opacity: 0, duration: d1 * 1.5, ease: easeOut }, f(3.5));
-      master.set(heroLayer, { opacity: 0 }, f(5.5));
-      master.to(painLayer, { opacity: 1, duration: d1 * 2.5, ease }, f(4));
+      master.set(heroLayer, { opacity: 0, pointerEvents: "none" }, f(5.5));
+      master.to(painLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2.5, ease }, f(4));
       master.to(iconTeal, { opacity: 1, duration: d1 * 2, ease }, f(4));
       master.to(glassCard, { opacity: 1, duration: d1 * 2, ease }, f(4));
 
@@ -234,9 +234,9 @@ export default function PreviewLanding() {
       master.to(painBlob, { opacity: 0, duration: ds, ease: easeOut }, f(12));
 
       /* ═══ Pain → Calc ═══ */
-      master.to(painLayer, { opacity: 0, duration: d1 * 1.5, ease }, f(13));
+      master.to(painLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 1.5, ease }, f(13));
       master.to(bg, { backgroundColor: "#ff6b5c", duration: d1 * 3, ease }, f(13));
-      master.to(calcLayer, { opacity: 1, duration: d1 * 2, ease }, f(14.5));
+      master.to(calcLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2, ease }, f(14.5));
 
       /* ═══ Calc IN ═══ */
       master.fromTo(calcPanel, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(17));
@@ -255,7 +255,7 @@ export default function PreviewLanding() {
       master.to(calcHeading, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(22));
 
       /* ═══ Calc → Solution ═══ */
-      master.to(calcLayer, { opacity: 0, duration: d1 * 1.5, ease }, f(23));
+      master.to(calcLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 1.5, ease }, f(23));
       master.to(iconTeal, { opacity: 0, duration: d1 * 1.5, ease }, f(23));
       master.to(bg, { backgroundColor: "#ffffff", duration: d1 * 3.5, ease }, f(23));
       master.fromTo(blobCoral, { opacity: 0 }, { opacity: 1, duration: d1 * 3, ease }, f(24));
@@ -263,7 +263,7 @@ export default function PreviewLanding() {
       const blobDuration = f(67) - f(27);
       master.to(blobCoral, { rotation: 60, x: "5vw", y: "5vh", scale: 1.1, duration: blobDuration, ease: "none" }, f(27));
       master.to(blobMint, { rotation: -45, x: "-5vw", y: "-5vh", scale: 1.1, duration: blobDuration, ease: "none" }, f(27));
-      master.to(solLayer, { opacity: 1, duration: d1 * 2, ease }, f(25));
+      master.to(solLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2, ease }, f(25));
       master.to(iconTeal, { opacity: 1, duration: d1 * 2, ease }, f(25.5));
 
       /* ═══ Solution IN ═══ */
@@ -275,8 +275,8 @@ export default function PreviewLanding() {
       master.to(solText1, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(33));
 
       /* ═══ Solution → NO ═══ */
-      master.to(solLayer, { opacity: 0, duration: d1 * 2, ease }, f(34));
-      master.to(noLayer, { opacity: 1, duration: d1 * 2, ease }, f(35.5));
+      master.to(solLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 2, ease }, f(34));
+      master.to(noLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2, ease }, f(35.5));
 
       /* ═══ NO IN ═══ */
       master.fromTo(noText, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: ds, ease }, f(38));
@@ -293,8 +293,8 @@ export default function PreviewLanding() {
       master.to(noText, { opacity: 0, scale: 0.5, duration: ds, ease: easeOut }, f(45));
 
       /* ═══ NO → How ═══ */
-      master.to(noLayer, { opacity: 0, duration: d1 * 2, ease }, f(46));
-      master.to(howLayer, { opacity: 1, duration: d1 * 2, ease }, f(46.5));
+      master.to(noLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 2, ease }, f(46));
+      master.to(howLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2, ease }, f(46.5));
 
       /* ═══ How IN ═══ */
       master.fromTo(howStep1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(49));
@@ -309,8 +309,8 @@ export default function PreviewLanding() {
       master.to(howRest, { opacity: 0, y: -10, duration: ds, ease: easeOut }, f(53));
 
       /* ═══ How → Value ═══ */
-      master.to(howLayer, { opacity: 0, duration: d1 * 2, ease }, f(54));
-      master.to(valLayer, { opacity: 1, duration: d1 * 2, ease }, f(54.5));
+      master.to(howLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 2, ease }, f(54));
+      master.to(valLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2, ease }, f(54.5));
 
       /* ═══ Value IN ═══ */
       master.fromTo(valOne, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(57));
@@ -321,8 +321,8 @@ export default function PreviewLanding() {
       master.to(valOne, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(60));
 
       /* ═══ Value → CTA ═══ */
-      master.to(valLayer, { opacity: 0, duration: d1 * 1.5, ease }, f(61));
-      master.to(ctaLayer, { opacity: 1, duration: d1 * 1.5, ease }, f(61.5));
+      master.to(valLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 1.5, ease }, f(61));
+      master.to(ctaLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 1.5, ease }, f(61.5));
 
       /* ═══ CTA IN ═══ */
       master.fromTo(ctaIcon, { opacity: 0, scale: 0.3, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: ds * 2, ease }, f(64));
@@ -396,7 +396,7 @@ export default function PreviewLanding() {
           <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ width: m ? "90vw" : "70vw", height: m ? "90vw" : "70vw", right: "-20%", bottom: "-25%", left: "auto", top: "auto", opacity: 0, zIndex: 1 }} />
 
           {/* ═══ HERO LAYER ═══ */}
-          <div id="hero-layer" style={{ position: "absolute", inset: 0, zIndex: 5 }}>
+          <div id="hero-layer" style={{ position: "absolute", inset: 0, zIndex: 5, pointerEvents: "auto" }}>
             <div id="hero-card" style={{
               position: "absolute",
               top: m ? MY(15) : Y(24), left: m ? MX(16) : X(26),
@@ -416,12 +416,14 @@ export default function PreviewLanding() {
               position: "absolute",
               top: m ? MY(39) : Y(69), left: m ? MX(229) : X(1083),
               width: m ? MW(125) : undefined,
-              fontSize: m ? MFS(18) : FS(25), fontWeight: 700,
-              letterSpacing: "0.75px", zIndex: 2, whiteSpace: m ? undefined : "nowrap" as const,
+              fontSize: m ? MFS(18) : FS(25), fontWeight: 500,
+              letterSpacing: "0.54px", zIndex: 2, whiteSpace: m ? undefined : "nowrap" as const,
+              lineHeight: m ? 1.45 : undefined, textAlign: m ? "center" as const : undefined,
             }}>
               <span style={{ color: "#8bf2d3" }}>Alpha </span>
               <span style={{ color: "white" }}>release</span>
-              <span style={{ color: "#8bf2d3" }}> coming soon!</span>
+              {m ? <br /> : " "}
+              <span style={{ color: "#8bf2d3" }}>coming soon!</span>
             </div>
             <div id="hero-headline" style={{
               position: "absolute",
@@ -466,7 +468,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ PAIN LAYER ═══ */}
-          <div id="pain-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
+          <div id="pain-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0, pointerEvents: "none" }}>
             <div id="pain-blob" className="gradient-blob gradient-blob-coral" style={{
               position: "absolute",
               width: m ? MW(304) : W(836), height: m ? MH(334) : H(544),
@@ -516,7 +518,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ CALC LAYER ═══ */}
-          <div id="calc-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
+          <div id="calc-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0, pointerEvents: "none" }}>
             <div id="calc-panel" style={{
               position: "absolute",
               top: m ? MY(15) : Y(20), right: m ? undefined : X(24),
@@ -579,7 +581,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ SOLUTION LAYER ═══ */}
-          <div id="sol-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
+          <div id="sol-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0, pointerEvents: "none" }}>
             <div id="sol-text-1" style={{
               position: "absolute",
               top: m ? MY(663) : Y(698), left: m ? MX(44) : X(94),
@@ -617,7 +619,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ NO LAYER ═══ */}
-          <div id="no-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
+          <div id="no-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0, pointerEvents: "none" }}>
             <div id="no-text" style={{
               position: "absolute",
               top: m ? MY(264) : Y(545.12), left: m ? MX(64) : X(61),
@@ -669,7 +671,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ HOW LAYER ═══ */}
-          <div id="how-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
+          <div id="how-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0, pointerEvents: "none" }}>
             <div id="how-step-1" style={{
               position: "absolute",
               top: m ? MY(262) : Y(338), left: m ? MX(70) : X(265.86),
@@ -718,7 +720,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ VALUE LAYER ═══ */}
-          <div id="val-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
+          <div id="val-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0, pointerEvents: "none" }}>
             <div id="val-one" style={{
               position: "absolute",
               top: m ? MY(310) : Y(287), left: m ? MX(44) : X(301),
@@ -753,7 +755,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ CTA LAYER ═══ */}
-          <div id="cta-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
+          <div id="cta-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0, pointerEvents: "none" }}>
             {/* Orange icon — desktop only, hidden on mobile */}
             <div id="cta-icon" style={{
               position: "absolute",
@@ -837,7 +839,7 @@ export default function PreviewLanding() {
             <div id="signup-icon" style={{
               position: "absolute",
               ...(m
-                ? { top: MY(128), left: MX(127), width: MW(139), height: MW(139) }
+                ? { top: MY(85), left: MX(127), width: MW(139), height: MW(139) }
                 : { top: "50%", left: "30%", transform: "translate(-50%, -50%)", width: 219, height: 219 }),
             }}>
               <Image src="/images/mentic-icon-orange.png" alt="Mentic" fill style={{ objectFit: "contain" }} />
@@ -847,12 +849,12 @@ export default function PreviewLanding() {
             <div id="signup-card" style={{
               position: "absolute",
               ...(m
-                ? { top: MY(352), left: MX(44), width: MW(307) }
+                ? { top: MY(352), left: MX(44), width: MW(307), height: MH(415) }
                 : { top: "50%", right: "8%", transform: "translateY(-50%)", width: 361 }),
               background: "#ff6b5c",
               borderRadius: m ? "15.199px" : "17.872px",
               boxShadow: m ? "2.551px 2.551px 8.759px rgba(0,0,0,0.25)" : "3px 3px 10.3px rgba(0,0,0,0.25)",
-              padding: m ? `${MH(23)} ${MW(28)}` : "32px 34px",
+              padding: m ? `${MH(23)} ${MW(29)}` : "32px 34px",
               boxSizing: "border-box" as const,
             }}>
               <div style={{ marginBottom: m ? 16 : 28 }}>
@@ -860,25 +862,25 @@ export default function PreviewLanding() {
                 <div style={{ fontSize: m ? MFS(50.03) : 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>UP</div>
               </div>
               <form id="signup-form" onSubmit={(e) => { e.preventDefault(); closeSignup(); }}>
-                <div style={{ display: "flex", gap: m ? 12 : 20, marginBottom: m ? 10 : 16 }}>
-                  <div style={{ flex: 1 }}>
+                <div style={{ display: "flex", gap: m ? MW(17) : 20, marginBottom: m ? 10 : 16 }}>
+                  <div style={{ width: m ? MW(116.506) : undefined, flex: m ? undefined : 1 }}>
                     <label style={{ display: "block", fontSize: m ? MFS(11.906) : 14, fontWeight: 600, color: "white", marginBottom: 6 }}>Name:</label>
-                    <input className="modal-input" placeholder="John" />
+                    <input className="modal-input" placeholder="John" style={m ? { height: 27.213, borderRadius: "4.252px", fontSize: MFS(11.906) } : undefined} />
                   </div>
-                  <div style={{ flex: 1 }}>
+                  <div style={{ width: m ? MW(116.506) : undefined, flex: m ? undefined : 1 }}>
                     <label style={{ display: "block", fontSize: m ? MFS(11.906) : 14, fontWeight: 600, color: "white", marginBottom: 6 }}>Surname:</label>
-                    <input className="modal-input" placeholder="Doe" />
+                    <input className="modal-input" placeholder="Doe" style={m ? { height: 27.213, borderRadius: "4.252px", fontSize: MFS(11.906) } : undefined} />
                   </div>
                 </div>
                 <div style={{ marginBottom: m ? 10 : 16 }}>
                   <label style={{ display: "block", fontSize: m ? MFS(11.906) : 14, fontWeight: 600, color: "white", marginBottom: 6 }}>Email:</label>
-                  <input className="modal-input" type="email" placeholder="example@company.com" style={{ width: "100%" }} />
+                  <input className="modal-input" type="email" placeholder="example@company.com" style={{ width: m ? MW(250.02) : "100%", ...(m ? { height: 27.213, borderRadius: "4.252px", fontSize: MFS(11.906) } : {}) }} />
                 </div>
                 <div style={{ marginBottom: m ? 14 : 24 }}>
                   <label style={{ display: "block", fontSize: m ? MFS(11.906) : 14, fontWeight: 600, color: "white", marginBottom: 6 }}>Company:</label>
-                  <input className="modal-input" placeholder="Example Inc." style={{ width: "100%" }} />
+                  <input className="modal-input" placeholder="Example Inc." style={{ width: m ? MW(250.02) : "100%", ...(m ? { height: 27.213, borderRadius: "4.252px", fontSize: MFS(11.906) } : {}) }} />
                 </div>
-                <button type="submit" className="modal-submit" style={m ? { fontSize: MFS(10.728), padding: "6px 16px", borderRadius: "7.152px" } : undefined}>Submit!</button>
+                <button type="submit" className="modal-submit" style={m ? { fontSize: MFS(10.728), padding: "6px 16px", borderRadius: "7.152px", width: MW(69.734), height: 27.893 } : undefined}>Submit!</button>
               </form>
             </div>
 
