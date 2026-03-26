@@ -382,14 +382,15 @@ export default function PreviewLanding() {
       const valLayer = vp.querySelector("#val-layer") as HTMLElement;
       const ctaLayer = vp.querySelector("#cta-layer") as HTMLElement;
 
-      /* ═══ Hero → Pain ═══ */
-      master.to(heroAlpha, { opacity: 0, duration: d1 * 2, ease: easeOut }, f(3));
-      master.to(heroHeadline, { opacity: 0, duration: d1 * 2, ease: easeOut }, f(3));
-      master.to(heroLogo, { opacity: 0, duration: d1 * 2, ease: easeOut }, f(3));
-      master.to(heroBtn, { opacity: 0, duration: d1 * 2, ease: easeOut }, f(3));
+      /* ═══ Hero → Pain (exit mirrors entrance so scroll-back replays it) ═��═ */
+      master.to(heroBtn, { opacity: 0, scale: 0.5, y: 20, duration: d1 * 1.2, ease: easeOut }, f(3));
+      master.to(heroAlpha, { opacity: 0, y: 10, duration: d1 * 1.2, ease: easeOut }, f(3));
+      master.to(heroHeadline, { opacity: 0, clipPath: "inset(0 0 100% 0)", duration: d1 * 1.5, ease: easeOut }, f(3.2));
+      master.to(heroLogo, { opacity: 0, clipPath: "inset(0 100% 0 0)", duration: d1 * 1.5, ease: easeOut }, f(3.4));
+      master.to(heroIcon, { opacity: 0, scale: 0, rotation: -180, duration: d1 * 1.5, ease: easeOut }, f(3.5));
+      master.to(heroCard, { opacity: 0, clipPath: "inset(100% 0 0 0)", duration: d1 * 2, ease: easeOut }, f(3.8));
       master.to(heroCard, { backgroundColor: "rgba(255,255,255,0.1)", boxShadow: "none", backdropFilter: "blur(12px)", duration: d1 * 2.5, ease }, f(3.5));
-      master.to(heroIcon, { opacity: 0, duration: d1 * 1.5, ease: easeOut }, f(3.5));
-      master.set(heroLayer, { opacity: 0, pointerEvents: "none" }, f(5.5));
+      master.to(heroLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 0.5, ease: easeOut }, f(5.5));
       master.to(painLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2.5, ease }, f(4));
       master.to(iconTeal, { opacity: 1, duration: d1 * 2, ease }, f(4));
       master.to(glassCard, { opacity: 1, duration: d1 * 2, ease }, f(4));
@@ -696,22 +697,22 @@ export default function PreviewLanding() {
       const ctx = a.ctx;
       const t = ctx.currentTime;
 
-      // Short noise burst — like a soft key click
-      const dur = 0.03 + Math.random() * 0.015; // 30-45ms, slight variation
+      // Soft key tap — louder, less harsh
+      const dur = 0.04 + Math.random() * 0.02; // 40-60ms, slight variation
       const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
       const d = buf.getChannelData(0);
-      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d.length * 0.08));
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d.length * 0.15));
       const src = ctx.createBufferSource();
       src.buffer = buf;
 
-      // Bandpass to keep it clicky, not hissy
+      // Lower bandpass = softer, less metallic
       const bp = ctx.createBiquadFilter();
       bp.type = "bandpass";
-      bp.frequency.value = 3000 + Math.random() * 1500; // randomise pitch slightly
-      bp.Q.value = 1.2;
+      bp.frequency.value = 2000 + Math.random() * 1000; // 2000-3000Hz, warmer
+      bp.Q.value = 0.8;
 
       const g = ctx.createGain();
-      g.gain.setValueAtTime(0.035, t);
+      g.gain.setValueAtTime(0.08, t); // louder
       g.gain.exponentialRampToValueAtTime(0.001, t + dur);
 
       src.connect(bp).connect(g).connect(ctx.destination);
