@@ -175,35 +175,16 @@ export default function PreviewLanding() {
     tl.to(signup.querySelector("#signup-bg"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
   }, []);
 
-  /* ── Loading screen + hero entrance ── */
-  useEffect(() => {
-    if (!viewportRef.current) return;
-    const vp = viewportRef.current;
+  /* ── Splash screen: "Begin" click fades out + audio starts via document click bubble ── */
+  const handleBegin = useCallback(() => {
+    // The click bubbles to document → onGesture → tryStartAudio handles audio.
+    // We just fade out the splash here.
     const loader = loaderRef.current;
-    const heroCard = vp.querySelector("#hero-card") as HTMLElement;
-    const heroIcon = vp.querySelector("#hero-icon") as HTMLElement;
-    const heroAlpha = vp.querySelector("#hero-alpha") as HTMLElement;
-    const heroLogo = vp.querySelector("#hero-logo") as HTMLElement;
-    const heroHeadline = vp.querySelector("#hero-headline") as HTMLElement;
-    const heroBtn = vp.querySelector("#hero-btn") as HTMLElement;
-
-    gsap.set([heroCard, heroIcon, heroAlpha, heroHeadline, heroLogo, heroBtn], { opacity: 0 });
-    gsap.set(heroCard, { clipPath: "inset(100% 0 0 0)" });
-    gsap.set(heroLogo, { clipPath: "inset(0 100% 0 0)" });
-    gsap.set(heroHeadline, { clipPath: "inset(0 0 100% 0)" });
-
-    const intro = gsap.timeline({ delay: 0.3 });
-    if (loader) {
-      intro.to(loader, { opacity: 0, duration: 0.5, ease: "power2.inOut" });
-      intro.set(loader, { display: "none" });
-    }
-    intro.to(heroCard, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power4.out" }, loader ? "-=0.2" : 0);
-    intro.fromTo(heroIcon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, "-=0.5");
-    intro.to(heroLogo, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power3.out" }, "-=0.4");
-    intro.to(heroHeadline, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "power3.out" }, "-=0.5");
-    intro.fromTo(heroAlpha, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
-    intro.fromTo(heroBtn, { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.5)" }, "-=0.2");
-    return () => { intro.kill(); };
+    if (!loader) return;
+    const tl = gsap.timeline();
+    tl.to(loader.querySelector("#splash-btn"), { opacity: 0, scale: 0.8, duration: 0.3, ease: "power2.in" });
+    tl.to(loader, { opacity: 0, duration: 0.6, ease: "power2.inOut" }, "-=0.1");
+    tl.set(loader, { display: "none" });
   }, []);
 
   /* ── Lenis smooth scroll ── */
@@ -308,6 +289,16 @@ export default function PreviewLanding() {
       const howLayer = vp.querySelector("#how-layer") as HTMLElement;
       const valLayer = vp.querySelector("#val-layer") as HTMLElement;
       const ctaLayer = vp.querySelector("#cta-layer") as HTMLElement;
+
+      /* ═══ Hero IN (replays on scroll-back) ═══ */
+      master.fromTo(heroCard, { opacity: 0, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: d1 * 1.5, ease: "power4.out" }, f(1));
+      master.fromTo(heroIcon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: d1 * 1.2, ease: "back.out(2)" }, f(1));
+      clk(f(1));
+      master.fromTo(heroLogo, { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: d1 * 1.3, ease: "power3.out" }, f(1.3));
+      master.fromTo(heroHeadline, { opacity: 0, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: d1 * 1.2, ease: "power3.out" }, f(1.3));
+      master.fromTo(heroAlpha, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: d1, ease }, f(1.6));
+      master.fromTo(heroBtn, { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: d1, ease: "back.out(2.5)" }, f(1.6));
+      clk(f(2));
 
       /* ═══ Hero → Pain ═══ */
       master.to(heroAlpha, { opacity: 0, duration: d1 * 2, ease: easeOut }, f(3));
@@ -1421,13 +1412,32 @@ export default function PreviewLanding() {
         </div>
       </div>
 
-      {/* ── Loading screen ── */}
+      {/* ── Splash screen ── */}
       <div ref={loaderRef} style={{
         position: "fixed", inset: 0, zIndex: 200, background: "#ff6b5c",
-        display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 16,
+        display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 0,
       }}>
-        <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={80} height={80} priority style={{ filter: "drop-shadow(2px 2px 12px rgba(0,0,0,0.2))" }} />
-        <div className="font-qurova" style={{ fontSize: 32, color: "#8bf2d3", letterSpacing: "0.05em" }}>mentic</div>
+        <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={m ? 80 : 100} height={m ? 80 : 100} priority style={{ filter: "drop-shadow(2px 2px 16px rgba(0,0,0,0.15))", marginBottom: m ? 12 : 16 }} />
+        <div className="font-qurova" style={{ fontSize: m ? 40 : 56, color: "#8bf2d3", letterSpacing: "0.04em", marginBottom: m ? 48 : 64 }}>mentic</div>
+        <button
+          id="splash-btn"
+          onClick={handleBegin}
+          style={{
+            background: "white", border: "none",
+            borderRadius: m ? 50 : 60,
+            padding: m ? "14px 44px" : "16px 56px",
+            fontSize: m ? 18 : 22, fontWeight: 700,
+            color: "#003c46", letterSpacing: "0.5px",
+            fontFamily: "'Nunito Sans', sans-serif",
+            boxShadow: "4px 4px 24px rgba(0,0,0,0.12), inset -1px -1px 12px rgba(0,0,0,0.08)",
+            cursor: "pointer",
+            transition: "transform 200ms cubic-bezier(0.165, 0.84, 0.44, 1)",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.06)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          Begin
+        </button>
       </div>
     </>
   );
