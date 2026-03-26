@@ -544,20 +544,27 @@ export default function PreviewLanding() {
           <div id="bg" style={{ position: "absolute", inset: 0, backgroundColor: "#ffe5e5", zIndex: 0 }} />
 
           {/* ── Persistent teal icon (visible from frame 2 onward) ── */}
-          <Image
+          <button
             id="icon-teal"
-            src="/images/mentic-icon-teal.png"
-            alt="Mentic"
-            width={65}
-            height={65}
+            onClick={() => lenisRef.current?.scrollTo(0, { duration: 1.5 })}
             style={{
               position: "absolute",
               top: Y(53), left: X(61),
               width: W(65), height: "auto",
               zIndex: 10, opacity: 0,
+              background: "none", border: "none", padding: 0,
+              cursor: "pointer",
               filter: "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.25))",
             }}
-          />
+          >
+            <Image
+              src="/images/mentic-icon-teal.png"
+              alt="Mentic"
+              width={65}
+              height={65}
+              style={{ width: "100%", height: "auto" }}
+            />
+          </button>
 
           {/* ── Persistent glass card (visible from frame 2 onward) ── */}
           <div
