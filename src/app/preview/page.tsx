@@ -368,16 +368,16 @@ export default function PreviewLanding() {
       /* Blobs rotate and drift as you scroll through white sections */
       const blobDuration = f(67) - f(27);
       master.to(blobCoral, {
-        rotation: 120,
-        x: "15%", y: "-20%",
-        scale: 1.15,
+        rotation: 180,
+        x: "30vw", y: "15vh",
+        scale: 1.3,
         duration: blobDuration,
         ease: "none",
       }, f(27));
       master.to(blobMint, {
-        rotation: -90,
-        x: "-20%", y: "-25%",
-        scale: 1.1,
+        rotation: -150,
+        x: "-25vw", y: "-20vh",
+        scale: 1.25,
         duration: blobDuration,
         ease: "none",
       }, f(27));
@@ -615,8 +615,8 @@ export default function PreviewLanding() {
             id="blob-coral"
             className="gradient-blob gradient-blob-coral"
             style={{
-              width: W(1219), height: H(1213),
-              left: X(-155), top: Y(627),
+              width: "80vw", height: "80vw",
+              left: "-30%", top: "-20%",
               opacity: 0, zIndex: 1,
             }}
           />
@@ -624,8 +624,9 @@ export default function PreviewLanding() {
             id="blob-mint"
             className="gradient-blob gradient-blob-mint"
             style={{
-              width: W(1076), height: H(1072),
-              left: X(1360), top: Y(1379),
+              width: "70vw", height: "70vw",
+              right: "-20%", bottom: "-25%",
+              left: "auto", top: "auto",
               opacity: 0, zIndex: 1,
             }}
           />
