@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 
 const ORIGINAL_TITLE = "mentic";
-const AWAY_TITLE = "We Miss You...";
+const AWAY_TITLE = "We miss you...🥺🥺";
 
 export default function TabAttention() {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
