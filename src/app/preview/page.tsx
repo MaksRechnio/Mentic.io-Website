@@ -111,7 +111,15 @@ export default function PreviewLanding() {
         tl.fromTo("#success-logo", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
         tl.fromTo("#success-message", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, "-=0.2");
         tl.fromTo("#success-socials", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, "-=0.1");
-        tl.fromTo("#success-done", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.5)" }, "-=0.1");
+        // Auto-close after 10 seconds
+        setTimeout(() => {
+          setFormStatus("idle");
+          setFormData({ firstName: "", lastName: "", email: "", company: "" });
+          gsap.set("#signup-card", { display: "block", opacity: 1, y: 0, scale: 1 });
+          gsap.set("#signup-icon", { display: "block", opacity: 1 });
+          gsap.set("#success-screen", { opacity: 0 });
+          closeSignup();
+        }, 10000);
       });
     } catch (err) {
       console.error("Signup error:", err);
@@ -997,47 +1005,25 @@ export default function PreviewLanding() {
               <div id="success-logo" className="font-qurova" style={{ fontSize: m ? 52 : 72, color: "#8bf2d3", marginBottom: 32, opacity: 0 }}>
                 mentic
               </div>
-              <div id="success-message" style={{ textAlign: "center", maxWidth: m ? "80%" : 420, marginBottom: 36, opacity: 0 }}>
-                <p style={{ margin: "0 0 8px", fontSize: m ? 20 : 26, fontWeight: 700, color: "#003c46" }}>
-                  Thank you for signing up.
+              <div id="success-message" style={{ textAlign: "center", maxWidth: m ? "80%" : 420, marginBottom: 40, opacity: 0 }}>
+                <p style={{ margin: "0 0 10px", fontSize: m ? 20 : 26, color: "#003c46", lineHeight: 1.3 }}>
+                  <span style={{ fontWeight: 300 }}>Thank you for </span><span style={{ fontWeight: 700 }}>signing up.</span>
                 </p>
-                <p style={{ margin: 0, fontSize: m ? 14 : 16, fontWeight: 300, color: "#1e1e1e", lineHeight: 1.6 }}>
-                  We will contact you soon about your alpha access.
+                <p style={{ margin: 0, fontSize: m ? 14 : 16, color: "#1e1e1e", lineHeight: 1.6 }}>
+                  <span style={{ fontWeight: 300 }}>We will </span><span style={{ fontWeight: 600 }}>contact you </span><span style={{ fontWeight: 300 }}>soon about your </span><span style={{ fontWeight: 700, color: "#003c46" }}>alpha access.</span>
                 </p>
               </div>
-              <div id="success-socials" style={{ display: "flex", alignItems: "center", gap: m ? 24 : 32, marginBottom: 40, opacity: 0 }}>
-                <a href="https://www.linkedin.com/company/mentic-io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", color: "#003c46", fontSize: m ? 13 : 15, fontWeight: 600 }}>
-                  <svg width={m ? 22 : 26} height={m ? 22 : 26} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
-                  LinkedIn
+              <div id="success-socials" style={{ display: "flex", alignItems: "center", gap: m ? 28 : 36, opacity: 0 }}>
+                <a href="https://www.linkedin.com/company/mentic-io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", color: "#003c46", transition: "transform 200ms, opacity 200ms" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.15)"; e.currentTarget.style.opacity = "0.7"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}>
+                  <svg width={m ? 30 : 36} height={m ? 30 : 36} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
                 </a>
-                <a href="https://www.instagram.com/mentic.io/" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", color: "#003c46", fontSize: m ? 13 : 15, fontWeight: 600 }}>
-                  <svg width={m ? 22 : 26} height={m ? 22 : 26} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><circle cx="12" cy="12" r="5" /><circle cx="17.5" cy="6.5" r="1.5" fill="#003c46" stroke="none" /></svg>
-                  Instagram
+                <a href="https://www.instagram.com/mentic.io/" target="_blank" rel="noopener noreferrer" style={{ display: "flex", color: "#003c46", transition: "transform 200ms, opacity 200ms" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.15)"; e.currentTarget.style.opacity = "0.7"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}>
+                  <svg width={m ? 30 : 36} height={m ? 30 : 36} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><circle cx="12" cy="12" r="5" /><circle cx="17.5" cy="6.5" r="1.5" fill="#003c46" stroke="none" /></svg>
                 </a>
-                <a href="https://x.com/Mentic_io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", color: "#003c46", fontSize: m ? 13 : 15, fontWeight: 600 }}>
-                  <svg width={m ? 20 : 24} height={m ? 20 : 24} viewBox="0 0 24 24" fill="#003c46"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
-                  X
+                <a href="https://x.com/Mentic_io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", color: "#003c46", transition: "transform 200ms, opacity 200ms" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.15)"; e.currentTarget.style.opacity = "0.7"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}>
+                  <svg width={m ? 28 : 34} height={m ? 28 : 34} viewBox="0 0 24 24" fill="#003c46"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
                 </a>
               </div>
-              <button id="success-done" type="button" onClick={() => {
-                setFormStatus("idle");
-                setFormData({ firstName: "", lastName: "", email: "", company: "" });
-                gsap.set("#signup-card", { display: "block", opacity: 1, y: 0, scale: 1 });
-                gsap.set("#signup-icon", { display: "block", opacity: 1 });
-                gsap.set("#success-screen", { opacity: 0 });
-                closeSignup();
-              }} style={{
-                background: "#003c46", border: "none", borderRadius: 12,
-                padding: m ? "12px 28px" : "14px 36px",
-                color: "#8bf2d3", fontSize: m ? 14 : 16, fontWeight: 700,
-                cursor: "pointer", opacity: 0,
-                transition: "transform 200ms, opacity 200ms",
-              }}
-                onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.05)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
-              >
-                Done
-              </button>
             </div>
           </div>
 
