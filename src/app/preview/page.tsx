@@ -464,7 +464,7 @@ export default function PreviewLanding() {
 
   return (
     <>
-      <div ref={wrapperRef} style={{ height: `${TOTAL_FRAMES * 35}vh`, position: "relative" }}>
+      <div ref={wrapperRef} style={{ height: `${TOTAL_FRAMES * 20}vh`, position: "relative" }}>
         <div
           ref={viewportRef}
           style={{
