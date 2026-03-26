@@ -62,7 +62,7 @@ export default function PreviewLanding() {
   /* ── Lenis smooth scroll (like itsoffbrand.com) ── */
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 2.0,
+      duration: 2.2,
       easing: (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
@@ -464,7 +464,7 @@ export default function PreviewLanding() {
 
   return (
     <>
-      <div ref={wrapperRef} style={{ height: `${TOTAL_FRAMES * 27}vh`, position: "relative" }}>
+      <div ref={wrapperRef} style={{ height: `${TOTAL_FRAMES * 25}vh`, position: "relative" }}>
         <div
           ref={viewportRef}
           style={{
