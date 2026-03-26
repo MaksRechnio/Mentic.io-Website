@@ -83,9 +83,7 @@ export default function TabAttention() {
     const handleVisibilityChange = () => {
       if (document.hidden) {
         startAnimation();
-        timeoutRef.current = setTimeout(() => {
-          document.title = AWAY_TITLE;
-        }, 3000);
+        document.title = AWAY_TITLE;
       } else {
         document.title = ORIGINAL_TITLE;
         stopAnimation();
