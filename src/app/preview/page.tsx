@@ -60,21 +60,29 @@ export default function PreviewLanding() {
 
     const tl = gsap.timeline({
       onComplete: () => {
+        // Hide signup layer fully
+        gsap.set(signup, { opacity: 0, pointerEvents: "none" });
+
+        // Resume scroll
         lenisRef.current?.start();
-        ScrollTrigger.refresh();
+
+        // Force ScrollTrigger to re-render all tweens at current scroll position
+        // by nudging scroll 1px and back
+        const currentScroll = window.scrollY;
+        window.scrollTo(0, currentScroll + 1);
+        requestAnimationFrame(() => {
+          window.scrollTo(0, currentScroll);
+          ScrollTrigger.refresh();
+        });
       },
     });
 
-    // Fade out signup
+    // Fade out signup elements
     tl.to(signup.querySelectorAll("#signup-form > *"), { opacity: 0, y: -10, duration: 0.2, ease: "power2.in", stagger: 0.03 });
     tl.to(signup.querySelector("#signup-card"), { opacity: 0, x: 40, duration: 0.3, ease: "power2.in" }, "<0.1");
     tl.to(signup.querySelector("#signup-icon"), { opacity: 0, scale: 0.5, duration: 0.3, ease: "power2.in" }, "<");
     tl.to(signup.querySelector("#signup-glass"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
     tl.to(signup.querySelectorAll("#signup-blobs > div"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
-    tl.set(signup, { opacity: 0, pointerEvents: "none" });
-
-    // Restore scroll layers — refresh ScrollTrigger to restore correct state
-    tl.call(() => ScrollTrigger.refresh());
   }, []);
 
   /* ── Loading screen + hero entrance (time-based, on page load) ── */
@@ -1254,20 +1262,20 @@ export default function PreviewLanding() {
               style={{
                 position: "absolute",
                 top: Y(265), left: X(1025),
-                width: W(361), height: H(488),
+                width: W(361),
                 background: "#ff6b5c",
                 borderRadius: "17.872px",
                 boxShadow: "3px 3px 10.3px rgba(0,0,0,0.25)",
-                padding: `${H(27)} ${W(33)}`,
+                padding: "32px 34px",
                 boxSizing: "border-box",
               }}
             >
               {/* Title */}
-              <div style={{ marginBottom: H(40) }}>
-                <div style={{ fontSize: FS(39.22), fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ fontSize: 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>
                   Sign
                 </div>
-                <div style={{ fontSize: FS(58.83), fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>
+                <div style={{ fontSize: 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>
                   UP
                 </div>
               </div>
@@ -1278,15 +1286,15 @@ export default function PreviewLanding() {
                 onSubmit={(e) => { e.preventDefault(); closeSignup(); }}
               >
                 {/* Name + Surname */}
-                <div style={{ display: "flex", gap: W(20), marginBottom: H(16) }}>
-                  <div style={{ width: W(137) }}>
-                    <label style={{ display: "block", fontSize: FS(14), fontWeight: 600, color: "white", marginBottom: H(6) }}>
+                <div style={{ display: "flex", gap: 20, marginBottom: 16 }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
                       Name:
                     </label>
                     <input className="modal-input" placeholder="John" />
                   </div>
-                  <div style={{ width: W(137) }}>
-                    <label style={{ display: "block", fontSize: FS(14), fontWeight: 600, color: "white", marginBottom: H(6) }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
                       Surname:
                     </label>
                     <input className="modal-input" placeholder="Doe" />
@@ -1294,19 +1302,19 @@ export default function PreviewLanding() {
                 </div>
 
                 {/* Email */}
-                <div style={{ marginBottom: H(16) }}>
-                  <label style={{ display: "block", fontSize: FS(14), fontWeight: 600, color: "white", marginBottom: H(6) }}>
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
                     Email:
                   </label>
-                  <input className="modal-input" type="email" placeholder="example@company.com" style={{ width: W(294) }} />
+                  <input className="modal-input" type="email" placeholder="example@company.com" style={{ width: "100%" }} />
                 </div>
 
                 {/* Company */}
-                <div style={{ marginBottom: H(24) }}>
-                  <label style={{ display: "block", fontSize: FS(14), fontWeight: 600, color: "white", marginBottom: H(6) }}>
+                <div style={{ marginBottom: 24 }}>
+                  <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
                     Company:
                   </label>
-                  <input className="modal-input" placeholder="Example Inc." style={{ width: W(294) }} />
+                  <input className="modal-input" placeholder="Example Inc." style={{ width: "100%" }} />
                 </div>
 
                 {/* Submit */}
@@ -1316,24 +1324,34 @@ export default function PreviewLanding() {
               </form>
             </div>
 
-            {/* Back button */}
+            {/* Back button — teal icon position, styled arrow */}
             <button
               onClick={closeSignup}
               style={{
                 position: "absolute",
                 top: Y(53), left: X(61),
                 width: W(65), height: H(65),
-                background: "none", border: "none",
+                background: "rgba(255,255,255,0.15)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                border: "1px solid rgba(255,255,255,0.2)",
+                borderRadius: "50%",
                 cursor: "pointer", zIndex: 25,
-                fontSize: FS(30), color: "#003c46",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                opacity: 0.6,
-                transition: "opacity 200ms",
+                transition: "background 200ms, transform 200ms",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
-              onMouseLeave={(e) => (e.currentTarget.style.opacity = "0.6")}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.3)";
+                e.currentTarget.style.transform = "scale(1.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgba(255,255,255,0.15)";
+                e.currentTarget.style.transform = "scale(1)";
+              }}
             >
-              ←
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
             </button>
           </div>
 
