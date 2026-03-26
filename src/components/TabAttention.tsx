@@ -35,15 +35,19 @@ export default function TabAttention() {
       return link;
     };
 
-    let angle = 0;
-    const SPEED = 0.05;
+    const SPEED = 4.5; // radians per second — fast, full spin in ~1.4s
+    let startTime = 0;
 
     const drawFavicon = () => {
       if (!imageReady) return;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      angle = (angle + SPEED) % (Math.PI * 2);
+      // Time-based rotation — stays smooth even when browsers throttle to 1fps
+      const now = Date.now();
+      const elapsed = (now - startTime) / 1000;
+      const angle = (elapsed * SPEED) % (Math.PI * 2);
+
       ctx.clearRect(0, 0, 32, 32);
       ctx.save();
       ctx.translate(16, 16);
@@ -58,9 +62,9 @@ export default function TabAttention() {
     };
 
     const startAnimation = () => {
-      angle = 0;
-      // setInterval runs in background tabs (throttled to ~1s by browsers, but still works)
-      intervalRef.current = setInterval(drawFavicon, 50);
+      startTime = Date.now();
+      // 16ms for 60fps when tab is active, browsers auto-throttle to ~1s in background
+      intervalRef.current = setInterval(drawFavicon, 16);
     };
 
     const stopAnimation = () => {
