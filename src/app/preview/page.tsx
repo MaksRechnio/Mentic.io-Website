@@ -364,6 +364,24 @@ export default function PreviewLanding() {
       master.to(bg, { backgroundColor: "#ffffff", duration: d1 * 3.5, ease }, f(23));
       master.fromTo(blobCoral, { opacity: 0 }, { opacity: 1, duration: d1 * 3, ease }, f(24));
       master.fromTo(blobMint, { opacity: 0 }, { opacity: 1, duration: d1 * 3, ease }, f(24));
+
+      /* Blobs rotate and drift as you scroll through white sections */
+      const blobDuration = f(67) - f(27);
+      master.to(blobCoral, {
+        rotation: 120,
+        x: "15%", y: "-20%",
+        scale: 1.15,
+        duration: blobDuration,
+        ease: "none",
+      }, f(27));
+      master.to(blobMint, {
+        rotation: -90,
+        x: "-20%", y: "-25%",
+        scale: 1.1,
+        duration: blobDuration,
+        ease: "none",
+      }, f(27));
+
       master.to(solLayer, { opacity: 1, duration: d1 * 2, ease }, f(25));
       master.to(iconTeal, { opacity: 1, duration: d1 * 2, ease }, f(25.5));
 
