@@ -241,7 +241,16 @@ export default function PreviewLanding() {
       const master = gsap.timeline({
         scrollTrigger: {
           trigger: wrapperRef.current, start: "top top", end: "bottom bottom", scrub: 1,
-          snap: { snapTo: sectionStops, duration: { min: 0.2, max: 0.6 }, delay: 0.08, ease: "power1.inOut", directional: true },
+          snap: {
+            snapTo: sectionStops,
+            duration: { min: 0.2, max: 0.6 },
+            delay: 0.08,
+            ease: "power1.inOut",
+            directional: true,
+            onComplete: () => {
+              if (audioRef.current && audioRef.current.ctx.state === "running") playClick();
+            },
+          },
         },
       });
 
@@ -567,21 +576,102 @@ export default function PreviewLanding() {
       startAudio();
     }
 
-    document.addEventListener("wheel", onInteraction, { passive: true });
+    function onWheel() {
+      onInteraction();
+      onScrollActivity();
+      // Trigger swoosh on wheel
+      if (audioRef.current && audioRef.current.ctx.currentTime >= audioRef.current.fadeUntil) {
+        playSwoosh();
+      }
+    }
+
+    document.addEventListener("wheel", onWheel, { passive: true });
     document.addEventListener("pointerdown", onInteraction);
     document.addEventListener("touchstart", onInteraction, { passive: true });
-    document.addEventListener("wheel", onScrollActivity, { passive: true });
     window.addEventListener("scroll", onScrollActivity, { passive: true });
 
     return () => {
-      document.removeEventListener("wheel", onInteraction);
+      document.removeEventListener("wheel", onWheel);
       document.removeEventListener("pointerdown", onInteraction);
       document.removeEventListener("touchstart", onInteraction);
-      document.removeEventListener("wheel", onScrollActivity);
       window.removeEventListener("scroll", onScrollActivity);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
       // DON'T close audio on cleanup — survives HMR/strict mode
     };
+  }, []);
+
+  /* ── SFX: mechanical click + gentle swoosh ── */
+  const lastSwooshRef = useRef(0);
+  const lastSnapRef = useRef(-1);
+
+  const playClick = useCallback(() => {
+    const a = audioRef.current;
+    if (!a || a.ctx.state !== "running") return;
+    const ctx = a.ctx;
+    const t = ctx.currentTime;
+
+    // Short metallic click: noise burst + high-freq ring
+    const clickGain = ctx.createGain();
+    clickGain.gain.setValueAtTime(0.08, t);
+    clickGain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+    clickGain.connect(ctx.destination);
+
+    // Noise burst (the "click" part)
+    const buf = ctx.createBuffer(1, ctx.sampleRate * 0.05, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d.length * 0.15));
+    const noiseSrc = ctx.createBufferSource();
+    noiseSrc.buffer = buf;
+    const hp = ctx.createBiquadFilter();
+    hp.type = "highpass";
+    hp.frequency.value = 2000;
+    hp.Q.value = 1;
+    noiseSrc.connect(hp).connect(clickGain);
+    noiseSrc.start(t);
+    noiseSrc.stop(t + 0.05);
+
+    // Metallic ring (short sine ping)
+    const ring = ctx.createOscillator();
+    ring.type = "sine";
+    ring.frequency.value = 3200 + Math.random() * 800;
+    const ringGain = ctx.createGain();
+    ringGain.gain.setValueAtTime(0.04, t);
+    ringGain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+    ring.connect(ringGain).connect(ctx.destination);
+    ring.start(t);
+    ring.stop(t + 0.08);
+  }, []);
+
+  const playSwoosh = useCallback(() => {
+    const a = audioRef.current;
+    if (!a || a.ctx.state !== "running") return;
+    const now = performance.now();
+    if (now - lastSwooshRef.current < 300) return; // Debounce: max ~3/sec
+    lastSwooshRef.current = now;
+
+    const ctx = a.ctx;
+    const t = ctx.currentTime;
+
+    // Gentle swoosh: filtered noise with swept bandpass
+    const dur = 0.15;
+    const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) {
+      const env = Math.sin((i / d.length) * Math.PI); // bell curve envelope
+      d[i] = (Math.random() * 2 - 1) * env;
+    }
+    const src = ctx.createBufferSource();
+    src.buffer = buf;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.setValueAtTime(600, t);
+    bp.frequency.linearRampToValueAtTime(1200, t + dur);
+    bp.Q.value = 0.5;
+    const sg = ctx.createGain();
+    sg.gain.value = 0.025;
+    src.connect(bp).connect(sg).connect(ctx.destination);
+    src.start(t);
+    src.stop(t + dur);
   }, []);
 
   /* ── Custom cursor ── */
