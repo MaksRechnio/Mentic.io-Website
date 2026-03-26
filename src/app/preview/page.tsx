@@ -240,6 +240,7 @@ export default function PreviewLanding() {
 
         // Play hero entrance after splash is gone
         if (!vp) return;
+        const heroLayer = vp.querySelector("#hero-layer") as HTMLElement;
         const heroCard = vp.querySelector("#hero-card") as HTMLElement;
         const heroIcon = vp.querySelector("#hero-icon") as HTMLElement;
         const heroAlpha = vp.querySelector("#hero-alpha") as HTMLElement;
@@ -247,6 +248,8 @@ export default function PreviewLanding() {
         const heroHeadline = vp.querySelector("#hero-headline") as HTMLElement;
         const heroBtn = vp.querySelector("#hero-btn") as HTMLElement;
 
+        // Hero layer is hidden in JSX (opacity:0). Set up initial states then animate.
+        gsap.set(heroLayer, { opacity: 1 });
         gsap.set([heroCard, heroIcon, heroAlpha, heroLogo, heroHeadline, heroBtn], { opacity: 0 });
         gsap.set(heroCard, { clipPath: "inset(100% 0 0 0)" });
         gsap.set(heroLogo, { clipPath: "inset(0 100% 0 0)" });
@@ -876,18 +879,43 @@ export default function PreviewLanding() {
           <button
             id="icon-teal"
             onClick={() => {
-              window.scrollTo(0, 0);
-              lenisRef.current?.scrollTo(0, { immediate: true });
-              // Ensure hero elements are visible at scroll=0
               const vp = viewportRef.current;
-              if (vp) {
-                const els = ["#hero-card", "#hero-icon", "#hero-alpha", "#hero-headline", "#hero-logo", "#hero-btn", "#hero-layer"];
-                els.forEach(sel => {
-                  const el = vp.querySelector(sel) as HTMLElement;
-                  if (el) { gsap.set(el, { opacity: 1, clearProps: "clipPath,scale,rotation,x,y" }); }
-                });
-                gsap.set(vp.querySelector("#hero-layer"), { pointerEvents: "auto" });
-              }
+              if (!vp) return;
+
+              // 1. Stop Lenis so it doesn't animate the scroll
+              lenisRef.current?.stop();
+
+              // 2. Hide entire viewport instantly (no visible scroll)
+              gsap.set(vp, { opacity: 0 });
+
+              // 3. Teleport to top — no scroll events since viewport is hidden
+              window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+
+              // 4. Reset all layers to initial state (hero visible, others hidden)
+              const allLayers = ["#pain-layer", "#calc-layer", "#sol-layer", "#no-layer", "#how-layer", "#val-layer", "#cta-layer"];
+              allLayers.forEach(sel => {
+                const el = vp.querySelector(sel) as HTMLElement;
+                if (el) gsap.set(el, { opacity: 0, pointerEvents: "none" });
+              });
+              gsap.set(vp.querySelector("#glass-card"), { opacity: 0 });
+              gsap.set(vp.querySelector("#icon-teal"), { opacity: 0 });
+              gsap.set(vp.querySelector("#bg"), { backgroundColor: "#ffe5e5" });
+
+              // Reset hero to visible
+              const heroEls = ["#hero-card", "#hero-icon", "#hero-alpha", "#hero-headline", "#hero-logo", "#hero-btn"];
+              heroEls.forEach(sel => {
+                const el = vp.querySelector(sel) as HTMLElement;
+                if (el) gsap.set(el, { opacity: 1, clearProps: "clipPath,scale,rotation,x,y,pointerEvents" });
+              });
+              gsap.set(vp.querySelector("#hero-layer"), { opacity: 1, pointerEvents: "auto" });
+              gsap.set(vp.querySelector("#hero-card"), { backgroundColor: "#ff6b5c", clipPath: "none", boxShadow: "0 6px 32px rgba(0,0,0,0.08)", backdropFilter: "none" });
+
+              // 5. Show viewport + restart Lenis after a frame
+              requestAnimationFrame(() => {
+                gsap.set(vp, { opacity: 1 });
+                ScrollTrigger.refresh();
+                lenisRef.current?.start();
+              });
             }}
             style={{
               position: "absolute",
@@ -936,7 +964,7 @@ export default function PreviewLanding() {
           <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ width: m ? "90vw" : "70vw", height: m ? "90vw" : "70vw", right: "-20%", bottom: "-25%", left: "auto", top: "auto", opacity: 0, zIndex: 1 }} />
 
           {/* ═══ HERO LAYER ═══ */}
-          <div id="hero-layer" style={{ position: "absolute", inset: 0, zIndex: 5, pointerEvents: "auto" }}>
+          <div id="hero-layer" style={{ position: "absolute", inset: 0, zIndex: 5, pointerEvents: "auto", opacity: 0 }}>
             <div id="hero-card" style={{
               position: "absolute",
               top: m ? MY(15) : Y(24), left: m ? MX(16) : X(26),
