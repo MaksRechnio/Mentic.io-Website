@@ -527,8 +527,11 @@ export default function PreviewLanding() {
     const SCROLL_VOL = 0.25;
 
     async function startAudio() {
+      // If audio already set up, just make sure it's resumed
       if (audioRef.current) {
-        if (audioRef.current.ctx.state === "suspended") audioRef.current.ctx.resume();
+        if (audioRef.current.ctx.state === "suspended") {
+          try { await audioRef.current.ctx.resume(); } catch (_) { /* ignore */ }
+        }
         return;
       }
       if (audioStartedRef.current) return;
@@ -537,7 +540,14 @@ export default function PreviewLanding() {
       try {
         const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
         const ctx = new AC();
-        await ctx.resume();
+
+        // Try to resume — if browser blocks it (no gesture yet), bail and retry later
+        try { await ctx.resume(); } catch (_) { /* ignore */ }
+        if (ctx.state === "suspended") {
+          // Browser blocked autoplay — reset flag so interaction listeners can retry
+          audioStartedRef.current = false;
+          return;
+        }
 
         const master = ctx.createGain();
         master.gain.value = 0;
@@ -634,13 +644,7 @@ export default function PreviewLanding() {
     }
 
     function onInteraction() {
-      startAudio().then(() => {
-        // Once audio is running, remove one-time trigger listeners
-        if (audioRef.current && audioRef.current.ctx.state === "running") {
-          document.removeEventListener("mousemove", onInteraction);
-          document.removeEventListener("keydown", onInteraction);
-        }
-      });
+      startAudio();
     }
 
     function onWheel() {
