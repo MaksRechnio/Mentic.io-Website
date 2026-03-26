@@ -14,9 +14,16 @@ export default function TabAttention() {
     canvas.width = 32;
     canvas.height = 32;
 
-    const originalFavicon = "/favicon.png";
+    // Grab the actual favicon URL that Next.js generated (could be hashed path)
+    const existingLink = document.querySelector<HTMLLinkElement>("link[rel='icon']");
+    const originalHref = existingLink?.href || "/favicon.png";
+
     const faviconImg = new Image();
-    faviconImg.src = originalFavicon;
+    faviconImg.crossOrigin = "anonymous";
+
+    let imageReady = false;
+    faviconImg.onload = () => { imageReady = true; };
+    faviconImg.src = originalHref;
 
     const getLinkEl = () => {
       let link = document.querySelector<HTMLLinkElement>("link[rel='icon']");
@@ -29,11 +36,12 @@ export default function TabAttention() {
     };
 
     let angle = 0;
-    const SPEED = 0.05; // radians per frame (~30fps → ~1.5 rad/s)
+    const SPEED = 0.05;
 
     const drawFavicon = () => {
+      if (!imageReady) return;
       const ctx = canvas.getContext("2d");
-      if (!ctx || !faviconImg.complete) return;
+      if (!ctx) return;
 
       angle = (angle + SPEED) % (Math.PI * 2);
       ctx.clearRect(0, 0, 32, 32);
@@ -44,13 +52,15 @@ export default function TabAttention() {
       ctx.drawImage(faviconImg, 0, 0, 32, 32);
       ctx.restore();
 
-      getLinkEl().href = canvas.toDataURL("image/png");
+      try {
+        getLinkEl().href = canvas.toDataURL("image/png");
+      } catch (e) { /* CORS or security error — silent */ }
     };
 
     const startAnimation = () => {
       angle = 0;
-      // Use setInterval instead of rAF — setInterval runs even when tab is hidden
-      intervalRef.current = setInterval(drawFavicon, 33); // ~30fps
+      // setInterval runs in background tabs (throttled to ~1s by browsers, but still works)
+      intervalRef.current = setInterval(drawFavicon, 50);
     };
 
     const stopAnimation = () => {
@@ -62,13 +72,13 @@ export default function TabAttention() {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;
       }
-      getLinkEl().href = originalFavicon;
+      // Restore original favicon
+      getLinkEl().href = originalHref;
     };
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
         startAnimation();
-        // Wait 3 seconds before changing title
         timeoutRef.current = setTimeout(() => {
           document.title = AWAY_TITLE;
         }, 3000);
@@ -78,9 +88,7 @@ export default function TabAttention() {
       }
     };
 
-    // Set initial title
     document.title = ORIGINAL_TITLE;
-
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
