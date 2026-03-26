@@ -365,19 +365,19 @@ export default function PreviewLanding() {
       master.fromTo(blobCoral, { opacity: 0 }, { opacity: 1, duration: d1 * 3, ease }, f(24));
       master.fromTo(blobMint, { opacity: 0 }, { opacity: 1, duration: d1 * 3, ease }, f(24));
 
-      /* Blobs rotate and drift dynamically as you scroll through white sections */
+      /* Blobs rotate subtly in place — staying in their corners */
       const blobDuration = f(67) - f(27);
       master.to(blobCoral, {
-        rotation: 240,
-        x: "45vw", y: "30vh",
-        scale: 1.5,
+        rotation: 60,
+        x: "5vw", y: "5vh",
+        scale: 1.1,
         duration: blobDuration,
         ease: "none",
       }, f(27));
       master.to(blobMint, {
-        rotation: -200,
-        x: "-35vw", y: "-35vh",
-        scale: 1.4,
+        rotation: -45,
+        x: "-5vw", y: "-5vh",
+        scale: 1.1,
         duration: blobDuration,
         ease: "none",
       }, f(27));
