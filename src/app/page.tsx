@@ -973,8 +973,8 @@ export default function PreviewLanding() {
       <div ref={wrapperRef} style={{ height: `${TOTAL_FRAMES * 23}vh`, position: "relative" }}>
         <div ref={viewportRef} style={{ position: "sticky", top: 0, width: "100vw", height: "100dvh", overflow: "hidden" }}>
 
-          {/* ── Background ── */}
-          <div id="bg" style={{ position: "absolute", inset: 0, backgroundColor: "#ffe5e5", zIndex: 0 }} />
+          {/* ── Background — fixed so it covers behind iOS browser chrome ── */}
+          <div id="bg" style={{ position: "fixed", inset: "-5vh -5vw", backgroundColor: "#ffe5e5", zIndex: 0 }} />
 
           {/* ── Persistent teal icon ── */}
           <button
