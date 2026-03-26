@@ -193,15 +193,25 @@ export default function PreviewLanding() {
     tl.fromTo(blob2, { opacity: 0, scale: 0.5 }, { opacity: 0.3, scale: 1, duration: 1.5, ease: "power2.out" }, "<0.2");
     tl.fromTo(icon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "back.out(2.5)" }, 0.3);
     tl.fromTo(logo, { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power3.out" }, "-=0.3");
-    tl.fromTo(tagline, { opacity: 0, y: 15 }, { opacity: 0.6, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.2");
-    tl.fromTo(btn, { opacity: 0, scale: 0.5, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(3)" }, "-=0.15");
+    tl.fromTo(tagline, { opacity: 0, letterSpacing: "0.5em", y: 10 }, { opacity: 0.7, letterSpacing: "0.2em", y: 0, duration: 0.8, ease: "power2.out" }, "-=0.2");
+    tl.fromTo(btn, { opacity: 0, scale: 0.5, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(3)" }, "-=0.3");
 
     // Gentle continuous blob drift
     gsap.to(blob1, { rotation: 360, duration: 40, repeat: -1, ease: "none" });
     gsap.to(blob2, { rotation: -360, duration: 50, repeat: -1, ease: "none" });
 
-    // Subtle button pulse
-    gsap.to(btn, { scale: 1.03, duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.5 });
+    // Subtle icon float
+    gsap.to(icon, { y: -8, duration: 2.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.2 });
+
+    // Tagline gentle opacity pulse
+    gsap.to(tagline, { opacity: 0.5, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2 });
+
+    // Button border glow pulse
+    gsap.to(btn, {
+      boxShadow: "0 0 20px 2px rgba(139,242,211,0.15), inset 0 0 20px rgba(255,255,255,0.04)",
+      borderColor: "rgba(255,255,255,0.5)",
+      duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.5,
+    });
 
     return () => { tl.kill(); };
   }, []);
@@ -217,6 +227,7 @@ export default function PreviewLanding() {
 
     // Cinematic exit
     const loader = loaderRef.current;
+    const vp = viewportRef.current;
     if (!loader) return;
     const btn = loader.querySelector("#splash-btn");
     const icon = loader.querySelector("#splash-icon");
@@ -226,6 +237,30 @@ export default function PreviewLanding() {
     const tl = gsap.timeline({
       onComplete: () => {
         gsap.set(loader, { display: "none" });
+
+        // Play hero entrance after splash is gone
+        if (!vp) return;
+        const heroCard = vp.querySelector("#hero-card") as HTMLElement;
+        const heroIcon = vp.querySelector("#hero-icon") as HTMLElement;
+        const heroAlpha = vp.querySelector("#hero-alpha") as HTMLElement;
+        const heroLogo = vp.querySelector("#hero-logo") as HTMLElement;
+        const heroHeadline = vp.querySelector("#hero-headline") as HTMLElement;
+        const heroBtn = vp.querySelector("#hero-btn") as HTMLElement;
+
+        gsap.set([heroCard, heroIcon, heroAlpha, heroLogo, heroHeadline, heroBtn], { opacity: 0 });
+        gsap.set(heroCard, { clipPath: "inset(100% 0 0 0)" });
+        gsap.set(heroLogo, { clipPath: "inset(0 100% 0 0)" });
+        gsap.set(heroHeadline, { clipPath: "inset(0 0 100% 0)" });
+
+        const hero = gsap.timeline();
+        hero.to(heroCard, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power4.out" });
+        hero.fromTo(heroIcon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, "-=0.5");
+        hero.to(heroLogo, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power3.out" }, "-=0.4");
+        hero.to(heroHeadline, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "power3.out" }, "-=0.5");
+        hero.fromTo(heroAlpha, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
+        hero.fromTo(heroBtn, { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.5)" }, "-=0.2");
+        hero.call(() => sfxClick(), [], 0.4);
+        hero.call(() => sfxClick(), [], 0.7);
       },
     });
 
@@ -344,16 +379,6 @@ export default function PreviewLanding() {
       const howLayer = vp.querySelector("#how-layer") as HTMLElement;
       const valLayer = vp.querySelector("#val-layer") as HTMLElement;
       const ctaLayer = vp.querySelector("#cta-layer") as HTMLElement;
-
-      /* ═══ Hero IN (replays on scroll-back) ═══ */
-      master.fromTo(heroCard, { opacity: 0, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: d1 * 1.5, ease: "power4.out" }, f(1));
-      master.fromTo(heroIcon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: d1 * 1.2, ease: "back.out(2)" }, f(1));
-      clk(f(1));
-      master.fromTo(heroLogo, { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: d1 * 1.3, ease: "power3.out" }, f(1.3));
-      master.fromTo(heroHeadline, { opacity: 0, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: d1 * 1.2, ease: "power3.out" }, f(1.3));
-      master.fromTo(heroAlpha, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: d1, ease }, f(1.6));
-      master.fromTo(heroBtn, { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: d1, ease: "back.out(2.5)" }, f(1.6));
-      clk(f(2));
 
       /* ═══ Hero → Pain ═══ */
       master.to(heroAlpha, { opacity: 0, duration: d1 * 2, ease: easeOut }, f(3));
@@ -1488,42 +1513,58 @@ export default function PreviewLanding() {
           background: "radial-gradient(ellipse at center, rgba(0,60,70,0.2) 0%, rgba(0,60,70,0.08) 40%, transparent 70%)",
         }} />
 
-        <div id="splash-icon" style={{ marginBottom: m ? 12 : 16, opacity: 0 }}>
-          <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={m ? 90 : 110} height={m ? 90 : 110} priority style={{ filter: "drop-shadow(2px 2px 20px rgba(0,0,0,0.18))" }} />
+        <div id="splash-icon" style={{ marginBottom: m ? 16 : 24, opacity: 0 }}>
+          <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={m ? 120 : 160} height={m ? 120 : 160} priority style={{ filter: "drop-shadow(3px 3px 24px rgba(0,0,0,0.2))" }} />
         </div>
         <div id="splash-logo" className="font-qurova" style={{
-          fontSize: m ? 48 : 64, color: "#8bf2d3", letterSpacing: "0.04em",
-          marginBottom: m ? 10 : 14, opacity: 0,
-          filter: "drop-shadow(1px 1px 8px rgba(0,0,0,0.1))",
+          fontSize: m ? 60 : 88, color: "#8bf2d3", letterSpacing: "0.04em",
+          marginBottom: m ? 12 : 16, opacity: 0,
+          filter: "drop-shadow(2px 2px 12px rgba(0,0,0,0.12))",
         }}>mentic</div>
         <div id="splash-tagline" style={{
-          fontSize: m ? 13 : 15, fontWeight: 300, color: "#faf9f6",
-          letterSpacing: "0.08em", textTransform: "uppercase" as const,
-          marginBottom: m ? 48 : 64, opacity: 0,
+          fontSize: m ? 12 : 14, fontWeight: 400, color: "#faf9f6",
+          letterSpacing: "0.2em", textTransform: "uppercase" as const,
+          marginBottom: m ? 52 : 72, opacity: 0,
         }}>The Autonomous Advertising Agent</div>
         <button
           id="splash-btn"
           onClick={handleBegin}
           style={{
-            position: "relative", background: "none", border: "2px solid rgba(255,255,255,0.5)",
+            position: "relative", background: "rgba(255,255,255,0.06)",
+            border: "1.5px solid rgba(255,255,255,0.35)",
             borderRadius: m ? 50 : 60,
-            padding: m ? "14px 52px" : "16px 64px",
-            fontSize: m ? 16 : 18, fontWeight: 600,
-            color: "#faf9f6", letterSpacing: "2px", textTransform: "uppercase" as const,
+            padding: m ? "14px 52px" : "18px 72px",
+            fontSize: m ? 14 : 16, fontWeight: 600,
+            color: "rgba(255,255,255,0.85)", letterSpacing: "3px", textTransform: "uppercase" as const,
             fontFamily: "'Nunito Sans', sans-serif",
             cursor: "pointer", opacity: 0,
-            backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-            transition: "border-color 300ms, color 300ms, background 300ms",
+            backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+            boxShadow: "0 0 0 0 rgba(139,242,211,0), inset 0 0 20px rgba(255,255,255,0.04)",
+            transition: "all 400ms cubic-bezier(0.165, 0.84, 0.44, 1)",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.9)";
-            e.currentTarget.style.background = "rgba(255,255,255,0.12)";
-            e.currentTarget.style.color = "#ffffff";
+            const el = e.currentTarget;
+            el.style.borderColor = "rgba(139,242,211,0.6)";
+            el.style.background = "rgba(139,242,211,0.1)";
+            el.style.color = "#8bf2d3";
+            el.style.boxShadow = "0 0 32px 4px rgba(139,242,211,0.2), inset 0 0 24px rgba(139,242,211,0.06)";
+            el.style.transform = "scale(1.06)";
+            el.style.letterSpacing = "4px";
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = "rgba(255,255,255,0.5)";
-            e.currentTarget.style.background = "none";
-            e.currentTarget.style.color = "#faf9f6";
+            const el = e.currentTarget;
+            el.style.borderColor = "rgba(255,255,255,0.35)";
+            el.style.background = "rgba(255,255,255,0.06)";
+            el.style.color = "rgba(255,255,255,0.85)";
+            el.style.boxShadow = "0 0 0 0 rgba(139,242,211,0), inset 0 0 20px rgba(255,255,255,0.04)";
+            el.style.transform = "scale(1)";
+            el.style.letterSpacing = "3px";
+          }}
+          onPointerDown={(e) => {
+            e.currentTarget.style.transform = "scale(0.95)";
+          }}
+          onPointerUp={(e) => {
+            e.currentTarget.style.transform = "scale(1.06)";
           }}
         >
           Begin
