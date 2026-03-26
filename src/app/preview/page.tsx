@@ -451,11 +451,11 @@ export default function PreviewLanding() {
 
   /* ── Audio engine: ambient + SFX ── */
   const audioRef = useRef<{ ctx: AudioContext; gain: GainNode; fadeUntil: number } | null>(null);
+  const audioCtxRef = useRef<AudioContext | null>(null);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const audioStartedRef = useRef(false);
   const lastSwooshRef = useRef(0);
 
-  // SFX functions — defined as plain functions using refs, no closure issues
+  // SFX functions — plain functions using refs, no closure issues
   function sfxClick() {
     try {
       const a = audioRef.current;
@@ -526,106 +526,108 @@ export default function PreviewLanding() {
     const BASE_VOL = 0.12;
     const SCROLL_VOL = 0.25;
 
-    async function startAudio() {
-      // If audio already set up, just make sure it's resumed
-      if (audioRef.current) {
-        if (audioRef.current.ctx.state === "suspended") {
-          try { await audioRef.current.ctx.resume(); } catch (_) { /* ignore */ }
-        }
-        return;
-      }
-      if (audioStartedRef.current) return;
-      audioStartedRef.current = true;
-
-      try {
+    // Create AudioContext once, reuse across all resume attempts
+    function getOrCreateCtx(): AudioContext {
+      if (!audioCtxRef.current) {
         const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-        const ctx = new AC();
+        audioCtxRef.current = new AC();
+      }
+      return audioCtxRef.current;
+    }
 
-        // Try to resume — if browser blocks it (no gesture yet), bail and retry later
-        try { await ctx.resume(); } catch (_) { /* ignore */ }
+    function initOscillators(ctx: AudioContext) {
+      // Already initialized
+      if (audioRef.current) return;
+
+      const master = ctx.createGain();
+      master.gain.value = 0;
+      master.connect(ctx.destination);
+
+      // Drone: 174Hz + 174.5Hz
+      [174, 174.5].forEach((freq) => {
+        const osc = ctx.createOscillator();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        const g = ctx.createGain();
+        g.gain.value = 0.3;
+        osc.connect(g).connect(master);
+        osc.start();
+      });
+
+      // Pad: 262Hz triangle + swept lowpass
+      const pad = ctx.createOscillator();
+      pad.type = "triangle";
+      pad.frequency.value = 262;
+      const padFilter = ctx.createBiquadFilter();
+      padFilter.type = "lowpass";
+      padFilter.frequency.value = 450;
+      padFilter.Q.value = 1;
+      const padGain = ctx.createGain();
+      padGain.gain.value = 0.18;
+      pad.connect(padFilter).connect(padGain).connect(master);
+      pad.start();
+
+      const lfo = ctx.createOscillator();
+      lfo.type = "sine";
+      lfo.frequency.value = 0.04;
+      const lfoG = ctx.createGain();
+      lfoG.gain.value = 150;
+      lfo.connect(lfoG).connect(padFilter.frequency);
+      lfo.start();
+
+      // Shimmer: 392Hz + vibrato
+      const shimmer = ctx.createOscillator();
+      shimmer.type = "sine";
+      shimmer.frequency.value = 392;
+      const shimG = ctx.createGain();
+      shimG.gain.value = 0.05;
+      shimmer.connect(shimG).connect(master);
+      shimmer.start();
+
+      const vib = ctx.createOscillator();
+      vib.type = "sine";
+      vib.frequency.value = 2;
+      const vibG = ctx.createGain();
+      vibG.gain.value = 2;
+      vib.connect(vibG).connect(shimmer.frequency);
+      vib.start();
+
+      // Warm noise
+      const bufSize = ctx.sampleRate * 2;
+      const noiseBuf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+      const nd = noiseBuf.getChannelData(0);
+      for (let i = 0; i < bufSize; i++) nd[i] = Math.random() * 2 - 1;
+      const noise = ctx.createBufferSource();
+      noise.buffer = noiseBuf;
+      noise.loop = true;
+      const nf = ctx.createBiquadFilter();
+      nf.type = "lowpass";
+      nf.frequency.value = 400;
+      nf.Q.value = 0.7;
+      const ng = ctx.createGain();
+      ng.gain.value = 0.05;
+      noise.connect(nf).connect(ng).connect(master);
+      noise.start();
+
+      audioRef.current = { ctx, gain: master, fadeUntil: ctx.currentTime + 4 };
+      master.gain.setTargetAtTime(BASE_VOL, ctx.currentTime, 1.0);
+    }
+
+    // Synchronous — no async race conditions, no boolean flags
+    function tryStartAudio() {
+      try {
+        const ctx = getOrCreateCtx();
+
+        // If suspended, try to resume (only succeeds on real user gesture)
         if (ctx.state === "suspended") {
-          // Browser blocked autoplay — reset flag so interaction listeners can retry
-          audioStartedRef.current = false;
-          return;
+          ctx.resume().catch(() => {});
         }
 
-        const master = ctx.createGain();
-        master.gain.value = 0;
-        master.connect(ctx.destination);
-
-        // Drone: 174Hz + 174.5Hz
-        [174, 174.5].forEach((freq) => {
-          const osc = ctx.createOscillator();
-          osc.type = "sine";
-          osc.frequency.value = freq;
-          const g = ctx.createGain();
-          g.gain.value = 0.3;
-          osc.connect(g).connect(master);
-          osc.start();
-        });
-
-        // Pad: 262Hz triangle + swept lowpass
-        const pad = ctx.createOscillator();
-        pad.type = "triangle";
-        pad.frequency.value = 262;
-        const padFilter = ctx.createBiquadFilter();
-        padFilter.type = "lowpass";
-        padFilter.frequency.value = 450;
-        padFilter.Q.value = 1;
-        const padGain = ctx.createGain();
-        padGain.gain.value = 0.18;
-        pad.connect(padFilter).connect(padGain).connect(master);
-        pad.start();
-
-        const lfo = ctx.createOscillator();
-        lfo.type = "sine";
-        lfo.frequency.value = 0.04;
-        const lfoG = ctx.createGain();
-        lfoG.gain.value = 150;
-        lfo.connect(lfoG).connect(padFilter.frequency);
-        lfo.start();
-
-        // Shimmer: 392Hz + vibrato
-        const shimmer = ctx.createOscillator();
-        shimmer.type = "sine";
-        shimmer.frequency.value = 392;
-        const shimG = ctx.createGain();
-        shimG.gain.value = 0.05;
-        shimmer.connect(shimG).connect(master);
-        shimmer.start();
-
-        const vib = ctx.createOscillator();
-        vib.type = "sine";
-        vib.frequency.value = 2;
-        const vibG = ctx.createGain();
-        vibG.gain.value = 2;
-        vib.connect(vibG).connect(shimmer.frequency);
-        vib.start();
-
-        // Warm noise
-        const bufSize = ctx.sampleRate * 2;
-        const noiseBuf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-        const nd = noiseBuf.getChannelData(0);
-        for (let i = 0; i < bufSize; i++) nd[i] = Math.random() * 2 - 1;
-        const noise = ctx.createBufferSource();
-        noise.buffer = noiseBuf;
-        noise.loop = true;
-        const nf = ctx.createBiquadFilter();
-        nf.type = "lowpass";
-        nf.frequency.value = 400;
-        nf.Q.value = 0.7;
-        const ng = ctx.createGain();
-        ng.gain.value = 0.05;
-        noise.connect(nf).connect(ng).connect(master);
-        noise.start();
-
-        audioRef.current = { ctx, gain: master, fadeUntil: ctx.currentTime + 4 };
-        master.gain.setTargetAtTime(BASE_VOL, ctx.currentTime, 1.0);
-        console.log("[ambient] running — fading in");
-      } catch (err) {
-        console.error("[ambient] failed:", err);
-        audioStartedRef.current = false;
-      }
+        // If now running, set up oscillators
+        if (ctx.state === "running") {
+          initOscillators(ctx);
+        }
+      } catch (e) { /* silent */ }
     }
 
     function onScrollActivity() {
@@ -643,12 +645,24 @@ export default function PreviewLanding() {
       }, 200);
     }
 
-    function onInteraction() {
-      startAudio();
+    // For real user gestures: click, pointerdown, keydown, touchstart
+    function onGesture() {
+      tryStartAudio();
+      // ctx.resume() is async — oscillators may not init until next event.
+      // Listen for statechange to catch the transition.
+      const ctx = audioCtxRef.current;
+      if (ctx && ctx.state !== "running") {
+        ctx.onstatechange = () => {
+          if (ctx.state === "running") {
+            initOscillators(ctx);
+            ctx.onstatechange = null;
+          }
+        };
+      }
     }
 
     function onWheel() {
-      onInteraction();
+      onGesture();
       onScrollActivity();
       try {
         const a = audioRef.current;
@@ -656,22 +670,20 @@ export default function PreviewLanding() {
       } catch (e) { /* silent */ }
     }
 
-    // Try to start audio immediately on page load (works if browser allows autoplay)
-    startAudio();
-
+    // Register only real user-activation events (NOT mousemove — it can't unlock AudioContext)
+    document.addEventListener("click", onGesture);
+    document.addEventListener("pointerdown", onGesture);
+    document.addEventListener("keydown", onGesture);
+    document.addEventListener("touchstart", onGesture, { passive: true });
     document.addEventListener("wheel", onWheel, { passive: true });
-    document.addEventListener("pointerdown", onInteraction);
-    document.addEventListener("touchstart", onInteraction, { passive: true });
-    document.addEventListener("mousemove", onInteraction, { passive: true });
-    document.addEventListener("keydown", onInteraction);
     window.addEventListener("scroll", onScrollActivity, { passive: true });
 
     return () => {
+      document.removeEventListener("click", onGesture);
+      document.removeEventListener("pointerdown", onGesture);
+      document.removeEventListener("keydown", onGesture);
+      document.removeEventListener("touchstart", onGesture);
       document.removeEventListener("wheel", onWheel);
-      document.removeEventListener("pointerdown", onInteraction);
-      document.removeEventListener("touchstart", onInteraction);
-      document.removeEventListener("mousemove", onInteraction);
-      document.removeEventListener("keydown", onInteraction);
       window.removeEventListener("scroll", onScrollActivity);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
     };
