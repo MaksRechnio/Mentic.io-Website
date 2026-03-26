@@ -432,8 +432,8 @@ export default function PreviewLanding() {
     let masterGain: GainNode | null = null;
     let started = false;
     let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
-    const BASE_VOL = 0.018;
-    const SCROLL_VOL = 0.06;
+    const BASE_VOL = 0.15;
+    const SCROLL_VOL = 0.4;
     const FADE_IN = 0.8;
     const FADE_OUT = 1.6;
 
@@ -523,7 +523,9 @@ export default function PreviewLanding() {
       noise.start();
 
       // Fade in to base volume
+      masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
       masterGain.gain.linearRampToValueAtTime(BASE_VOL, audioCtx.currentTime + 2);
+      console.log("[ambient] Audio started, ctx state:", audioCtx.state);
     }
 
     function onScroll() {
@@ -543,14 +545,17 @@ export default function PreviewLanding() {
     // Start audio on first interaction (browser autoplay policy)
     function onFirstInteraction() {
       initAudio();
+      if (audioCtx && audioCtx.state === "suspended") {
+        audioCtx.resume();
+      }
       window.removeEventListener("scroll", onFirstInteraction);
       window.removeEventListener("click", onFirstInteraction);
       window.removeEventListener("touchstart", onFirstInteraction);
     }
 
-    window.addEventListener("scroll", onFirstInteraction, { once: false });
-    window.addEventListener("click", onFirstInteraction, { once: false });
-    window.addEventListener("touchstart", onFirstInteraction, { once: false });
+    window.addEventListener("scroll", onFirstInteraction);
+    window.addEventListener("click", onFirstInteraction);
+    window.addEventListener("touchstart", onFirstInteraction);
     window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
