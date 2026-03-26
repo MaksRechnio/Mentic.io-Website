@@ -99,6 +99,20 @@ export default function PreviewLanding() {
       ]);
 
       setFormStatus("success");
+      // Animate to success screen
+      requestAnimationFrame(() => {
+        const tl = gsap.timeline();
+        tl.to("#signup-card", { opacity: 0, y: 40, scale: 0.9, duration: 0.4, ease: "power2.in" });
+        tl.to("#signup-icon", { opacity: 0, scale: 0.5, duration: 0.3, ease: "power2.in" }, "<0.1");
+        tl.set("#signup-card", { display: "none" });
+        tl.set("#signup-icon", { display: "none" });
+        tl.fromTo("#success-screen", { opacity: 0 }, { opacity: 1, duration: 0.01 });
+        tl.fromTo("#success-icon", { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.6, ease: "back.out(2)" });
+        tl.fromTo("#success-logo", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
+        tl.fromTo("#success-message", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, "-=0.2");
+        tl.fromTo("#success-socials", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" }, "-=0.1");
+        tl.fromTo("#success-done", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.5)" }, "-=0.1");
+      });
     } catch (err) {
       console.error("Signup error:", err);
       setFormStatus("error");
@@ -930,41 +944,30 @@ export default function PreviewLanding() {
                 <div style={{ fontSize: m ? "clamp(24px, 8.5vw, 34px)" : 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>Sign</div>
                 <div style={{ fontSize: m ? "clamp(36px, 12.7vw, 50px)" : 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>UP</div>
               </div>
-              {formStatus === "success" ? (
-                <div id="signup-form" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, padding: "20px 0", textAlign: "center" }}>
-                  <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(139,242,211,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8bf2d3" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
+              <form id="signup-form" onSubmit={handleFormSubmit}>
+                {formError && <div style={{ color: "#003c46", fontSize: m ? 11 : 13, marginBottom: 8, fontWeight: 600 }}>{formError}</div>}
+                <div style={{ display: "flex", gap: m ? "6.8%" : 20, marginBottom: m ? "4%" : 16 }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Name:</label>
+                    <input className="modal-input" placeholder="John" value={formData.firstName} onChange={(e) => setFormData(p => ({ ...p, firstName: e.target.value }))} style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
                   </div>
-                  <div style={{ fontSize: m ? 16 : 20, fontWeight: 700, color: "#003c46" }}>You&apos;re in!</div>
-                  <div style={{ fontSize: m ? 12 : 14, color: "white", lineHeight: 1.5 }}>Check your email for a confirmation.<br />We&apos;ll be in touch soon.</div>
-                  <button type="button" onClick={() => { setFormStatus("idle"); setFormData({ firstName: "", lastName: "", email: "", company: "" }); closeSignup(); }} className="modal-submit" style={{ marginTop: 8 }}>Done</button>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Surname:</label>
+                    <input className="modal-input" placeholder="Doe" value={formData.lastName} onChange={(e) => setFormData(p => ({ ...p, lastName: e.target.value }))} style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
+                  </div>
                 </div>
-              ) : (
-                <form id="signup-form" onSubmit={handleFormSubmit}>
-                  {formError && <div style={{ color: "#003c46", fontSize: m ? 11 : 13, marginBottom: 8, fontWeight: 600 }}>{formError}</div>}
-                  <div style={{ display: "flex", gap: m ? "6.8%" : 20, marginBottom: m ? "4%" : 16 }}>
-                    <div style={{ flex: 1 }}>
-                      <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Name:</label>
-                      <input className="modal-input" placeholder="John" value={formData.firstName} onChange={(e) => setFormData(p => ({ ...p, firstName: e.target.value }))} style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Surname:</label>
-                      <input className="modal-input" placeholder="Doe" value={formData.lastName} onChange={(e) => setFormData(p => ({ ...p, lastName: e.target.value }))} style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
-                    </div>
-                  </div>
-                  <div style={{ marginBottom: m ? "4%" : 16 }}>
-                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Email:</label>
-                    <input className="modal-input" type="email" placeholder="example@company.com" value={formData.email} onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
-                  </div>
-                  <div style={{ marginBottom: m ? "5.6%" : 24 }}>
-                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company:</label>
-                    <input className="modal-input" placeholder="Example Inc." value={formData.company} onChange={(e) => setFormData(p => ({ ...p, company: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
-                  </div>
-                  <button type="submit" disabled={formStatus === "submitting"} className="modal-submit" style={{ ...(m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : {}), ...(formStatus === "submitting" ? { opacity: 0.6, cursor: "not-allowed" } : {}) }}>
-                    {formStatus === "submitting" ? "Submitting..." : "Submit!"}
-                  </button>
-                </form>
-              )}
+                <div style={{ marginBottom: m ? "4%" : 16 }}>
+                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Email:</label>
+                  <input className="modal-input" type="email" placeholder="example@company.com" value={formData.email} onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
+                </div>
+                <div style={{ marginBottom: m ? "5.6%" : 24 }}>
+                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company:</label>
+                  <input className="modal-input" placeholder="Example Inc." value={formData.company} onChange={(e) => setFormData(p => ({ ...p, company: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
+                </div>
+                <button type="submit" disabled={formStatus === "submitting"} className="modal-submit" style={{ ...(m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : {}), ...(formStatus === "submitting" ? { opacity: 0.6, cursor: "not-allowed" } : {}) }}>
+                  {formStatus === "submitting" ? "Submitting..." : "Submit!"}
+                </button>
+              </form>
             </div>
 
             {/* Back button */}
@@ -981,6 +984,61 @@ export default function PreviewLanding() {
                 <path d="M19 12H5M12 19l-7-7 7-7" />
               </svg>
             </button>
+
+            {/* ── Success screen ── */}
+            <div id="success-screen" style={{
+              position: "absolute", inset: 0, zIndex: 30, opacity: 0,
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+              pointerEvents: formStatus === "success" ? "auto" : "none",
+            }}>
+              <div id="success-icon" style={{ marginBottom: 24, opacity: 0 }}>
+                <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={m ? 100 : 140} height={m ? 100 : 140} style={{ filter: "drop-shadow(2px 2px 16px rgba(0,0,0,0.12))" }} />
+              </div>
+              <div id="success-logo" className="font-qurova" style={{ fontSize: m ? 52 : 72, color: "#8bf2d3", marginBottom: 32, opacity: 0 }}>
+                mentic
+              </div>
+              <div id="success-message" style={{ textAlign: "center", maxWidth: m ? "80%" : 420, marginBottom: 36, opacity: 0 }}>
+                <p style={{ margin: "0 0 8px", fontSize: m ? 20 : 26, fontWeight: 700, color: "#003c46" }}>
+                  Thank you for signing up.
+                </p>
+                <p style={{ margin: 0, fontSize: m ? 14 : 16, fontWeight: 300, color: "#1e1e1e", lineHeight: 1.6 }}>
+                  We will contact you soon about your alpha access.
+                </p>
+              </div>
+              <div id="success-socials" style={{ display: "flex", alignItems: "center", gap: m ? 24 : 32, marginBottom: 40, opacity: 0 }}>
+                <a href="https://www.linkedin.com/company/mentic-io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", color: "#003c46", fontSize: m ? 13 : 15, fontWeight: 600 }}>
+                  <svg width={m ? 22 : 26} height={m ? 22 : 26} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
+                  LinkedIn
+                </a>
+                <a href="https://www.instagram.com/mentic.io/" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", color: "#003c46", fontSize: m ? 13 : 15, fontWeight: 600 }}>
+                  <svg width={m ? 22 : 26} height={m ? 22 : 26} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><circle cx="12" cy="12" r="5" /><circle cx="17.5" cy="6.5" r="1.5" fill="#003c46" stroke="none" /></svg>
+                  Instagram
+                </a>
+                <a href="https://x.com/Mentic_io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none", color: "#003c46", fontSize: m ? 13 : 15, fontWeight: 600 }}>
+                  <svg width={m ? 20 : 24} height={m ? 20 : 24} viewBox="0 0 24 24" fill="#003c46"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                  X
+                </a>
+              </div>
+              <button id="success-done" type="button" onClick={() => {
+                setFormStatus("idle");
+                setFormData({ firstName: "", lastName: "", email: "", company: "" });
+                gsap.set("#signup-card", { display: "block", opacity: 1, y: 0, scale: 1 });
+                gsap.set("#signup-icon", { display: "block", opacity: 1 });
+                gsap.set("#success-screen", { opacity: 0 });
+                closeSignup();
+              }} style={{
+                background: "#003c46", border: "none", borderRadius: 12,
+                padding: m ? "12px 28px" : "14px 36px",
+                color: "#8bf2d3", fontSize: m ? 14 : 16, fontWeight: 700,
+                cursor: "pointer", opacity: 0,
+                transition: "transform 200ms, opacity 200ms",
+              }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.05)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+              >
+                Done
+              </button>
+            </div>
           </div>
 
         </div>
