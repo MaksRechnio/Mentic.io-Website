@@ -446,8 +446,8 @@ export default function PreviewLanding() {
   const audioStartedRef = useRef(false);
 
   useEffect(() => {
-    const BASE_VOL = 0.12;
-    const SCROLL_VOL = 0.25;
+    const BASE_VOL = 0.06;
+    const SCROLL_VOL = 0.14;
 
     async function startAudio() {
       // Prevent double init — ref survives HMR/strict mode
@@ -464,7 +464,7 @@ export default function PreviewLanding() {
         await ctx.resume();
 
         const master = ctx.createGain();
-        master.gain.value = BASE_VOL;
+        master.gain.value = 0; // Start silent, fade in
         master.connect(ctx.destination);
 
         // Drone: 174Hz + 174.5Hz (F3) — warm, audible on all speakers
@@ -535,7 +535,11 @@ export default function PreviewLanding() {
         noise.start();
 
         audioRef.current = { ctx, gain: master };
-        console.log("[ambient] running — state:", ctx.state);
+
+        // Smooth 4-second fade-in from silence to base volume
+        master.gain.setValueAtTime(0, ctx.currentTime);
+        master.gain.linearRampToValueAtTime(BASE_VOL, ctx.currentTime + 4);
+        console.log("[ambient] running — fading in over 4s");
       } catch (err) {
         console.error("[ambient] failed:", err);
         audioStartedRef.current = false;
