@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -23,6 +23,24 @@ export default function PreviewLanding() {
   const loaderRef = useRef<HTMLDivElement>(null);
   const signupLayerRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<InstanceType<typeof Lenis> | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  /* ── Responsive: detect mobile and compute scale ── */
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      setIsMobile(w < 1024);
+      // Scale to fit both width and height, whichever is more constraining
+      const scaleW = w / 1491;
+      const scaleH = h / 967;
+      const scale = Math.min(scaleW, scaleH);
+      document.documentElement.style.setProperty("--vp-scale", String(scale));
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
   const openSignup = useCallback(() => {
     if (!signupLayerRef.current) return;
     const signup = signupLayerRef.current;
@@ -569,6 +587,21 @@ export default function PreviewLanding() {
             width: "100vw",
             height: "100vh",
             overflow: "hidden",
+          }}
+        >
+        {/* Scaled inner container: 1491×967 internally, CSS-scaled to fit viewport */}
+        <div
+          style={isMobile ? {
+            width: 1491,
+            height: 967,
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%) scale(var(--vp-scale))",
+            transformOrigin: "center center",
+          } : {
+            position: "absolute",
+            inset: 0,
           }}
         >
           {/* ── Background ── */}
@@ -1231,8 +1264,10 @@ export default function PreviewLanding() {
             </button>
           </div>
 
+        </div>
+
           {/* ═══════════════════════════════════════
-              SIGNUP LAYER (click-triggered, not scroll)
+              SIGNUP LAYER (click-triggered, sits outside scaled container)
           ═══════════════════════════════════════ */}
           <div
             ref={signupLayerRef}
@@ -1242,7 +1277,7 @@ export default function PreviewLanding() {
               opacity: 0, pointerEvents: "none",
             }}
           >
-            {/* Own white background — covers everything underneath */}
+            {/* Own white background */}
             <div id="signup-bg" style={{ position: "absolute", inset: 0, background: "#ffffff" }} />
 
             {/* Gradient blobs */}
@@ -1250,16 +1285,17 @@ export default function PreviewLanding() {
               <div
                 className="gradient-blob gradient-blob-coral"
                 style={{
-                  width: W(1219), height: H(1213),
-                  left: X(-586), top: Y(-586),
+                  width: "80vw", height: "80vw",
+                  left: "-30%", top: "-30%",
                   transform: "rotate(-134.46deg)",
                 }}
               />
               <div
                 className="gradient-blob gradient-blob-mint"
                 style={{
-                  width: W(1076), height: H(1072),
-                  left: X(929), top: Y(307),
+                  width: "70vw", height: "70vw",
+                  right: "-15%", bottom: "-20%",
+                  left: "auto", top: "auto",
                   transform: "rotate(-134.46deg)",
                 }}
               />
@@ -1270,8 +1306,7 @@ export default function PreviewLanding() {
               id="signup-glass"
               style={{
                 position: "absolute",
-                top: Y(24), left: X(24),
-                width: W(1443), height: H(919),
+                inset: isMobile ? "12px" : "2.5% 1.6%",
                 background: "rgba(255,255,255,0.08)",
                 backdropFilter: "blur(12px)",
                 WebkitBackdropFilter: "blur(12px)",
@@ -1281,98 +1316,113 @@ export default function PreviewLanding() {
               }}
             />
 
-            {/* Mentic orange icon */}
-            <div
-              id="signup-icon"
-              style={{
-                position: "absolute",
-                top: Y(374), left: X(414),
-                width: W(219), height: H(219),
-              }}
-            >
-              <Image
-                src="/images/mentic-icon-orange.png"
-                alt="Mentic"
-                fill
-                style={{ objectFit: "contain" }}
-              />
-            </div>
-
-            {/* Coral signup card with form */}
-            <div
-              id="signup-card"
-              style={{
-                position: "absolute",
-                top: Y(265), left: X(1025),
-                width: W(361),
-                background: "#ff6b5c",
-                borderRadius: "17.872px",
-                boxShadow: "3px 3px 10.3px rgba(0,0,0,0.25)",
-                padding: "32px 34px",
-                boxSizing: "border-box",
-              }}
-            >
-              {/* Title */}
-              <div style={{ marginBottom: 28 }}>
-                <div style={{ fontSize: 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>
-                  Sign
-                </div>
-                <div style={{ fontSize: 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>
-                  UP
-                </div>
+            {/* Content — responsive flex layout */}
+            <div style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: isMobile ? 24 : "8%",
+              padding: isMobile ? "60px 24px 24px" : "0 5%",
+            }}>
+              {/* Mentic orange icon */}
+              <div
+                id="signup-icon"
+                style={{
+                  width: isMobile ? 120 : 219,
+                  height: isMobile ? 120 : 219,
+                  flexShrink: 0,
+                  position: "relative",
+                }}
+              >
+                <Image
+                  src="/images/mentic-icon-orange.png"
+                  alt="Mentic"
+                  fill
+                  style={{ objectFit: "contain" }}
+                />
               </div>
 
-              {/* Form */}
-              <form
-                id="signup-form"
-                onSubmit={(e) => { e.preventDefault(); closeSignup(); }}
+              {/* Coral signup card with form */}
+              <div
+                id="signup-card"
+                style={{
+                  width: isMobile ? "100%" : 361,
+                  maxWidth: 400,
+                  background: "#ff6b5c",
+                  borderRadius: "17.872px",
+                  boxShadow: "3px 3px 10.3px rgba(0,0,0,0.25)",
+                  padding: isMobile ? "28px 24px" : "32px 34px",
+                  boxSizing: "border-box",
+                  flexShrink: 0,
+                }}
               >
-                {/* Name + Surname */}
-                <div style={{ display: "flex", gap: 20, marginBottom: 16 }}>
-                  <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
-                      Name:
-                    </label>
-                    <input className="modal-input" placeholder="John" />
+                {/* Title */}
+                <div style={{ marginBottom: isMobile ? 20 : 28 }}>
+                  <div style={{ fontSize: isMobile ? 32 : 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>
+                    Sign
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
-                      Surname:
-                    </label>
-                    <input className="modal-input" placeholder="Doe" />
+                  <div style={{ fontSize: isMobile ? 48 : 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>
+                    UP
                   </div>
                 </div>
 
-                {/* Email */}
-                <div style={{ marginBottom: 16 }}>
-                  <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
-                    Email:
-                  </label>
-                  <input className="modal-input" type="email" placeholder="example@company.com" style={{ width: "100%" }} />
-                </div>
+                {/* Form */}
+                <form
+                  id="signup-form"
+                  onSubmit={(e) => { e.preventDefault(); closeSignup(); }}
+                >
+                  {/* Name + Surname */}
+                  <div style={{ display: "flex", gap: isMobile ? 12 : 20, marginBottom: isMobile ? 12 : 16, flexDirection: isMobile ? "column" as const : "row" as const }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
+                        Name:
+                      </label>
+                      <input className="modal-input" placeholder="John" />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
+                        Surname:
+                      </label>
+                      <input className="modal-input" placeholder="Doe" />
+                    </div>
+                  </div>
 
-                {/* Company */}
-                <div style={{ marginBottom: 24 }}>
-                  <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
-                    Company:
-                  </label>
-                  <input className="modal-input" placeholder="Example Inc." style={{ width: "100%" }} />
-                </div>
+                  {/* Email */}
+                  <div style={{ marginBottom: isMobile ? 12 : 16 }}>
+                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
+                      Email:
+                    </label>
+                    <input className="modal-input" type="email" placeholder="example@company.com" style={{ width: "100%" }} />
+                  </div>
 
-                {/* Submit */}
-                <button type="submit" className="modal-submit">
-                  Submit!
-                </button>
-              </form>
+                  {/* Company */}
+                  <div style={{ marginBottom: isMobile ? 18 : 24 }}>
+                    <label style={{ display: "block", fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>
+                      Company:
+                    </label>
+                    <input className="modal-input" placeholder="Example Inc." style={{ width: "100%" }} />
+                  </div>
+
+                  {/* Submit */}
+                  <button type="submit" className="modal-submit">
+                    Submit!
+                  </button>
+                </form>
+              </div>
             </div>
 
-            {/* Back button — teal icon position, styled arrow */}
+            {/* Back button */}
             <button
               onClick={closeSignup}
               style={{
                 position: "absolute",
-                top: Y(53), left: X(61),
-                width: W(65), height: H(65),
+                top: isMobile ? 12 : 20,
+                left: isMobile ? 12 : 24,
+                width: isMobile ? 44 : 50,
+                height: isMobile ? 44 : 50,
                 background: "rgba(255,255,255,0.15)",
                 backdropFilter: "blur(8px)",
                 WebkitBackdropFilter: "blur(8px)",
