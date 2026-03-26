@@ -70,7 +70,19 @@ export default function PreviewLanding() {
     const vp = viewportRef.current;
     const loader = loaderRef.current;
 
-    gsap.set(["#hero-card", "#hero-icon", "#hero-alpha", "#hero-headline", "#hero-logo", "#hero-btn"].map(s => vp.querySelector(s)), { opacity: 0 });
+    const heroCard = vp.querySelector("#hero-card") as HTMLElement;
+    const heroIcon = vp.querySelector("#hero-icon") as HTMLElement;
+    const heroAlpha = vp.querySelector("#hero-alpha") as HTMLElement;
+    const heroLogo = vp.querySelector("#hero-logo") as HTMLElement;
+    const heroHeadline = vp.querySelector("#hero-headline") as HTMLElement;
+    const heroBtn = vp.querySelector("#hero-btn") as HTMLElement;
+
+    gsap.set([heroCard, heroIcon, heroAlpha, heroHeadline, heroLogo, heroBtn], { opacity: 0 });
+
+    // Set up clip-path reveals
+    gsap.set(heroCard, { clipPath: "inset(100% 0 0 0)" });
+    gsap.set(heroLogo, { clipPath: "inset(0 100% 0 0)" });
+    gsap.set(heroHeadline, { clipPath: "inset(0 0 100% 0)" });
 
     const intro = gsap.timeline({ delay: 0.3 });
 
@@ -79,19 +91,41 @@ export default function PreviewLanding() {
       intro.set(loader, { display: "none" });
     }
 
-    intro.fromTo(vp.querySelector("#hero-card"),
-      { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" },
-      loader ? "-=0.2" : 0);
-    intro.fromTo(vp.querySelector("#hero-icon"),
-      { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" }, "-=0.4");
-    intro.fromTo(vp.querySelector("#hero-alpha"),
-      { opacity: 0, y: -15 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
-    intro.fromTo(vp.querySelector("#hero-logo"),
-      { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: "power2.out" }, "-=0.3");
-    intro.fromTo(vp.querySelector("#hero-headline"),
-      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.35");
-    intro.fromTo(vp.querySelector("#hero-btn"),
-      { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.4)" }, "-=0.2");
+    // Card sweeps up from bottom
+    intro.to(heroCard, {
+      opacity: 1, clipPath: "inset(0% 0 0 0)",
+      duration: 0.9, ease: "power4.out",
+    }, loader ? "-=0.2" : 0);
+
+    // Icon spins in with a bounce
+    intro.fromTo(heroIcon,
+      { opacity: 0, scale: 0, rotation: -180 },
+      { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" },
+      "-=0.5");
+
+    // "mentic" logo sweeps in from left with clip-path
+    intro.to(heroLogo, {
+      opacity: 1, clipPath: "inset(0 0% 0 0)",
+      duration: 0.8, ease: "power3.out",
+    }, "-=0.4");
+
+    // Headline sweeps up from bottom
+    intro.to(heroHeadline, {
+      opacity: 1, clipPath: "inset(0 0 0% 0)",
+      duration: 0.7, ease: "power3.out",
+    }, "-=0.5");
+
+    // Alpha text types in with a blur
+    intro.fromTo(heroAlpha,
+      { opacity: 0, filter: "blur(12px)", letterSpacing: "8px" },
+      { opacity: 1, filter: "blur(0px)", letterSpacing: "0.75px", duration: 0.6, ease: "power2.out" },
+      "-=0.3");
+
+    // Button pops in with elastic feel
+    intro.fromTo(heroBtn,
+      { opacity: 0, scale: 0.5, y: 20 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.5)" },
+      "-=0.2");
 
     return () => { intro.kill(); };
   }, []);
