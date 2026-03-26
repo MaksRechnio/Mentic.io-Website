@@ -875,7 +875,20 @@ export default function PreviewLanding() {
           {/* ── Persistent teal icon ── */}
           <button
             id="icon-teal"
-            onClick={() => lenisRef.current?.scrollTo(0, { duration: 1.5 })}
+            onClick={() => {
+              window.scrollTo(0, 0);
+              lenisRef.current?.scrollTo(0, { immediate: true });
+              // Ensure hero elements are visible at scroll=0
+              const vp = viewportRef.current;
+              if (vp) {
+                const els = ["#hero-card", "#hero-icon", "#hero-alpha", "#hero-headline", "#hero-logo", "#hero-btn", "#hero-layer"];
+                els.forEach(sel => {
+                  const el = vp.querySelector(sel) as HTMLElement;
+                  if (el) { gsap.set(el, { opacity: 1, clearProps: "clipPath,scale,rotation,x,y" }); }
+                });
+                gsap.set(vp.querySelector("#hero-layer"), { pointerEvents: "auto" });
+              }
+            }}
             style={{
               position: "absolute",
               top: m ? MY(25) : Y(53), left: m ? MX(32) : X(61),
