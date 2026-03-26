@@ -175,16 +175,71 @@ export default function PreviewLanding() {
     tl.to(signup.querySelector("#signup-bg"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
   }, []);
 
-  /* ── Splash screen: "Begin" click fades out + audio starts via document click bubble ── */
-  const handleBegin = useCallback(() => {
-    // The click bubbles to document → onGesture → tryStartAudio handles audio.
-    // We just fade out the splash here.
+  /* ── Splash intro animation ── */
+  useEffect(() => {
     const loader = loaderRef.current;
     if (!loader) return;
-    const tl = gsap.timeline();
-    tl.to(loader.querySelector("#splash-btn"), { opacity: 0, scale: 0.8, duration: 0.3, ease: "power2.in" });
-    tl.to(loader, { opacity: 0, duration: 0.6, ease: "power2.inOut" }, "-=0.1");
-    tl.set(loader, { display: "none" });
+    const icon = loader.querySelector("#splash-icon");
+    const logo = loader.querySelector("#splash-logo");
+    const btn = loader.querySelector("#splash-btn");
+    const tagline = loader.querySelector("#splash-tagline");
+    const blob1 = loader.querySelector("#splash-blob-1");
+    const blob2 = loader.querySelector("#splash-blob-2");
+
+    gsap.set([icon, logo, btn, tagline], { opacity: 0 });
+
+    const tl = gsap.timeline({ delay: 0.2 });
+    tl.fromTo(blob1, { opacity: 0, scale: 0.5 }, { opacity: 0.4, scale: 1, duration: 1.5, ease: "power2.out" });
+    tl.fromTo(blob2, { opacity: 0, scale: 0.5 }, { opacity: 0.3, scale: 1, duration: 1.5, ease: "power2.out" }, "<0.2");
+    tl.fromTo(icon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "back.out(2.5)" }, 0.3);
+    tl.fromTo(logo, { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power3.out" }, "-=0.3");
+    tl.fromTo(tagline, { opacity: 0, y: 15 }, { opacity: 0.6, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.2");
+    tl.fromTo(btn, { opacity: 0, scale: 0.5, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(3)" }, "-=0.15");
+
+    // Gentle continuous blob drift
+    gsap.to(blob1, { rotation: 360, duration: 40, repeat: -1, ease: "none" });
+    gsap.to(blob2, { rotation: -360, duration: 50, repeat: -1, ease: "none" });
+
+    // Subtle button pulse
+    gsap.to(btn, { scale: 1.03, duration: 1.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.5 });
+
+    return () => { tl.kill(); };
+  }, []);
+
+  /* ── Splash "Begin" handler ── */
+  const handleBegin = useCallback(() => {
+    // Haptic feedback on mobile
+    if (navigator.vibrate) navigator.vibrate(15);
+
+    // Scroll to top
+    window.scrollTo(0, 0);
+    lenisRef.current?.scrollTo(0, { immediate: true });
+
+    // Cinematic exit
+    const loader = loaderRef.current;
+    if (!loader) return;
+    const btn = loader.querySelector("#splash-btn");
+    const icon = loader.querySelector("#splash-icon");
+    const logo = loader.querySelector("#splash-logo");
+    const tagline = loader.querySelector("#splash-tagline");
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gsap.set(loader, { display: "none" });
+      },
+    });
+
+    // Button collapses inward with a flash
+    tl.to(btn, { scale: 0.85, duration: 0.08, ease: "power2.in" });
+    tl.to(btn, { scale: 1.15, opacity: 0, duration: 0.25, ease: "power2.out" });
+
+    // Logo and icon fly apart
+    tl.to(icon, { scale: 1.3, opacity: 0, rotation: 90, duration: 0.4, ease: "power2.in" }, "-=0.15");
+    tl.to(logo, { opacity: 0, clipPath: "inset(0 0 0 100%)", duration: 0.35, ease: "power2.in" }, "<");
+    tl.to(tagline, { opacity: 0, y: -10, duration: 0.2, ease: "power2.in" }, "<");
+
+    // Background sweeps away
+    tl.to(loader, { clipPath: "inset(0 0 100% 0)", duration: 0.5, ease: "power3.inOut" }, "-=0.1");
   }, []);
 
   /* ── Lenis smooth scroll ── */
@@ -470,6 +525,9 @@ export default function PreviewLanding() {
   // SFX functions — plain functions using refs, no closure issues
   function sfxClick() {
     try {
+      // Haptic feedback on mobile
+      if (navigator.vibrate) navigator.vibrate(8);
+
       const a = audioRef.current;
       if (!a || a.ctx.state !== "running") return;
       const ctx = a.ctx;
@@ -1415,26 +1473,58 @@ export default function PreviewLanding() {
       {/* ── Splash screen ── */}
       <div ref={loaderRef} style={{
         position: "fixed", inset: 0, zIndex: 200, background: "#ff6b5c",
-        display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 0,
+        display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column",
+        overflow: "hidden", clipPath: "inset(0 0 0% 0)",
       }}>
-        <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={m ? 80 : 100} height={m ? 80 : 100} priority style={{ filter: "drop-shadow(2px 2px 16px rgba(0,0,0,0.15))", marginBottom: m ? 12 : 16 }} />
-        <div className="font-qurova" style={{ fontSize: m ? 40 : 56, color: "#8bf2d3", letterSpacing: "0.04em", marginBottom: m ? 48 : 64 }}>mentic</div>
+        {/* Animated background blobs */}
+        <div id="splash-blob-1" className="gradient-blob" style={{
+          position: "absolute", width: m ? "120vw" : "70vw", height: m ? "120vw" : "70vw",
+          left: "-20%", top: "-30%", opacity: 0,
+          background: "radial-gradient(ellipse at center, rgba(139,242,211,0.35) 0%, rgba(139,242,211,0.12) 40%, transparent 70%)",
+        }} />
+        <div id="splash-blob-2" className="gradient-blob" style={{
+          position: "absolute", width: m ? "100vw" : "60vw", height: m ? "100vw" : "60vw",
+          right: "-15%", bottom: "-25%", left: "auto", top: "auto", opacity: 0,
+          background: "radial-gradient(ellipse at center, rgba(0,60,70,0.2) 0%, rgba(0,60,70,0.08) 40%, transparent 70%)",
+        }} />
+
+        <div id="splash-icon" style={{ marginBottom: m ? 12 : 16, opacity: 0 }}>
+          <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={m ? 90 : 110} height={m ? 90 : 110} priority style={{ filter: "drop-shadow(2px 2px 20px rgba(0,0,0,0.18))" }} />
+        </div>
+        <div id="splash-logo" className="font-qurova" style={{
+          fontSize: m ? 48 : 64, color: "#8bf2d3", letterSpacing: "0.04em",
+          marginBottom: m ? 10 : 14, opacity: 0,
+          filter: "drop-shadow(1px 1px 8px rgba(0,0,0,0.1))",
+        }}>mentic</div>
+        <div id="splash-tagline" style={{
+          fontSize: m ? 13 : 15, fontWeight: 300, color: "#faf9f6",
+          letterSpacing: "0.08em", textTransform: "uppercase" as const,
+          marginBottom: m ? 48 : 64, opacity: 0,
+        }}>The Autonomous Advertising Agent</div>
         <button
           id="splash-btn"
           onClick={handleBegin}
           style={{
-            background: "white", border: "none",
+            position: "relative", background: "none", border: "2px solid rgba(255,255,255,0.5)",
             borderRadius: m ? 50 : 60,
-            padding: m ? "14px 44px" : "16px 56px",
-            fontSize: m ? 18 : 22, fontWeight: 700,
-            color: "#003c46", letterSpacing: "0.5px",
+            padding: m ? "14px 52px" : "16px 64px",
+            fontSize: m ? 16 : 18, fontWeight: 600,
+            color: "#faf9f6", letterSpacing: "2px", textTransform: "uppercase" as const,
             fontFamily: "'Nunito Sans', sans-serif",
-            boxShadow: "4px 4px 24px rgba(0,0,0,0.12), inset -1px -1px 12px rgba(0,0,0,0.08)",
-            cursor: "pointer",
-            transition: "transform 200ms cubic-bezier(0.165, 0.84, 0.44, 1)",
+            cursor: "pointer", opacity: 0,
+            backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
+            transition: "border-color 300ms, color 300ms, background 300ms",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.06)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.9)";
+            e.currentTarget.style.background = "rgba(255,255,255,0.12)";
+            e.currentTarget.style.color = "#ffffff";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "rgba(255,255,255,0.5)";
+            e.currentTarget.style.background = "none";
+            e.currentTarget.style.color = "#faf9f6";
+          }}
         >
           Begin
         </button>
