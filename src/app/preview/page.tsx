@@ -970,7 +970,7 @@ export default function PreviewLanding() {
             {/* Back button */}
             <button onClick={closeSignup} style={{
               position: "absolute", top: m ? 16 : 24, left: m ? 16 : 28,
-              background: "none", border: "none", padding: 0,
+              background: "none", border: "none", padding: m ? 10 : 14,
               cursor: "pointer", zIndex: 25,
               transition: "transform 200ms, opacity 200ms",
             }}
