@@ -201,7 +201,7 @@ export default function PreviewLanding() {
     intro.fromTo(heroIcon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, "-=0.5");
     intro.to(heroLogo, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power3.out" }, "-=0.4");
     intro.to(heroHeadline, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "power3.out" }, "-=0.5");
-    intro.fromTo(heroAlpha, { opacity: 0, filter: "blur(12px)", letterSpacing: "8px" }, { opacity: 1, filter: "blur(0px)", letterSpacing: "0.75px", duration: 0.6, ease: "power2.out" }, "-=0.3");
+    intro.fromTo(heroAlpha, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
     intro.fromTo(heroBtn, { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.5)" }, "-=0.2");
     return () => { intro.kill(); };
   }, []);
@@ -658,16 +658,39 @@ export default function PreviewLanding() {
             }} />
             <div id="hero-alpha" style={{
               position: "absolute",
-              top: m ? MY(39) : Y(69), left: m ? MX(229) : X(1083),
-              width: m ? MW(125) : undefined,
-              fontSize: m ? MFS(18) : FS(25), fontWeight: 500,
-              letterSpacing: "0.54px", zIndex: 2, whiteSpace: m ? undefined : "nowrap" as const,
-              lineHeight: m ? 1.45 : undefined, textAlign: m ? "center" as const : undefined,
+              top: m ? MY(42) : Y(72), right: m ? undefined : X(1491 - 1164 - 229.913),
+              left: m ? MX(229) : undefined,
+              display: "flex", gap: m ? 14 : 18, alignItems: "center",
+              zIndex: 2,
             }}>
-              <span style={{ color: "#8bf2d3" }}>Alpha </span>
-              <span style={{ color: "white" }}>release</span>
-              {m ? <br /> : " "}
-              <span style={{ color: "#8bf2d3" }}>coming soon!</span>
+              {/* Instagram */}
+              <a href="https://www.instagram.com/mentic.io/" target="_blank" rel="noopener noreferrer" style={{ display: "flex", opacity: 0.7, transition: "opacity 200ms, transform 200ms" }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.15)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.7"; e.currentTarget.style.transform = "scale(1)"; }}>
+                <svg width={m ? 22 : 26} height={m ? 22 : 26} viewBox="0 0 24 24" fill="none" stroke="#8bf2d3" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <circle cx="12" cy="12" r="5" />
+                  <circle cx="17.5" cy="6.5" r="1.5" fill="#8bf2d3" stroke="none" />
+                </svg>
+              </a>
+              {/* LinkedIn */}
+              <a href="https://www.linkedin.com/company/mentic-io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", opacity: 0.7, transition: "opacity 200ms, transform 200ms" }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.15)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.7"; e.currentTarget.style.transform = "scale(1)"; }}>
+                <svg width={m ? 22 : 26} height={m ? 22 : 26} viewBox="0 0 24 24" fill="none" stroke="#8bf2d3" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
+                  <rect x="2" y="9" width="4" height="12" />
+                  <circle cx="4" cy="4" r="2" />
+                </svg>
+              </a>
+              {/* X / Twitter */}
+              <a href="https://x.com/Mentic_io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", opacity: 0.7, transition: "opacity 200ms, transform 200ms" }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.15)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.7"; e.currentTarget.style.transform = "scale(1)"; }}>
+                <svg width={m ? 20 : 24} height={m ? 20 : 24} viewBox="0 0 24 24" fill="#8bf2d3">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+              </a>
             </div>
             <div id="hero-headline" style={{
               position: "absolute",
