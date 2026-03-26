@@ -54,6 +54,7 @@
 html {
   scroll-behavior: auto;
   scrollbar-width: none;
+  cursor: url("/cursors/mentic-cursor.svg") 12 12, crosshair;
 }
 
 html::-webkit-scrollbar {
@@ -67,6 +68,17 @@ body {
   color: var(--dark-teal);
   font-family: var(--font-nunito), "Nunito Sans", sans-serif;
   overflow-x: hidden;
+  cursor: url("/cursors/mentic-cursor.svg") 12 12, crosshair;
+}
+
+/* ── Branded cursor for interactive elements ── */
+a, button, [role="button"], input[type="submit"],
+.modal-submit, [style*="cursor: pointer"], [style*="cursor:pointer"] {
+  cursor: url("/cursors/mentic-pointer.svg") 12 12, pointer !important;
+}
+
+input, textarea, select {
+  cursor: url("/cursors/mentic-cursor.svg") 12 12, text !important;
 }
 
 /* ── Qurova utility class ── */
