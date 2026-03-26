@@ -751,7 +751,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ CALC LAYER ═══ */}
-          <div id="calc-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0, pointerEvents: "none" }}>
+          <div id="calc-layer" style={{ position: "absolute", inset: 0, zIndex: 6, opacity: 0, pointerEvents: "none" }}>
             <div id="calc-panel" style={{
               position: "absolute",
               top: m ? MY(15) : Y(20), right: m ? undefined : X(24),
