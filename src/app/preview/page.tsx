@@ -634,7 +634,13 @@ export default function PreviewLanding() {
     }
 
     function onInteraction() {
-      startAudio();
+      startAudio().then(() => {
+        // Once audio is running, remove one-time trigger listeners
+        if (audioRef.current && audioRef.current.ctx.state === "running") {
+          document.removeEventListener("mousemove", onInteraction);
+          document.removeEventListener("keydown", onInteraction);
+        }
+      });
     }
 
     function onWheel() {
@@ -646,15 +652,22 @@ export default function PreviewLanding() {
       } catch (e) { /* silent */ }
     }
 
+    // Try to start audio immediately on page load (works if browser allows autoplay)
+    startAudio();
+
     document.addEventListener("wheel", onWheel, { passive: true });
     document.addEventListener("pointerdown", onInteraction);
     document.addEventListener("touchstart", onInteraction, { passive: true });
+    document.addEventListener("mousemove", onInteraction, { passive: true });
+    document.addEventListener("keydown", onInteraction);
     window.addEventListener("scroll", onScrollActivity, { passive: true });
 
     return () => {
       document.removeEventListener("wheel", onWheel);
       document.removeEventListener("pointerdown", onInteraction);
       document.removeEventListener("touchstart", onInteraction);
+      document.removeEventListener("mousemove", onInteraction);
+      document.removeEventListener("keydown", onInteraction);
       window.removeEventListener("scroll", onScrollActivity);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
     };
