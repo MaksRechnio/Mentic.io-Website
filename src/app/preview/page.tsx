@@ -441,13 +441,13 @@ export default function PreviewLanding() {
   }, [isMobile]);
 
   /* ── Ambient audio engine ── */
-  const audioRef = useRef<{ ctx: AudioContext; gain: GainNode } | null>(null);
+  const audioRef = useRef<{ ctx: AudioContext; gain: GainNode; fadeUntil: number } | null>(null);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioStartedRef = useRef(false);
 
   useEffect(() => {
-    const BASE_VOL = 0.06;
-    const SCROLL_VOL = 0.14;
+    const BASE_VOL = 0.12;
+    const SCROLL_VOL = 0.25;
 
     async function startAudio() {
       // Prevent double init — ref survives HMR/strict mode
@@ -534,12 +534,12 @@ export default function PreviewLanding() {
         noise.connect(nf).connect(ng).connect(master);
         noise.start();
 
-        audioRef.current = { ctx, gain: master };
+        audioRef.current = { ctx, gain: master, fadeUntil: ctx.currentTime + 4 };
 
-        // Smooth 4-second fade-in from silence to base volume
-        master.gain.setValueAtTime(0, ctx.currentTime);
-        master.gain.linearRampToValueAtTime(BASE_VOL, ctx.currentTime + 4);
-        console.log("[ambient] running — fading in over 4s");
+        // Smooth fade-in from silence — setTargetAtTime with 1s time constant
+        // reaches ~63% at 1s, ~86% at 2s, ~95% at 3s, ~98% at 4s
+        master.gain.setTargetAtTime(BASE_VOL, ctx.currentTime, 1.0);
+        console.log("[ambient] running — fading in");
       } catch (err) {
         console.error("[ambient] failed:", err);
         audioStartedRef.current = false;
@@ -549,6 +549,8 @@ export default function PreviewLanding() {
     function onScrollActivity() {
       const a = audioRef.current;
       if (!a || a.ctx.state !== "running") return;
+      // Don't interrupt the initial fade-in
+      if (a.ctx.currentTime < a.fadeUntil) return;
       a.gain.gain.cancelScheduledValues(a.ctx.currentTime);
       a.gain.gain.setTargetAtTime(SCROLL_VOL, a.ctx.currentTime, 0.12);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
