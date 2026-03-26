@@ -6,14 +6,13 @@ const ORIGINAL_TITLE = "mentic";
 const AWAY_TITLE = "We Miss You...";
 
 export default function TabAttention() {
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const rafRef = useRef<number | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const canvas = document.createElement("canvas");
     canvas.width = 32;
     canvas.height = 32;
-    let frame = 0;
 
     const originalFavicon = "/favicon.png";
     const faviconImg = new Image();
@@ -36,7 +35,7 @@ export default function TabAttention() {
       ctx.clearRect(0, 0, 32, 32);
       ctx.save();
       ctx.translate(16, 16);
-      ctx.rotate((rotation * Math.PI) / 180);
+      ctx.rotate(rotation);
       ctx.translate(-16, -16);
       ctx.drawImage(faviconImg, 0, 0, 32, 32);
       ctx.restore();
@@ -44,18 +43,26 @@ export default function TabAttention() {
       getLinkEl().href = canvas.toDataURL("image/png");
     };
 
+    let startTime = 0;
+    const SPEED = 1.5; // radians per second — smooth, steady spin
+
+    const tick = (time: number) => {
+      if (!startTime) startTime = time;
+      const elapsed = (time - startTime) / 1000;
+      const angle = (elapsed * SPEED) % (Math.PI * 2);
+      drawFavicon(angle);
+      rafRef.current = requestAnimationFrame(tick);
+    };
+
     const startAnimation = () => {
-      frame = 0;
-      intervalRef.current = setInterval(() => {
-        frame = (frame + 20) % 360;
-        drawFavicon(frame);
-      }, 50);
+      startTime = 0;
+      rafRef.current = requestAnimationFrame(tick);
     };
 
     const stopAnimation = () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+        rafRef.current = null;
       }
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
