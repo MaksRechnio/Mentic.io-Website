@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+/* ── Qurova DEMO font-face ── */
+@font-face {
+  font-family: "Qurova DEMO";
+  src: url("/fonts/QurovaDEMO-Light.otf") format("opentype");
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Qurova DEMO";
+  src: url("/fonts/QurovaDEMO-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Qurova DEMO";
+  src: url("/fonts/QurovaDEMO-Medium.otf") format("opentype");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Qurova DEMO";
+  src: url("/fonts/QurovaDEMO-SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Qurova DEMO";
+  src: url("/fonts/QurovaDEMO-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --coral: #ff6b5c;
+  --mint: #8bf2d3;
+  --dark-teal: #003c46;
+  --off-white: #faf9f6;
+  --light-pink: #ffe5e5;
+  --near-black: #1e1e1e;
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-radius: 17.872px;
+  --input-bg: rgba(255, 255, 255, 0.2);
+
+  --speed-fast: 200ms;
+  --speed-medium: 400ms;
+  --speed-smooth: 600ms;
+  --speed-slow: 1200ms;
+
+  --ease-premium: cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+html {
+  scroll-behavior: auto;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--off-white);
+  color: var(--dark-teal);
+  font-family: var(--font-nunito), "Nunito Sans", sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── Qurova utility class ── */
+.font-qurova {
+  font-family: "Qurova DEMO", serif;
+}
+
+/* ── Glass card base ── */
+.glass-card {
+  background: var(--glass-bg);
+  border-radius: var(--glass-radius);
+  position: absolute;
+  inset: 2.068vh 1.61vw;
+}
+
+/* ── Gradient ellipse blobs ── */
+.gradient-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+.gradient-blob-coral {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 107, 92, 0.7) 0%,
+    rgba(255, 107, 92, 0.3) 40%,
+    transparent 70%
+  );
+}
+
+.gradient-blob-mint {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(139, 242, 211, 0.5) 0%,
+    rgba(139, 242, 211, 0.2) 40%,
+    transparent 70%
+  );
+}
+
+/* ── Mentic icon ── */
+.mentic-icon {
+  position: absolute;
+  top: 5.48vh;
+  left: 4.09vw;
+  width: 4.36vw;
+  height: 6.72vh;
+  z-index: 10;
+}
+
+/* ── Signup modal overlay ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-card {
+  background: var(--coral);
+  border-radius: var(--glass-radius);
+  box-shadow: 3px 3px 10.3px rgba(0, 0, 0, 0.25);
+  padding: 32px;
+  width: 361px;
+  position: relative;
+}
+
+.modal-input {
+  background: var(--input-bg);
+  border: none;
+  border-radius: 5px;
+  height: 32px;
+  width: 100%;
+  padding: 0 10px;
+  color: white;
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.modal-input::placeholder {
+  color: rgba(241, 241, 241, 0.57);
+}
+
+.modal-submit {
+  background: var(--mint);
+  border: none;
+  border-radius: 8.41px;
+  box-shadow: 0.841px 0.841px 7.107px rgba(0, 0, 0, 0.25);
+  padding: 8px 20px;
+  color: var(--dark-teal);
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: 700;
+  font-size: 12.615px;
+  cursor: pointer;
+  transition: transform var(--speed-fast) var(--ease-premium);
+}
+
+.modal-submit:hover {
+  transform: scale(1.05);
+}
