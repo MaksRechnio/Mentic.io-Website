@@ -446,7 +446,7 @@ export default function PreviewLanding() {
 
   useEffect(() => {
     const BASE_VOL = 0.12;
-    const SCROLL_VOL = 0.35;
+    const SCROLL_VOL = 0.25;
     let initCalled = false;
 
     async function startAudio() {
@@ -463,8 +463,8 @@ export default function PreviewLanding() {
         master.gain.value = BASE_VOL;
         master.connect(ctx.destination);
 
-        // Drone layer: 220Hz + 220.8Hz (audible on all speakers, slight beating)
-        [220, 220.8].forEach((freq) => {
+        // Drone layer: 130Hz + 130.4Hz — warm low hum with gentle beating
+        [130, 130.4].forEach((freq) => {
           const osc = ctx.createOscillator();
           osc.type = "sine";
           osc.frequency.value = freq;
@@ -474,14 +474,14 @@ export default function PreviewLanding() {
           osc.start();
         });
 
-        // Warm pad: 330Hz triangle through slowly swept lowpass
+        // Warm pad: 196Hz (G3) triangle through slowly swept lowpass
         const pad = ctx.createOscillator();
         pad.type = "triangle";
-        pad.frequency.value = 330;
+        pad.frequency.value = 196;
         const padFilter = ctx.createBiquadFilter();
         padFilter.type = "lowpass";
-        padFilter.frequency.value = 600;
-        padFilter.Q.value = 1.5;
+        padFilter.frequency.value = 350;
+        padFilter.Q.value = 1;
         const padGain = ctx.createGain();
         padGain.gain.value = 0.2;
         pad.connect(padFilter).connect(padGain).connect(master);
@@ -490,30 +490,30 @@ export default function PreviewLanding() {
         // Slow LFO sweeps the pad filter
         const lfo = ctx.createOscillator();
         lfo.type = "sine";
-        lfo.frequency.value = 0.06;
+        lfo.frequency.value = 0.04;
         const lfoG = ctx.createGain();
-        lfoG.gain.value = 250;
+        lfoG.gain.value = 120;
         lfo.connect(lfoG).connect(padFilter.frequency);
         lfo.start();
 
-        // High shimmer: 660Hz with slow vibrato
+        // Gentle shimmer: 392Hz (G4) — softer, lower
         const shimmer = ctx.createOscillator();
         shimmer.type = "sine";
-        shimmer.frequency.value = 660;
+        shimmer.frequency.value = 392;
         const shimG = ctx.createGain();
-        shimG.gain.value = 0.08;
+        shimG.gain.value = 0.04;
         shimmer.connect(shimG).connect(master);
         shimmer.start();
 
         const vib = ctx.createOscillator();
         vib.type = "sine";
-        vib.frequency.value = 3;
+        vib.frequency.value = 2;
         const vibG = ctx.createGain();
-        vibG.gain.value = 4;
+        vibG.gain.value = 2;
         vib.connect(vibG).connect(shimmer.frequency);
         vib.start();
 
-        // Filtered noise for air/texture
+        // Filtered noise — warm low wash
         const bufSize = ctx.sampleRate * 2;
         const noiseBuf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
         const noiseData = noiseBuf.getChannelData(0);
@@ -522,11 +522,11 @@ export default function PreviewLanding() {
         noise.buffer = noiseBuf;
         noise.loop = true;
         const nf = ctx.createBiquadFilter();
-        nf.type = "bandpass";
-        nf.frequency.value = 800;
-        nf.Q.value = 1;
+        nf.type = "lowpass";
+        nf.frequency.value = 400;
+        nf.Q.value = 0.7;
         const ng = ctx.createGain();
-        ng.gain.value = 0.07;
+        ng.gain.value = 0.05;
         noise.connect(nf).connect(ng).connect(master);
         noise.start();
 
