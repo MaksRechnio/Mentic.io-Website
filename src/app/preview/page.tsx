@@ -5,8 +5,16 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import Image from "next/image";
+import emailjs from "@emailjs/browser";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const EMAILJS_PUBLIC_KEY = "vL-JN3gWKUaXsCkWK";
+const EMAILJS_SERVICE_ID = "service_43fsg3n";
+const EMAILJS_TEMPLATE_USER = "template_6i6qlv1";
+const EMAILJS_TEMPLATE_TEAM = "template_ahcl5qh";
+const GOOGLE_SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbwVOGT0vm3drdkvPXfKlGLWXk7LQgcD05PoqtU1ekiQbFznCx6HeFuwJ1UMSvWisEPV/exec";
+const RECAPTCHA_SITE_KEY = "6Ldl23wsAAAAALU_SmSuijf2skLsOd6eZ74Dv4C2";
 
 /* ── Desktop: Figma frame = 1491 × 967 px ── */
 const X = (x: number) => `${(x / 1491) * 100}%`;
@@ -31,6 +39,9 @@ export default function PreviewLanding() {
   const signupLayerRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<InstanceType<typeof Lenis> | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", company: "" });
+  const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 1024);
@@ -38,6 +49,62 @@ export default function PreviewLanding() {
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
   }, []);
+
+  /* ── Load reCAPTCHA + init EmailJS ── */
+  useEffect(() => {
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+    if (!document.querySelector(`script[src*="recaptcha"]`)) {
+      const s = document.createElement("script");
+      s.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+      s.async = true;
+      document.head.appendChild(s);
+    }
+  }, []);
+
+  const handleFormSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormError("");
+
+    const { firstName, lastName, email, company } = formData;
+    if (!firstName.trim() || !lastName.trim()) { setFormError("Please enter your full name."); return; }
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setFormError("Please enter a valid email."); return; }
+
+    setFormStatus("submitting");
+    const timestamp = new Date().toISOString();
+
+    try {
+      const grecaptcha = (window as unknown as Record<string, unknown>).grecaptcha as { ready: (cb: () => void) => void; execute: (key: string, opts: { action: string }) => Promise<string> } | undefined;
+      let token = "";
+      if (grecaptcha) {
+        token = await new Promise<string>((resolve, reject) => {
+          grecaptcha.ready(() => { grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: "signup" }).then(resolve).catch(reject); });
+        });
+      }
+
+      await fetch(GOOGLE_SHEET_WEBHOOK, {
+        method: "POST", mode: "no-cors",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ firstName: firstName.trim(), lastName: lastName.trim(), email: email.trim(), company: company.trim(), recaptchaToken: token, timestamp }),
+      });
+
+      const emailParams = {
+        first_name: firstName.trim(), last_name: lastName.trim(),
+        email: email.trim(), to_email: email.trim(), reply_to: email.trim(),
+        company: company.trim() || "N/A", timestamp,
+      };
+
+      await Promise.all([
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_USER, emailParams),
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_TEAM, emailParams),
+      ]);
+
+      setFormStatus("success");
+    } catch (err) {
+      console.error("Signup error:", err);
+      setFormStatus("error");
+      setFormError("Something went wrong. Please try again.");
+    }
+  }, [formData]);
 
   const openSignup = useCallback(() => {
     if (!signupLayerRef.current) return;
@@ -863,27 +930,41 @@ export default function PreviewLanding() {
                 <div style={{ fontSize: m ? "clamp(24px, 8.5vw, 34px)" : 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>Sign</div>
                 <div style={{ fontSize: m ? "clamp(36px, 12.7vw, 50px)" : 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>UP</div>
               </div>
-              <form id="signup-form" onSubmit={(e) => { e.preventDefault(); closeSignup(); }}>
-                <div style={{ display: "flex", gap: m ? "6.8%" : 20, marginBottom: m ? "4%" : 16 }}>
-                  <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Name:</label>
-                    <input className="modal-input" placeholder="John" style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
+              {formStatus === "success" ? (
+                <div id="signup-form" style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, padding: "20px 0", textAlign: "center" }}>
+                  <div style={{ width: 56, height: 56, borderRadius: "50%", background: "rgba(139,242,211,0.2)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8bf2d3" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Surname:</label>
-                    <input className="modal-input" placeholder="Doe" style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
+                  <div style={{ fontSize: m ? 16 : 20, fontWeight: 700, color: "#003c46" }}>You&apos;re in!</div>
+                  <div style={{ fontSize: m ? 12 : 14, color: "white", lineHeight: 1.5 }}>Check your email for a confirmation.<br />We&apos;ll be in touch soon.</div>
+                  <button type="button" onClick={() => { setFormStatus("idle"); setFormData({ firstName: "", lastName: "", email: "", company: "" }); closeSignup(); }} className="modal-submit" style={{ marginTop: 8 }}>Done</button>
+                </div>
+              ) : (
+                <form id="signup-form" onSubmit={handleFormSubmit}>
+                  {formError && <div style={{ color: "#003c46", fontSize: m ? 11 : 13, marginBottom: 8, fontWeight: 600 }}>{formError}</div>}
+                  <div style={{ display: "flex", gap: m ? "6.8%" : 20, marginBottom: m ? "4%" : 16 }}>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Name:</label>
+                      <input className="modal-input" placeholder="John" value={formData.firstName} onChange={(e) => setFormData(p => ({ ...p, firstName: e.target.value }))} style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Surname:</label>
+                      <input className="modal-input" placeholder="Doe" value={formData.lastName} onChange={(e) => setFormData(p => ({ ...p, lastName: e.target.value }))} style={m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : undefined} />
+                    </div>
                   </div>
-                </div>
-                <div style={{ marginBottom: m ? "4%" : 16 }}>
-                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Email:</label>
-                  <input className="modal-input" type="email" placeholder="example@company.com" style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
-                </div>
-                <div style={{ marginBottom: m ? "5.6%" : 24 }}>
-                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company:</label>
-                  <input className="modal-input" placeholder="Example Inc." style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
-                </div>
-                <button type="submit" className="modal-submit" style={m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : undefined}>Submit!</button>
-              </form>
+                  <div style={{ marginBottom: m ? "4%" : 16 }}>
+                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Email:</label>
+                    <input className="modal-input" type="email" placeholder="example@company.com" value={formData.email} onChange={(e) => setFormData(p => ({ ...p, email: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
+                  </div>
+                  <div style={{ marginBottom: m ? "5.6%" : 24 }}>
+                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company:</label>
+                    <input className="modal-input" placeholder="Example Inc." value={formData.company} onChange={(e) => setFormData(p => ({ ...p, company: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
+                  </div>
+                  <button type="submit" disabled={formStatus === "submitting"} className="modal-submit" style={{ ...(m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : {}), ...(formStatus === "submitting" ? { opacity: 0.6, cursor: "not-allowed" } : {}) }}>
+                    {formStatus === "submitting" ? "Submitting..." : "Submit!"}
+                  </button>
+                </form>
+              )}
             </div>
 
             {/* Back button */}
