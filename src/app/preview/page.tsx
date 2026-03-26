@@ -443,28 +443,32 @@ export default function PreviewLanding() {
   /* ── Ambient audio engine ── */
   const audioRef = useRef<{ ctx: AudioContext; gain: GainNode } | null>(null);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const audioStartedRef = useRef(false);
 
   useEffect(() => {
     const BASE_VOL = 0.12;
     const SCROLL_VOL = 0.25;
-    let initCalled = false;
 
     async function startAudio() {
-      if (audioRef.current || initCalled) return;
-      initCalled = true;
+      // Prevent double init — ref survives HMR/strict mode
+      if (audioRef.current) {
+        if (audioRef.current.ctx.state === "suspended") audioRef.current.ctx.resume();
+        return;
+      }
+      if (audioStartedRef.current) return;
+      audioStartedRef.current = true;
 
       try {
-        const ctx = new (window.AudioContext || (window as unknown as Record<string, unknown>).webkitAudioContext as typeof AudioContext)();
-
-        // Must await resume — Chrome won't play until this resolves
-        if (ctx.state === "suspended") await ctx.resume();
+        const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        const ctx = new AC();
+        await ctx.resume();
 
         const master = ctx.createGain();
         master.gain.value = BASE_VOL;
         master.connect(ctx.destination);
 
-        // Drone layer: 130Hz + 130.4Hz — warm low hum with gentle beating
-        [130, 130.4].forEach((freq) => {
+        // Drone: 174Hz + 174.5Hz (F3) — warm, audible on all speakers
+        [174, 174.5].forEach((freq) => {
           const osc = ctx.createOscillator();
           osc.type = "sine";
           osc.frequency.value = freq;
@@ -474,34 +478,34 @@ export default function PreviewLanding() {
           osc.start();
         });
 
-        // Warm pad: 196Hz (G3) triangle through slowly swept lowpass
+        // Pad: 262Hz (C4) triangle through slowly swept lowpass
         const pad = ctx.createOscillator();
         pad.type = "triangle";
-        pad.frequency.value = 196;
+        pad.frequency.value = 262;
         const padFilter = ctx.createBiquadFilter();
         padFilter.type = "lowpass";
-        padFilter.frequency.value = 350;
+        padFilter.frequency.value = 450;
         padFilter.Q.value = 1;
         const padGain = ctx.createGain();
-        padGain.gain.value = 0.2;
+        padGain.gain.value = 0.18;
         pad.connect(padFilter).connect(padGain).connect(master);
         pad.start();
 
-        // Slow LFO sweeps the pad filter
+        // LFO sweeps pad filter
         const lfo = ctx.createOscillator();
         lfo.type = "sine";
         lfo.frequency.value = 0.04;
         const lfoG = ctx.createGain();
-        lfoG.gain.value = 120;
+        lfoG.gain.value = 150;
         lfo.connect(lfoG).connect(padFilter.frequency);
         lfo.start();
 
-        // Gentle shimmer: 392Hz (G4) — softer, lower
+        // Shimmer: 392Hz (G4) with gentle vibrato
         const shimmer = ctx.createOscillator();
         shimmer.type = "sine";
         shimmer.frequency.value = 392;
         const shimG = ctx.createGain();
-        shimG.gain.value = 0.04;
+        shimG.gain.value = 0.05;
         shimmer.connect(shimG).connect(master);
         shimmer.start();
 
@@ -513,11 +517,11 @@ export default function PreviewLanding() {
         vib.connect(vibG).connect(shimmer.frequency);
         vib.start();
 
-        // Filtered noise — warm low wash
+        // Warm noise wash
         const bufSize = ctx.sampleRate * 2;
         const noiseBuf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-        const noiseData = noiseBuf.getChannelData(0);
-        for (let i = 0; i < bufSize; i++) noiseData[i] = Math.random() * 2 - 1;
+        const d = noiseBuf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) d[i] = Math.random() * 2 - 1;
         const noise = ctx.createBufferSource();
         noise.buffer = noiseBuf;
         noise.loop = true;
@@ -531,32 +535,30 @@ export default function PreviewLanding() {
         noise.start();
 
         audioRef.current = { ctx, gain: master };
-        console.log("[ambient] running — state:", ctx.state, "baseLatency:", ctx.baseLatency);
+        console.log("[ambient] running — state:", ctx.state);
       } catch (err) {
-        console.error("[ambient] failed to start:", err);
-        initCalled = false;
+        console.error("[ambient] failed:", err);
+        audioStartedRef.current = false;
       }
     }
 
     function onScrollActivity() {
       const a = audioRef.current;
-      if (!a) return;
+      if (!a || a.ctx.state !== "running") return;
       a.gain.gain.cancelScheduledValues(a.ctx.currentTime);
       a.gain.gain.setTargetAtTime(SCROLL_VOL, a.ctx.currentTime, 0.12);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
       scrollTimerRef.current = setTimeout(() => {
         const a2 = audioRef.current;
-        if (!a2) return;
+        if (!a2 || a2.ctx.state !== "running") return;
         a2.gain.gain.cancelScheduledValues(a2.ctx.currentTime);
         a2.gain.gain.setTargetAtTime(BASE_VOL, a2.ctx.currentTime, 0.4);
       }, 200);
     }
 
+    // Always listen for interactions — handles HMR re-mounts too
     function onInteraction() {
       startAudio();
-      document.removeEventListener("wheel", onInteraction);
-      document.removeEventListener("pointerdown", onInteraction);
-      document.removeEventListener("touchstart", onInteraction);
     }
 
     document.addEventListener("wheel", onInteraction, { passive: true });
@@ -572,17 +574,101 @@ export default function PreviewLanding() {
       document.removeEventListener("wheel", onScrollActivity);
       window.removeEventListener("scroll", onScrollActivity);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
-      if (audioRef.current) {
-        audioRef.current.ctx.close();
-        audioRef.current = null;
-      }
+      // DON'T close audio on cleanup — survives HMR/strict mode
     };
   }, []);
+
+  /* ── Custom cursor ── */
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const cursorLineRef1 = useRef<HTMLDivElement>(null);
+  const cursorLineRef2 = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isMobile) return; // No custom cursor on mobile/touch
+    const cursor = cursorRef.current;
+    const line1 = cursorLineRef1.current;
+    const line2 = cursorLineRef2.current;
+    if (!cursor || !line1 || !line2) return;
+
+    let mouseX = -100, mouseY = -100;
+    let curX = -100, curY = -100;
+    let hovering = false;
+    let raf: number;
+
+    const onMove = (e: MouseEvent) => { mouseX = e.clientX; mouseY = e.clientY; };
+
+    const onOver = (e: MouseEvent) => {
+      const t = e.target as HTMLElement;
+      const isInteractive = t.closest("a, button, [role='button'], input, textarea, select, .modal-submit, [style*='cursor']");
+      if (isInteractive && !hovering) {
+        hovering = true;
+        cursor.style.width = "20px";
+        cursor.style.height = "20px";
+        cursor.style.borderRadius = "50%";
+        cursor.style.background = "#ff6b5c";
+        line1.style.opacity = "0";
+        line2.style.opacity = "0";
+        line1.style.transform = "rotate(45deg) scaleX(0)";
+        line2.style.transform = "rotate(-45deg) scaleX(0)";
+      } else if (!isInteractive && hovering) {
+        hovering = false;
+        cursor.style.width = "24px";
+        cursor.style.height = "24px";
+        cursor.style.borderRadius = "0";
+        cursor.style.background = "transparent";
+        line1.style.opacity = "1";
+        line2.style.opacity = "1";
+        line1.style.transform = "rotate(45deg) scaleX(1)";
+        line2.style.transform = "rotate(-45deg) scaleX(1)";
+      }
+    };
+
+    const tick = () => {
+      curX += (mouseX - curX) * 0.18;
+      curY += (mouseY - curY) * 0.18;
+      cursor.style.transform = `translate(${curX - 12}px, ${curY - 12}px)`;
+      raf = requestAnimationFrame(tick);
+    };
+
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseover", onOver);
+    raf = requestAnimationFrame(tick);
+
+    return () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseover", onOver);
+      cancelAnimationFrame(raf);
+    };
+  }, [isMobile]);
 
   const m = isMobile;
 
   return (
     <>
+      {/* Custom cursor (desktop only) */}
+      {!m && (
+        <div ref={cursorRef} style={{
+          position: "fixed", top: 0, left: 0, width: 24, height: 24,
+          pointerEvents: "none", zIndex: 99999,
+          transition: "width 0.3s cubic-bezier(0.25,1,0.5,1), height 0.3s cubic-bezier(0.25,1,0.5,1), border-radius 0.3s cubic-bezier(0.25,1,0.5,1), background 0.3s cubic-bezier(0.25,1,0.5,1)",
+          transform: "translate(-100px, -100px)",
+        }}>
+          <div ref={cursorLineRef1} style={{
+            position: "absolute", top: "50%", left: "50%",
+            width: 22, height: 3, marginLeft: -11, marginTop: -1.5,
+            background: "#003c46", borderRadius: 2,
+            transform: "rotate(45deg) scaleX(1)",
+            transition: "opacity 0.25s ease, transform 0.3s cubic-bezier(0.25,1,0.5,1)",
+          }} />
+          <div ref={cursorLineRef2} style={{
+            position: "absolute", top: "50%", left: "50%",
+            width: 22, height: 3, marginLeft: -11, marginTop: -1.5,
+            background: "#003c46", borderRadius: 2,
+            transform: "rotate(-45deg) scaleX(1)",
+            transition: "opacity 0.25s ease, transform 0.3s cubic-bezier(0.25,1,0.5,1)",
+          }} />
+        </div>
+      )}
       <div ref={wrapperRef} style={{ height: `${TOTAL_FRAMES * 23}vh`, position: "relative" }}>
         <div ref={viewportRef} style={{ position: "sticky", top: 0, width: "100vw", height: "100vh", overflow: "hidden" }}>
 
