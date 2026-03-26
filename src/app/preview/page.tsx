@@ -797,7 +797,7 @@ export default function PreviewLanding() {
               zIndex: 2, opacity: 0,
             }}>
               <span style={{ fontSize: m ? MFS(40) : FS(80.683), fontWeight: 800, color: "#ff6b5c" }}>ONE</span>
-              <span style={{ fontSize: m ? MFS(24) : FS(47.425), fontWeight: 300, color: "#1e1e1e", marginLeft: "0.3em" }}>subscription</span>
+              <span style={{ fontSize: m ? MFS(24) : FS(47.425), fontWeight: 300, color: "#1e1e1e", marginLeft: "0.3em" }}>subscription.</span>
             </div>
             <div id="val-every" style={{
               position: "absolute",
@@ -818,7 +818,7 @@ export default function PreviewLanding() {
             }}>
               <span style={{ fontSize: m ? MFS(48) : FS(80.683), fontWeight: 800, color: "#ff6b5c" }}>ALL</span>
               <span style={{ fontSize: m ? MFS(16) : FS(47.425), fontWeight: 300, color: "black", marginLeft: "0.3em" }}>
-                advertising <span style={{ fontWeight: 500 }}>platforms</span> centralised
+                advertising <span style={{ fontWeight: 500 }}>platforms</span> centralised.
               </span>
             </div>
           </div>
