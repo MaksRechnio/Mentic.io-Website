@@ -247,12 +247,12 @@ export default function PreviewLanding() {
             delay: 0.08,
             ease: "power1.inOut",
             directional: true,
-            onComplete: () => {
-              if (audioRef.current && audioRef.current.ctx.state === "running") sfxClick();
-            },
           },
         },
       });
+
+      // Helper: schedule a click sound at the end of an element's appear animation
+      const clk = (pos: number) => master.call(() => sfxClick(), [], pos + ds);
 
       const bg = vp.querySelector("#bg") as HTMLElement;
       const heroCard = vp.querySelector("#hero-card") as HTMLElement;
@@ -324,8 +324,10 @@ export default function PreviewLanding() {
       /* ═══ Pain IN ═══ */
       master.fromTo(painText1, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(7));
       master.fromTo(painBlob, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: ds, ease }, f(7));
+      clk(f(7));
       master.fromTo(painText2, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(8));
       master.fromTo(glassStrip1, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(8));
+      clk(f(8));
       if (!mob) {
         master.to(painBlob, { width: W(1051), height: H(666), left: X(220), top: Y(813), duration: ds, ease }, f(8));
       } else {
@@ -333,6 +335,7 @@ export default function PreviewLanding() {
       }
       master.fromTo(painText3, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(9));
       master.fromTo(glassStrip2, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(9));
+      clk(f(9));
       if (!mob) {
         master.to(painBlob, { width: W(1232), height: H(848), left: X(130), top: Y(908), duration: ds, ease }, f(9));
       } else {
@@ -355,10 +358,13 @@ export default function PreviewLanding() {
       /* ═══ Calc IN ═══ */
       master.fromTo(calcPanel, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(17));
       master.fromTo(calcHeading, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(17));
+      clk(f(17));
       master.fromTo(calcAmount, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: ds, ease }, f(18));
       master.fromTo(calcFifty, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: ds, ease }, f(18));
+      clk(f(18));
       master.fromTo(calcFees, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: ds, ease }, f(19));
       master.fromTo(calcNotads, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: ds, ease }, f(19));
+      clk(f(19));
 
       /* Calc OUT */
       master.to(calcFees, { opacity: 0, x: 20, duration: ds, ease: easeOut }, f(21));
@@ -382,8 +388,11 @@ export default function PreviewLanding() {
 
       /* ═══ Solution IN ═══ */
       master.fromTo(solText1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(28));
+      clk(f(28));
       master.fromTo(solText2, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(29));
+      clk(f(29));
       master.fromTo(solText3, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(30));
+      clk(f(30));
       master.to(solText3, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(32));
       master.to(solText2, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(33));
       master.to(solText1, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(33));
@@ -394,11 +403,16 @@ export default function PreviewLanding() {
 
       /* ═══ NO IN ═══ */
       master.fromTo(noText, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: ds, ease }, f(38));
+      clk(f(38));
       master.fromTo(noItem1, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(39));
+      clk(f(39));
       master.fromTo(noItem2, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(40));
+      clk(f(40));
       master.fromTo(noItem3, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(41));
+      clk(f(41));
       master.fromTo(noItem4, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(42));
       master.fromTo(noDot, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: ds, ease }, f(42));
+      clk(f(42));
       master.to(noItem4, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(44));
       master.to(noDot, { opacity: 0, scale: 0, duration: ds, ease: easeOut }, f(44));
       master.to(noItem3, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(44));
@@ -412,10 +426,13 @@ export default function PreviewLanding() {
 
       /* ═══ How IN ═══ */
       master.fromTo(howStep1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(49));
+      clk(f(49));
       master.fromTo(howStep2, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(50));
       master.fromTo(howStep3, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(50));
+      clk(f(50));
       master.fromTo(howMentic, { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: ds, ease }, f(51));
       master.fromTo(howRest, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: ds, ease }, f(51));
+      clk(f(51));
       master.to(howStep3, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(53));
       master.to(howStep2, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(53));
       master.to(howStep1, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(53));
@@ -428,8 +445,10 @@ export default function PreviewLanding() {
 
       /* ═══ Value IN ═══ */
       master.fromTo(valOne, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(57));
+      clk(f(57));
       master.fromTo(valEvery, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(58));
       master.fromTo(valAll, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(58));
+      clk(f(58));
       master.to(valAll, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(60));
       master.to(valEvery, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(60));
       master.to(valOne, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(60));
@@ -442,9 +461,11 @@ export default function PreviewLanding() {
       master.fromTo(ctaIcon, { opacity: 0, scale: 0.3, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: ds * 2, ease }, f(64));
       master.fromTo(ctaSign, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: ds, ease }, f(64));
       master.fromTo(ctaUp, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: ds, ease }, f(64));
+      clk(f(64));
       master.fromTo(ctaNow, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: ds, ease }, f(65));
       master.fromTo(ctaAlpha, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: ds, ease }, f(65));
       master.fromTo(ctaButton, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: ds, ease: "back.out(1.4)" }, f(65));
+      clk(f(65));
     }, wrapperRef);
     return () => ctx.revert();
   }, [isMobile]);
