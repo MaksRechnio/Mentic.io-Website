@@ -445,115 +445,113 @@ export default function PreviewLanding() {
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const BASE_VOL = 0.15;
-    const SCROLL_VOL = 0.4;
+    const BASE_VOL = 0.12;
+    const SCROLL_VOL = 0.35;
+    let initCalled = false;
 
-    function startAudio() {
-      if (audioRef.current) return;
+    async function startAudio() {
+      if (audioRef.current || initCalled) return;
+      initCalled = true;
 
-      const ctx = new AudioContext();
-      const master = ctx.createGain();
-      master.gain.value = BASE_VOL;
-      master.connect(ctx.destination);
+      try {
+        const ctx = new (window.AudioContext || (window as unknown as Record<string, unknown>).webkitAudioContext as typeof AudioContext)();
 
-      // Deep drone: two slightly detuned sine oscillators
-      const drone1 = ctx.createOscillator();
-      drone1.type = "sine";
-      drone1.frequency.value = 55;
-      const d1g = ctx.createGain();
-      d1g.gain.value = 0.4;
-      drone1.connect(d1g).connect(master);
-      drone1.start();
+        // Must await resume — Chrome won't play until this resolves
+        if (ctx.state === "suspended") await ctx.resume();
 
-      const drone2 = ctx.createOscillator();
-      drone2.type = "sine";
-      drone2.frequency.value = 55.3;
-      const d2g = ctx.createGain();
-      d2g.gain.value = 0.4;
-      drone2.connect(d2g).connect(master);
-      drone2.start();
+        const master = ctx.createGain();
+        master.gain.value = BASE_VOL;
+        master.connect(ctx.destination);
 
-      // Mid pad: triangle wave + LFO-swept lowpass
-      const pad = ctx.createOscillator();
-      pad.type = "triangle";
-      pad.frequency.value = 110;
-      const padGain = ctx.createGain();
-      padGain.gain.value = 0.15;
-      const padFilter = ctx.createBiquadFilter();
-      padFilter.type = "lowpass";
-      padFilter.frequency.value = 400;
-      padFilter.Q.value = 2;
-      pad.connect(padFilter).connect(padGain).connect(master);
-      pad.start();
+        // Drone layer: 220Hz + 220.8Hz (audible on all speakers, slight beating)
+        [220, 220.8].forEach((freq) => {
+          const osc = ctx.createOscillator();
+          osc.type = "sine";
+          osc.frequency.value = freq;
+          const g = ctx.createGain();
+          g.gain.value = 0.3;
+          osc.connect(g).connect(master);
+          osc.start();
+        });
 
-      const lfo = ctx.createOscillator();
-      lfo.type = "sine";
-      lfo.frequency.value = 0.08;
-      const lfoGain = ctx.createGain();
-      lfoGain.gain.value = 200;
-      lfo.connect(lfoGain).connect(padFilter.frequency);
-      lfo.start();
+        // Warm pad: 330Hz triangle through slowly swept lowpass
+        const pad = ctx.createOscillator();
+        pad.type = "triangle";
+        pad.frequency.value = 330;
+        const padFilter = ctx.createBiquadFilter();
+        padFilter.type = "lowpass";
+        padFilter.frequency.value = 600;
+        padFilter.Q.value = 1.5;
+        const padGain = ctx.createGain();
+        padGain.gain.value = 0.2;
+        pad.connect(padFilter).connect(padGain).connect(master);
+        pad.start();
 
-      // High shimmer with vibrato
-      const shimmer = ctx.createOscillator();
-      shimmer.type = "sine";
-      shimmer.frequency.value = 880;
-      const shimmerGain = ctx.createGain();
-      shimmerGain.gain.value = 0.04;
-      const shimmerFilter = ctx.createBiquadFilter();
-      shimmerFilter.type = "bandpass";
-      shimmerFilter.frequency.value = 900;
-      shimmerFilter.Q.value = 8;
-      shimmer.connect(shimmerFilter).connect(shimmerGain).connect(master);
-      shimmer.start();
+        // Slow LFO sweeps the pad filter
+        const lfo = ctx.createOscillator();
+        lfo.type = "sine";
+        lfo.frequency.value = 0.06;
+        const lfoG = ctx.createGain();
+        lfoG.gain.value = 250;
+        lfo.connect(lfoG).connect(padFilter.frequency);
+        lfo.start();
 
-      const vibrato = ctx.createOscillator();
-      vibrato.type = "sine";
-      vibrato.frequency.value = 4.5;
-      const vibGain = ctx.createGain();
-      vibGain.gain.value = 3;
-      vibrato.connect(vibGain).connect(shimmer.frequency);
-      vibrato.start();
+        // High shimmer: 660Hz with slow vibrato
+        const shimmer = ctx.createOscillator();
+        shimmer.type = "sine";
+        shimmer.frequency.value = 660;
+        const shimG = ctx.createGain();
+        shimG.gain.value = 0.08;
+        shimmer.connect(shimG).connect(master);
+        shimmer.start();
 
-      // Filtered noise texture
-      const bufSize = ctx.sampleRate * 2;
-      const noiseBuf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-      const data = noiseBuf.getChannelData(0);
-      for (let i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
-      const noise = ctx.createBufferSource();
-      noise.buffer = noiseBuf;
-      noise.loop = true;
-      const noiseFilter = ctx.createBiquadFilter();
-      noiseFilter.type = "bandpass";
-      noiseFilter.frequency.value = 300;
-      noiseFilter.Q.value = 3;
-      const noiseGain = ctx.createGain();
-      noiseGain.gain.value = 0.06;
-      noise.connect(noiseFilter).connect(noiseGain).connect(master);
-      noise.start();
+        const vib = ctx.createOscillator();
+        vib.type = "sine";
+        vib.frequency.value = 3;
+        const vibG = ctx.createGain();
+        vibG.gain.value = 4;
+        vib.connect(vibG).connect(shimmer.frequency);
+        vib.start();
 
-      audioRef.current = { ctx, gain: master };
+        // Filtered noise for air/texture
+        const bufSize = ctx.sampleRate * 2;
+        const noiseBuf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
+        const noiseData = noiseBuf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) noiseData[i] = Math.random() * 2 - 1;
+        const noise = ctx.createBufferSource();
+        noise.buffer = noiseBuf;
+        noise.loop = true;
+        const nf = ctx.createBiquadFilter();
+        nf.type = "bandpass";
+        nf.frequency.value = 800;
+        nf.Q.value = 1;
+        const ng = ctx.createGain();
+        ng.gain.value = 0.07;
+        noise.connect(nf).connect(ng).connect(master);
+        noise.start();
 
-      // Resume if browser suspended it
-      if (ctx.state === "suspended") ctx.resume();
-      console.log("[ambient] started — state:", ctx.state, "sampleRate:", ctx.sampleRate);
+        audioRef.current = { ctx, gain: master };
+        console.log("[ambient] running — state:", ctx.state, "baseLatency:", ctx.baseLatency);
+      } catch (err) {
+        console.error("[ambient] failed to start:", err);
+        initCalled = false;
+      }
     }
 
     function onScrollActivity() {
       const a = audioRef.current;
       if (!a) return;
       a.gain.gain.cancelScheduledValues(a.ctx.currentTime);
-      a.gain.gain.setTargetAtTime(SCROLL_VOL, a.ctx.currentTime, 0.15);
+      a.gain.gain.setTargetAtTime(SCROLL_VOL, a.ctx.currentTime, 0.12);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
       scrollTimerRef.current = setTimeout(() => {
         const a2 = audioRef.current;
         if (!a2) return;
         a2.gain.gain.cancelScheduledValues(a2.ctx.currentTime);
-        a2.gain.gain.setTargetAtTime(BASE_VOL, a2.ctx.currentTime, 0.5);
+        a2.gain.gain.setTargetAtTime(BASE_VOL, a2.ctx.currentTime, 0.4);
       }, 200);
     }
 
-    // Use wheel/pointerdown/touchstart — NOT scroll (Lenis intercepts native scroll)
     function onInteraction() {
       startAudio();
       document.removeEventListener("wheel", onInteraction);
@@ -564,7 +562,6 @@ export default function PreviewLanding() {
     document.addEventListener("wheel", onInteraction, { passive: true });
     document.addEventListener("pointerdown", onInteraction);
     document.addEventListener("touchstart", onInteraction, { passive: true });
-    // Scroll volume swell — use wheel (fires before Lenis) + native scroll as backup
     document.addEventListener("wheel", onScrollActivity, { passive: true });
     window.addEventListener("scroll", onScrollActivity, { passive: true });
 
