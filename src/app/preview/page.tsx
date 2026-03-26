@@ -472,8 +472,8 @@ export default function PreviewLanding() {
               width: m ? MW(362) : W(1443), height: m ? MH(822) : H(919),
               background: "#ff6b5c", borderRadius: m ? "16.698px" : "17.872px",
               boxShadow: m
-                ? "-1px -1px 15px rgba(0,0,0,0.25), 1px 1px 15px rgba(0,0,0,0.25)"
-                : "-1.787px -1.787px 23.413px rgba(0,0,0,0.25), 2.681px 2.681px 19.302px rgba(0,0,0,0.25)",
+                ? "0 4px 24px rgba(0,0,0,0.08)"
+                : "0 6px 32px rgba(0,0,0,0.08)",
             }} />
             <Image id="hero-icon" src="/images/mentic-icon-mint.png" alt="Mentic" width={65} height={65} style={{
               position: "absolute",
