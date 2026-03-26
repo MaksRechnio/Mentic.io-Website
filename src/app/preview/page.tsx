@@ -248,7 +248,7 @@ export default function PreviewLanding() {
             ease: "power1.inOut",
             directional: true,
             onComplete: () => {
-              if (audioRef.current && audioRef.current.ctx.state === "running") playClick();
+              if (audioRef.current && audioRef.current.ctx.state === "running") sfxClick();
             },
           },
         },
@@ -449,17 +449,84 @@ export default function PreviewLanding() {
     return () => ctx.revert();
   }, [isMobile]);
 
-  /* ── Ambient audio engine ── */
+  /* ── Audio engine: ambient + SFX ── */
   const audioRef = useRef<{ ctx: AudioContext; gain: GainNode; fadeUntil: number } | null>(null);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const audioStartedRef = useRef(false);
+  const lastSwooshRef = useRef(0);
+
+  // SFX functions — defined as plain functions using refs, no closure issues
+  function sfxClick() {
+    try {
+      const a = audioRef.current;
+      if (!a || a.ctx.state !== "running") return;
+      const ctx = a.ctx;
+      const t = ctx.currentTime;
+
+      const clickGain = ctx.createGain();
+      clickGain.gain.setValueAtTime(0.08, t);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+      clickGain.connect(ctx.destination);
+
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.05, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d.length * 0.15));
+      const noiseSrc = ctx.createBufferSource();
+      noiseSrc.buffer = buf;
+      const hp = ctx.createBiquadFilter();
+      hp.type = "highpass";
+      hp.frequency.value = 2000;
+      hp.Q.value = 1;
+      noiseSrc.connect(hp).connect(clickGain);
+      noiseSrc.start(t);
+      noiseSrc.stop(t + 0.05);
+
+      const ring = ctx.createOscillator();
+      ring.type = "sine";
+      ring.frequency.value = 3200 + Math.random() * 800;
+      const ringGain = ctx.createGain();
+      ringGain.gain.setValueAtTime(0.04, t);
+      ringGain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+      ring.connect(ringGain).connect(ctx.destination);
+      ring.start(t);
+      ring.stop(t + 0.08);
+    } catch (e) { /* silent */ }
+  }
+
+  function sfxSwoosh() {
+    try {
+      const a = audioRef.current;
+      if (!a || a.ctx.state !== "running") return;
+      const now = performance.now();
+      if (now - lastSwooshRef.current < 300) return;
+      lastSwooshRef.current = now;
+
+      const ctx = a.ctx;
+      const t = ctx.currentTime;
+      const dur = 0.15;
+      const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.sin((i / d.length) * Math.PI);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const bp = ctx.createBiquadFilter();
+      bp.type = "bandpass";
+      bp.frequency.setValueAtTime(600, t);
+      bp.frequency.linearRampToValueAtTime(1200, t + dur);
+      bp.Q.value = 0.5;
+      const sg = ctx.createGain();
+      sg.gain.value = 0.025;
+      src.connect(bp).connect(sg).connect(ctx.destination);
+      src.start(t);
+      src.stop(t + dur);
+    } catch (e) { /* silent */ }
+  }
 
   useEffect(() => {
     const BASE_VOL = 0.12;
     const SCROLL_VOL = 0.25;
 
     async function startAudio() {
-      // Prevent double init — ref survives HMR/strict mode
       if (audioRef.current) {
         if (audioRef.current.ctx.state === "suspended") audioRef.current.ctx.resume();
         return;
@@ -473,10 +540,10 @@ export default function PreviewLanding() {
         await ctx.resume();
 
         const master = ctx.createGain();
-        master.gain.value = 0; // Start silent, fade in
+        master.gain.value = 0;
         master.connect(ctx.destination);
 
-        // Drone: 174Hz + 174.5Hz (F3) — warm, audible on all speakers
+        // Drone: 174Hz + 174.5Hz
         [174, 174.5].forEach((freq) => {
           const osc = ctx.createOscillator();
           osc.type = "sine";
@@ -487,7 +554,7 @@ export default function PreviewLanding() {
           osc.start();
         });
 
-        // Pad: 262Hz (C4) triangle through slowly swept lowpass
+        // Pad: 262Hz triangle + swept lowpass
         const pad = ctx.createOscillator();
         pad.type = "triangle";
         pad.frequency.value = 262;
@@ -500,7 +567,6 @@ export default function PreviewLanding() {
         pad.connect(padFilter).connect(padGain).connect(master);
         pad.start();
 
-        // LFO sweeps pad filter
         const lfo = ctx.createOscillator();
         lfo.type = "sine";
         lfo.frequency.value = 0.04;
@@ -509,7 +575,7 @@ export default function PreviewLanding() {
         lfo.connect(lfoG).connect(padFilter.frequency);
         lfo.start();
 
-        // Shimmer: 392Hz (G4) with gentle vibrato
+        // Shimmer: 392Hz + vibrato
         const shimmer = ctx.createOscillator();
         shimmer.type = "sine";
         shimmer.frequency.value = 392;
@@ -526,11 +592,11 @@ export default function PreviewLanding() {
         vib.connect(vibG).connect(shimmer.frequency);
         vib.start();
 
-        // Warm noise wash
+        // Warm noise
         const bufSize = ctx.sampleRate * 2;
         const noiseBuf = ctx.createBuffer(1, bufSize, ctx.sampleRate);
-        const d = noiseBuf.getChannelData(0);
-        for (let i = 0; i < bufSize; i++) d[i] = Math.random() * 2 - 1;
+        const nd = noiseBuf.getChannelData(0);
+        for (let i = 0; i < bufSize; i++) nd[i] = Math.random() * 2 - 1;
         const noise = ctx.createBufferSource();
         noise.buffer = noiseBuf;
         noise.loop = true;
@@ -544,9 +610,6 @@ export default function PreviewLanding() {
         noise.start();
 
         audioRef.current = { ctx, gain: master, fadeUntil: ctx.currentTime + 4 };
-
-        // Smooth fade-in from silence — setTargetAtTime with 1s time constant
-        // reaches ~63% at 1s, ~86% at 2s, ~95% at 3s, ~98% at 4s
         master.gain.setTargetAtTime(BASE_VOL, ctx.currentTime, 1.0);
         console.log("[ambient] running — fading in");
       } catch (err) {
@@ -558,7 +621,6 @@ export default function PreviewLanding() {
     function onScrollActivity() {
       const a = audioRef.current;
       if (!a || a.ctx.state !== "running") return;
-      // Don't interrupt the initial fade-in
       if (a.ctx.currentTime < a.fadeUntil) return;
       a.gain.gain.cancelScheduledValues(a.ctx.currentTime);
       a.gain.gain.setTargetAtTime(SCROLL_VOL, a.ctx.currentTime, 0.12);
@@ -571,7 +633,6 @@ export default function PreviewLanding() {
       }, 200);
     }
 
-    // Always listen for interactions — handles HMR re-mounts too
     function onInteraction() {
       startAudio();
     }
@@ -579,10 +640,10 @@ export default function PreviewLanding() {
     function onWheel() {
       onInteraction();
       onScrollActivity();
-      // Trigger swoosh on wheel
-      if (audioRef.current && audioRef.current.ctx.currentTime >= audioRef.current.fadeUntil) {
-        playSwoosh();
-      }
+      try {
+        const a = audioRef.current;
+        if (a && a.ctx.currentTime >= a.fadeUntil) sfxSwoosh();
+      } catch (e) { /* silent */ }
     }
 
     document.addEventListener("wheel", onWheel, { passive: true });
@@ -596,82 +657,7 @@ export default function PreviewLanding() {
       document.removeEventListener("touchstart", onInteraction);
       window.removeEventListener("scroll", onScrollActivity);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
-      // DON'T close audio on cleanup — survives HMR/strict mode
     };
-  }, []);
-
-  /* ── SFX: mechanical click + gentle swoosh ── */
-  const lastSwooshRef = useRef(0);
-  const lastSnapRef = useRef(-1);
-
-  const playClick = useCallback(() => {
-    const a = audioRef.current;
-    if (!a || a.ctx.state !== "running") return;
-    const ctx = a.ctx;
-    const t = ctx.currentTime;
-
-    // Short metallic click: noise burst + high-freq ring
-    const clickGain = ctx.createGain();
-    clickGain.gain.setValueAtTime(0.08, t);
-    clickGain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
-    clickGain.connect(ctx.destination);
-
-    // Noise burst (the "click" part)
-    const buf = ctx.createBuffer(1, ctx.sampleRate * 0.05, ctx.sampleRate);
-    const d = buf.getChannelData(0);
-    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.exp(-i / (d.length * 0.15));
-    const noiseSrc = ctx.createBufferSource();
-    noiseSrc.buffer = buf;
-    const hp = ctx.createBiquadFilter();
-    hp.type = "highpass";
-    hp.frequency.value = 2000;
-    hp.Q.value = 1;
-    noiseSrc.connect(hp).connect(clickGain);
-    noiseSrc.start(t);
-    noiseSrc.stop(t + 0.05);
-
-    // Metallic ring (short sine ping)
-    const ring = ctx.createOscillator();
-    ring.type = "sine";
-    ring.frequency.value = 3200 + Math.random() * 800;
-    const ringGain = ctx.createGain();
-    ringGain.gain.setValueAtTime(0.04, t);
-    ringGain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
-    ring.connect(ringGain).connect(ctx.destination);
-    ring.start(t);
-    ring.stop(t + 0.08);
-  }, []);
-
-  const playSwoosh = useCallback(() => {
-    const a = audioRef.current;
-    if (!a || a.ctx.state !== "running") return;
-    const now = performance.now();
-    if (now - lastSwooshRef.current < 300) return; // Debounce: max ~3/sec
-    lastSwooshRef.current = now;
-
-    const ctx = a.ctx;
-    const t = ctx.currentTime;
-
-    // Gentle swoosh: filtered noise with swept bandpass
-    const dur = 0.15;
-    const buf = ctx.createBuffer(1, ctx.sampleRate * dur, ctx.sampleRate);
-    const d = buf.getChannelData(0);
-    for (let i = 0; i < d.length; i++) {
-      const env = Math.sin((i / d.length) * Math.PI); // bell curve envelope
-      d[i] = (Math.random() * 2 - 1) * env;
-    }
-    const src = ctx.createBufferSource();
-    src.buffer = buf;
-    const bp = ctx.createBiquadFilter();
-    bp.type = "bandpass";
-    bp.frequency.setValueAtTime(600, t);
-    bp.frequency.linearRampToValueAtTime(1200, t + dur);
-    bp.Q.value = 0.5;
-    const sg = ctx.createGain();
-    sg.gain.value = 0.025;
-    src.connect(bp).connect(sg).connect(ctx.destination);
-    src.start(t);
-    src.stop(t + dur);
   }, []);
 
   /* ── Custom cursor ── */
