@@ -839,7 +839,7 @@ export default function PreviewLanding() {
             <div id="signup-icon" style={{
               position: "absolute",
               ...(m
-                ? { top: MY(85), left: MX(127), width: MW(139), height: MW(139) }
+                ? { top: MY(128), left: "50%", transform: "translateX(-50%)", width: MW(139), height: MW(139) }
                 : { top: "50%", left: "30%", transform: "translate(-50%, -50%)", width: 219, height: 219 }),
             }}>
               <Image src="/images/mentic-icon-orange.png" alt="Mentic" fill style={{ objectFit: "contain" }} />
@@ -849,7 +849,7 @@ export default function PreviewLanding() {
             <div id="signup-card" style={{
               position: "absolute",
               ...(m
-                ? { top: MY(352), left: MX(44), width: MW(307) }
+                ? { top: MY(352), left: "50%", transform: "translateX(-50%)", width: MW(307) }
                 : { top: "50%", right: "8%", transform: "translateY(-50%)", width: 361 }),
               background: "#ff6b5c",
               borderRadius: m ? "15.199px" : "17.872px",
