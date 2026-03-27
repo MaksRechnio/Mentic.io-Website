@@ -57,6 +57,7 @@ html {
   cursor: none !important;
   height: -webkit-fill-available;
   overscroll-behavior: none;
+  background: var(--coral);
 }
 
 html::-webkit-scrollbar {

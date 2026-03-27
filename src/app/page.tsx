@@ -942,6 +942,22 @@ export default function PreviewLanding() {
     };
   }, [isMobile]);
 
+  /* ── Sync html background with #bg on mobile (fixes iOS Safari safe-area stripes) ── */
+  useEffect(() => {
+    if (!isMobile) return;
+    const bg = document.getElementById("bg");
+    if (!bg) return;
+    const sync = () => {
+      const c = bg.style.backgroundColor;
+      if (c) document.documentElement.style.backgroundColor = c;
+    };
+    gsap.ticker.add(sync);
+    return () => {
+      gsap.ticker.remove(sync);
+      document.documentElement.style.backgroundColor = "";
+    };
+  }, [isMobile]);
+
   const m = isMobile;
 
   return (
@@ -974,7 +990,7 @@ export default function PreviewLanding() {
         <div ref={viewportRef} style={{ position: "sticky", top: 0, width: "100vw", height: "100dvh", overflow: "hidden" }}>
 
           {/* ── Background — fixed so it covers behind iOS browser chrome ── */}
-          <div id="bg" style={{ position: "fixed", inset: "-5vh -5vw", backgroundColor: "#ffe5e5", zIndex: 0 }} />
+          <div id="bg" style={{ position: "fixed", inset: m ? "-20vh -10vw" : "-5vh -5vw", backgroundColor: "#ffe5e5", zIndex: 0 }} />
 
           {/* ── Persistent teal icon ── */}
           <button
