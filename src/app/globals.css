@@ -67,8 +67,6 @@ html::-webkit-scrollbar {
 body {
   margin: 0;
   padding: 0;
-  padding-top: env(safe-area-inset-top, 0);
-  padding-bottom: env(safe-area-inset-bottom, 0);
   background: var(--coral);
   color: var(--dark-teal);
   font-family: var(--font-nunito), "Nunito Sans", sans-serif;
