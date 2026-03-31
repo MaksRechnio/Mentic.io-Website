@@ -36,6 +36,7 @@ export default function PreviewLanding() {
   const viewportRef = useRef<HTMLDivElement>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
   const signupLayerRef = useRef<HTMLDivElement>(null);
+  const mobileBgRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<InstanceType<typeof Lenis> | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", company: "" });
@@ -562,7 +563,7 @@ export default function PreviewLanding() {
       const t = ctx.currentTime;
 
       const clickGain = ctx.createGain();
-      clickGain.gain.setValueAtTime(0.08, t);
+      clickGain.gain.setValueAtTime(0.064, t);
       clickGain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
       clickGain.connect(ctx.destination);
 
@@ -583,7 +584,7 @@ export default function PreviewLanding() {
       ring.type = "sine";
       ring.frequency.value = 3200 + Math.random() * 800;
       const ringGain = ctx.createGain();
-      ringGain.gain.setValueAtTime(0.04, t);
+      ringGain.gain.setValueAtTime(0.032, t);
       ringGain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
       ring.connect(ringGain).connect(ctx.destination);
       ring.start(t);
@@ -613,7 +614,7 @@ export default function PreviewLanding() {
       bp.frequency.linearRampToValueAtTime(1200, t + dur);
       bp.Q.value = 0.5;
       const sg = ctx.createGain();
-      sg.gain.value = 0.025;
+      sg.gain.value = 0.02;
       src.connect(bp).connect(sg).connect(ctx.destination);
       src.start(t);
       src.stop(t + dur);
@@ -636,8 +637,8 @@ export default function PreviewLanding() {
       osc.frequency.exponentialRampToValueAtTime(1200, t + dur);
 
       const g = ctx.createGain();
-      g.gain.setValueAtTime(0.03, t);
-      g.gain.linearRampToValueAtTime(0.05, t + dur * 0.3);
+      g.gain.setValueAtTime(0.024, t);
+      g.gain.linearRampToValueAtTime(0.04, t + dur * 0.3);
       g.gain.exponentialRampToValueAtTime(0.001, t + dur);
 
       const lp = ctx.createBiquadFilter();
@@ -666,7 +667,7 @@ export default function PreviewLanding() {
       osc.frequency.setValueAtTime(1200, t);
       osc.frequency.exponentialRampToValueAtTime(600, t + 0.1);
       const g = ctx.createGain();
-      g.gain.setValueAtTime(0.06, t);
+      g.gain.setValueAtTime(0.048, t);
       g.gain.exponentialRampToValueAtTime(0.001, t + 0.12);
       const lp = ctx.createBiquadFilter();
       lp.type = "lowpass";
@@ -681,7 +682,7 @@ export default function PreviewLanding() {
       thump.frequency.setValueAtTime(180, t);
       thump.frequency.exponentialRampToValueAtTime(80, t + 0.06);
       const tg = ctx.createGain();
-      tg.gain.setValueAtTime(0.05, t);
+      tg.gain.setValueAtTime(0.04, t);
       tg.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
       thump.connect(tg).connect(ctx.destination);
       thump.start(t);
@@ -712,7 +713,7 @@ export default function PreviewLanding() {
       bp.Q.value = 0.8;
 
       const g = ctx.createGain();
-      g.gain.setValueAtTime(0.08, t); // louder
+      g.gain.setValueAtTime(0.064, t); // louder
       g.gain.exponentialRampToValueAtTime(0.001, t + dur);
 
       src.connect(bp).connect(g).connect(ctx.destination);
@@ -722,8 +723,8 @@ export default function PreviewLanding() {
   }
 
   useEffect(() => {
-    const BASE_VOL = 0.12;
-    const SCROLL_VOL = 0.25;
+    const BASE_VOL = 0.096;
+    const SCROLL_VOL = 0.20;
 
     // Create AudioContext once, reuse across all resume attempts
     function getOrCreateCtx(): AudioContext {
@@ -748,7 +749,7 @@ export default function PreviewLanding() {
         osc.type = "sine";
         osc.frequency.value = freq;
         const g = ctx.createGain();
-        g.gain.value = 0.3;
+        g.gain.value = 0.24;
         osc.connect(g).connect(master);
         osc.start();
       });
@@ -762,7 +763,7 @@ export default function PreviewLanding() {
       padFilter.frequency.value = 450;
       padFilter.Q.value = 1;
       const padGain = ctx.createGain();
-      padGain.gain.value = 0.18;
+      padGain.gain.value = 0.144;
       pad.connect(padFilter).connect(padGain).connect(master);
       pad.start();
 
@@ -779,7 +780,7 @@ export default function PreviewLanding() {
       shimmer.type = "sine";
       shimmer.frequency.value = 392;
       const shimG = ctx.createGain();
-      shimG.gain.value = 0.05;
+      shimG.gain.value = 0.04;
       shimmer.connect(shimG).connect(master);
       shimmer.start();
 
@@ -804,7 +805,7 @@ export default function PreviewLanding() {
       nf.frequency.value = 400;
       nf.Q.value = 0.7;
       const ng = ctx.createGain();
-      ng.gain.value = 0.05;
+      ng.gain.value = 0.04;
       noise.connect(nf).connect(ng).connect(master);
       noise.start();
 
@@ -942,19 +943,29 @@ export default function PreviewLanding() {
     };
   }, [isMobile]);
 
-  /* ── Sync html background with #bg on mobile (fixes iOS Safari safe-area stripes) ── */
+  /* ── Sync html + mobile-bg + theme-color with #bg on mobile (fixes iOS Safari safe-area stripes) ── */
   useEffect(() => {
     if (!isMobile) return;
     const bg = document.getElementById("bg");
+    const mbg = mobileBgRef.current;
+    const themeMeta = document.querySelector('meta[name="theme-color"]');
     if (!bg) return;
+    let lastColor = "";
     const sync = () => {
       const c = bg.style.backgroundColor;
-      if (c) document.documentElement.style.backgroundColor = c;
+      if (c && c !== lastColor) {
+        lastColor = c;
+        document.documentElement.style.backgroundColor = c;
+        document.body.style.backgroundColor = c;
+        if (mbg) mbg.style.backgroundColor = c;
+        if (themeMeta) themeMeta.setAttribute("content", c);
+      }
     };
     gsap.ticker.add(sync);
     return () => {
       gsap.ticker.remove(sync);
       document.documentElement.style.backgroundColor = "";
+      document.body.style.backgroundColor = "";
     };
   }, [isMobile]);
 
@@ -986,11 +997,14 @@ export default function PreviewLanding() {
           }} />
         </div>
       )}
+      {/* ── Mobile: extra background layer OUTSIDE viewport to cover iOS safe areas ── */}
+      {m && <div ref={mobileBgRef} style={{ position: "fixed", inset: "-100vh -100vw", zIndex: -1, backgroundColor: "#ffe5e5", pointerEvents: "none" }} />}
+
       <div ref={wrapperRef} style={{ height: `${TOTAL_FRAMES * 23}vh`, position: "relative" }}>
         <div ref={viewportRef} style={{ position: "sticky", top: 0, width: "100vw", height: "100dvh", overflow: "hidden" }}>
 
           {/* ── Background — fixed so it covers behind iOS browser chrome ── */}
-          <div id="bg" style={{ position: "fixed", inset: m ? "-20vh -10vw" : "-5vh -5vw", backgroundColor: "#ffe5e5", zIndex: 0 }} />
+          <div id="bg" style={{ position: "fixed", inset: m ? "-50vh -25vw" : "-5vh -5vw", backgroundColor: "#ffe5e5", zIndex: 0 }} />
 
           {/* ── Persistent teal icon ── */}
           <button
@@ -1722,7 +1736,7 @@ export default function PreviewLanding() {
 
       {/* ── Splash screen ── */}
       <div ref={loaderRef} style={{
-        position: "fixed", inset: 0, zIndex: 200, background: "#ff6b5c",
+        position: "fixed", inset: m ? "-5vh -5vw" : 0, zIndex: 200, background: "#ff6b5c",
         display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column",
         overflow: "hidden", clipPath: "inset(0 0 0% 0)",
       }}>
