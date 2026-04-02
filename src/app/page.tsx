@@ -293,7 +293,7 @@ export default function PreviewLanding() {
     if (!wrapperRef.current) return;
     const ctx = gsap.context(() => {
 
-      /* ═══ Hero — clip-path exit on scroll ═══ */
+      /* ═══ Hero — dramatic exit on scroll ═══ */
       gsap.timeline({
         scrollTrigger: {
           trigger: "#section-hero",
@@ -302,12 +302,12 @@ export default function PreviewLanding() {
           scrub: 0.4,
         },
       })
-      .to("#hero-btn", { opacity: 0, scale: 0.6, y: 20, duration: 0.3, ease: "power3.in" }, 0)
-      .to("#hero-alpha", { opacity: 0, y: 15, duration: 0.3, ease: "power3.in" }, 0)
-      .to("#hero-headline", { opacity: 0, clipPath: "inset(0 0 100% 0)", duration: 0.4, ease: "power3.in" }, 0.05)
-      .to("#hero-logo", { opacity: 0, clipPath: "inset(0 100% 0 0)", duration: 0.4, ease: "power3.in" }, 0.1)
-      .to("#hero-icon", { opacity: 0, scale: 0, rotation: -90, duration: 0.4, ease: "power3.in" }, 0.1)
-      .to("#hero-card", { opacity: 0, clipPath: "inset(100% 0 0 0)", duration: 0.5, ease: "power3.in" }, 0.15);
+      .to("#hero-btn", { opacity: 0, y: -60, rotation: 8, duration: 0.3, ease: "power3.in" }, 0)
+      .to("#hero-alpha", { opacity: 0, x: 120, duration: 0.3, ease: "power3.in" }, 0)
+      .to("#hero-headline", { opacity: 0, y: -80, skewY: 4, duration: 0.4, ease: "power3.in" }, 0.05)
+      .to("#hero-logo", { opacity: 0, x: -150, rotation: -12, duration: 0.4, ease: "power3.in" }, 0.08)
+      .to("#hero-icon", { opacity: 0, scale: 0.1, rotation: -270, duration: 0.5, ease: "power4.in" }, 0.1)
+      .to("#hero-card", { opacity: 0, y: 120, scale: 0.85, duration: 0.5, ease: "power3.in" }, 0.12);
 
       /* ═══ Pain ═══ */
       ScrollTrigger.create({
@@ -321,19 +321,24 @@ export default function PreviewLanding() {
           gsap.to(["#glass-card", "#icon-teal"], { opacity: 0, duration: 0.4, ease: "power2.in" });
         },
       });
+      // Hide glass card when leaving pain section (it only suits the pink bg)
+      ScrollTrigger.create({
+        trigger: "#section-pain",
+        start: "bottom 50%",
+        onEnter: () => gsap.to("#glass-card", { opacity: 0, duration: 0.4, ease: "power2.in" }),
+        onLeaveBack: () => gsap.to("#glass-card", { opacity: 1, duration: 0.4, ease: "power2.out" }),
+      });
 
       const painTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-pain", start: "top 70%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      painTl.fromTo("#pain-blob", { opacity: 0, scale: 0.4, rotation: -120 }, { opacity: 1, scale: 1, rotation: -90, duration: 0.8, ease: "back.out(1.4)" }, 0);
-      painTl.fromTo("#pain-text-1", { opacity: 0, y: 40, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power3.out" }, 0.15);
-      painTl.call(() => sfxClick(), [], 0.6);
-      painTl.fromTo("#glass-strip-1", { opacity: 0, scaleX: 0, transformOrigin: "left" }, { opacity: 1, scaleX: 1, duration: 0.6, ease: "power4.out" }, 0.3);
-      painTl.fromTo("#pain-text-2", { opacity: 0, y: 35, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power3.out" }, 0.35);
-      painTl.call(() => sfxClick(), [], 0.8);
-      painTl.fromTo("#glass-strip-2", { opacity: 0, scaleX: 0, transformOrigin: "left" }, { opacity: 1, scaleX: 1, duration: 0.6, ease: "power4.out" }, 0.5);
-      painTl.fromTo("#pain-text-3", { opacity: 0, y: 35, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power3.out" }, 0.55);
-      painTl.call(() => sfxClick(), [], 1.0);
+      painTl.fromTo("#pain-blob", { opacity: 0, scale: 0.2, rotation: -200, x: -80 }, { opacity: 1, scale: 1, rotation: -90, x: 0, duration: 1, ease: "elastic.out(1, 0.6)" }, 0);
+      painTl.fromTo("#pain-text-1", { opacity: 0, x: -120, skewX: -8, rotation: -3 }, { opacity: 1, x: 0, skewX: 0, rotation: 0, duration: 0.8, ease: "power4.out" }, 0.1);
+      painTl.call(() => sfxClick(), [], 0.5);
+      painTl.fromTo("#pain-text-2", { opacity: 0, x: 120, skewX: 8, rotation: 3 }, { opacity: 1, x: 0, skewX: 0, rotation: 0, duration: 0.8, ease: "power4.out" }, 0.3);
+      painTl.call(() => sfxClick(), [], 0.7);
+      painTl.fromTo("#pain-text-3", { opacity: 0, y: 80, scale: 0.7, rotation: 5 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.9, ease: "back.out(1.7)" }, 0.55);
+      painTl.call(() => sfxClick(), [], 0.95);
 
       /* ═══ Calc ═══ */
       ScrollTrigger.create({
@@ -346,15 +351,15 @@ export default function PreviewLanding() {
       const calcTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-calc", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      calcTl.fromTo("#calc-panel", { opacity: 0, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, clipPath: "inset(0 0 0 0%)", duration: 0.7, ease: "power4.out" }, 0);
-      calcTl.fromTo("#calc-heading", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.15);
-      calcTl.call(() => sfxClick(), [], 0.5);
-      calcTl.fromTo("#calc-amount", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.8)" }, 0.3);
-      calcTl.fromTo("#calc-fifty", { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2.5)" }, 0.35);
-      calcTl.call(() => sfxClick(), [], 0.7);
-      calcTl.fromTo("#calc-fees", { opacity: 0, x: -40, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "power3.out" }, 0.5);
-      calcTl.fromTo("#calc-notads", { opacity: 0, y: 25, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 0.6);
-      calcTl.call(() => sfxClick(), [], 0.9);
+      calcTl.fromTo("#calc-panel", { opacity: 0, x: 200, rotation: 6, scale: 0.8 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.9, ease: "power4.out" }, 0);
+      calcTl.fromTo("#calc-heading", { opacity: 0, y: -60, skewY: -6 }, { opacity: 1, y: 0, skewY: 0, duration: 0.7, ease: "power3.out" }, 0.15);
+      calcTl.call(() => sfxClick(), [], 0.4);
+      calcTl.fromTo("#calc-amount", { opacity: 0, scale: 0.1, rotation: 90 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "elastic.out(1, 0.5)" }, 0.25);
+      calcTl.fromTo("#calc-fifty", { opacity: 0, scale: 3, y: -40 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "back.out(2.5)" }, 0.35);
+      calcTl.call(() => sfxClick(), [], 0.65);
+      calcTl.fromTo("#calc-fees", { opacity: 0, x: -100, rotation: -4, skewX: -6 }, { opacity: 1, x: 0, rotation: 0, skewX: 0, duration: 0.7, ease: "power4.out" }, 0.45);
+      calcTl.fromTo("#calc-notads", { opacity: 0, y: 60, scale: 0.5, rotation: -8 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, 0.6);
+      calcTl.call(() => sfxClick(), [], 0.85);
 
       /* ═══ Solution ═══ */
       ScrollTrigger.create({
@@ -374,64 +379,71 @@ export default function PreviewLanding() {
       const solTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-sol", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      solTl.fromTo("#sol-text-1", { opacity: 0, y: 50, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.8, ease: "power3.out" }, 0);
-      solTl.call(() => sfxClick(), [], 0.5);
-      solTl.fromTo("#sol-text-2", { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.2);
-      solTl.call(() => sfxClick(), [], 0.7);
-      solTl.fromTo("#sol-text-3", { opacity: 0, y: 25, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 0.4);
-      solTl.call(() => sfxClick(), [], 0.85);
+      solTl.fromTo("#sol-text-1", { opacity: 0, y: 100, rotation: -6, scale: 0.8 }, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.9, ease: "power4.out" }, 0);
+      solTl.call(() => sfxClick(), [], 0.4);
+      solTl.fromTo("#sol-text-2", { opacity: 0, x: -100, skewX: -10 }, { opacity: 1, x: 0, skewX: 0, duration: 0.8, ease: "power4.out" }, 0.15);
+      solTl.call(() => sfxClick(), [], 0.6);
+      solTl.fromTo("#sol-text-3", { opacity: 0, x: 100, skewX: 10, scale: 0.85 }, { opacity: 1, x: 0, skewX: 0, scale: 1, duration: 0.8, ease: "back.out(1.5)" }, 0.35);
+      solTl.call(() => sfxClick(), [], 0.8);
 
       /* ═══ NO ═══ */
+      ScrollTrigger.create({
+        trigger: "#section-no",
+        start: "top 65%",
+        onEnter: () => gsap.to("#bg", { backgroundColor: "#ffffff", duration: 0.6, ease: "power2.out" }),
+        onLeaveBack: () => gsap.to("#bg", { backgroundColor: "#ffffff", duration: 0.6, ease: "power2.out" }),
+      });
+
       const noTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-no", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      noTl.fromTo("#no-text", { opacity: 0, scale: 0.15, rotation: -15 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, 0);
+      noTl.fromTo("#no-text", { opacity: 0, scale: 0.05, rotation: -25, y: 60 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.9, ease: "elastic.out(1, 0.5)" }, 0);
+      noTl.call(() => sfxClick(), [], 0.4);
+      noTl.fromTo("#no-item-1", { opacity: 0, x: 150, rotation: 12, scale: 0.6 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 0.15);
       noTl.call(() => sfxClick(), [], 0.5);
-      noTl.fromTo("#no-item-1", { opacity: 0, x: 60, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.5, ease: "power4.out" }, 0.2);
-      noTl.call(() => sfxClick(), [], 0.55);
-      noTl.fromTo("#no-item-2", { opacity: 0, x: 60, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.5, ease: "power4.out" }, 0.35);
-      noTl.call(() => sfxClick(), [], 0.7);
-      noTl.fromTo("#no-item-3", { opacity: 0, x: 60, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.5, ease: "power4.out" }, 0.5);
-      noTl.call(() => sfxClick(), [], 0.85);
-      noTl.fromTo("#no-item-4", { opacity: 0, x: 60, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.5, ease: "power4.out" }, 0.65);
-      noTl.fromTo("#no-dot", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(3)" }, 0.8);
+      noTl.fromTo("#no-item-2", { opacity: 0, x: -150, rotation: -12, scale: 0.6 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 0.3);
+      noTl.call(() => sfxClick(), [], 0.65);
+      noTl.fromTo("#no-item-3", { opacity: 0, y: 80, rotation: 8, scale: 0.6 }, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 0.45);
+      noTl.call(() => sfxClick(), [], 0.8);
+      noTl.fromTo("#no-item-4", { opacity: 0, y: -80, rotation: -8, scale: 0.6 }, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 0.6);
+      noTl.fromTo("#no-dot", { opacity: 0, scale: 0, rotation: 720 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "elastic.out(1, 0.4)" }, 0.75);
       noTl.call(() => sfxClick(), [], 0.95);
 
       /* ═══ How ═══ */
       const howTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-how", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      howTl.fromTo("#how-step-1", { opacity: 0, y: 40, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.6, ease: "power3.out" }, 0);
-      howTl.call(() => sfxClick(), [], 0.4);
-      howTl.fromTo("#how-step-2", { opacity: 0, y: 35, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.6, ease: "power3.out" }, 0.15);
-      howTl.fromTo("#how-step-3", { opacity: 0, y: 30, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.6, ease: "power3.out" }, 0.3);
-      howTl.call(() => sfxClick(), [], 0.65);
-      howTl.fromTo("#how-mentic", { opacity: 0, x: 80, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.7, ease: "power4.out" }, 0.4);
-      howTl.fromTo("#how-rest", { opacity: 0, y: 15, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 0.55);
+      howTl.fromTo("#how-step-1", { opacity: 0, x: -120, rotation: -8, scale: 0.7 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, 0);
+      howTl.call(() => sfxClick(), [], 0.35);
+      howTl.fromTo("#how-step-2", { opacity: 0, y: 100, rotation: 6, scale: 0.7 }, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, 0.15);
+      howTl.fromTo("#how-step-3", { opacity: 0, x: 120, rotation: 8, scale: 0.7 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, 0.3);
+      howTl.call(() => sfxClick(), [], 0.6);
+      howTl.fromTo("#how-mentic", { opacity: 0, scale: 0.3, x: 200, rotation: 15 }, { opacity: 1, scale: 1, x: 0, rotation: 0, duration: 0.9, ease: "elastic.out(1, 0.6)" }, 0.4);
+      howTl.fromTo("#how-rest", { opacity: 0, y: -50, skewY: 6, scale: 0.85 }, { opacity: 1, y: 0, skewY: 0, scale: 1, duration: 0.7, ease: "power4.out" }, 0.55);
       howTl.call(() => sfxClick(), [], 0.85);
 
       /* ═══ Value ═══ */
       const valTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-val", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      valTl.fromTo("#val-one", { opacity: 0, x: -60, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out" }, 0);
-      valTl.call(() => sfxClick(), [], 0.5);
-      valTl.fromTo("#val-every", { opacity: 0, x: -50, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out" }, 0.2);
-      valTl.call(() => sfxClick(), [], 0.7);
-      valTl.fromTo("#val-all", { opacity: 0, x: -40, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out" }, 0.4);
+      valTl.fromTo("#val-one", { opacity: 0, y: 80, x: -80, rotation: -10, scale: 0.6 }, { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.9, ease: "back.out(1.6)" }, 0);
+      valTl.call(() => sfxClick(), [], 0.4);
+      valTl.fromTo("#val-every", { opacity: 0, y: -60, x: 80, rotation: 10, scale: 0.6 }, { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.9, ease: "back.out(1.6)" }, 0.2);
+      valTl.call(() => sfxClick(), [], 0.65);
+      valTl.fromTo("#val-all", { opacity: 0, scale: 0.3, rotation: -15, y: 60 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.9, ease: "elastic.out(1, 0.6)" }, 0.4);
       valTl.call(() => sfxClick(), [], 0.9);
 
       /* ═══ CTA ═══ */
       const ctaTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-cta", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      ctaTl.fromTo("#cta-icon", { opacity: 0, scale: 0.2, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "back.out(1.8)" }, 0);
-      ctaTl.fromTo("#cta-sign", { opacity: 0, x: -80, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "power4.out" }, 0.1);
-      ctaTl.fromTo("#cta-up", { opacity: 0, y: 50, scale: 0.7 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.6)" }, 0.2);
-      ctaTl.call(() => sfxClick(), [], 0.55);
-      ctaTl.fromTo("#cta-now", { opacity: 0, x: 50, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.6, ease: "power4.out" }, 0.3);
-      ctaTl.fromTo("#cta-alpha", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.45);
-      ctaTl.fromTo("#cta-button", { opacity: 0, scale: 0.6, y: 15 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.5)" }, 0.55);
+      ctaTl.fromTo("#cta-icon", { opacity: 0, scale: 0.1, rotation: -360, y: 80 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.5)" }, 0);
+      ctaTl.fromTo("#cta-sign", { opacity: 0, x: -200, skewX: -15, rotation: -8 }, { opacity: 1, x: 0, skewX: 0, rotation: 0, duration: 0.8, ease: "power4.out" }, 0.1);
+      ctaTl.fromTo("#cta-up", { opacity: 0, y: 120, scale: 0.3, rotation: 20 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.8, ease: "back.out(2)" }, 0.2);
+      ctaTl.call(() => sfxClick(), [], 0.5);
+      ctaTl.fromTo("#cta-now", { opacity: 0, x: 150, skewX: 15, rotation: 8 }, { opacity: 1, x: 0, skewX: 0, rotation: 0, duration: 0.7, ease: "power4.out" }, 0.3);
+      ctaTl.fromTo("#cta-alpha", { opacity: 0, y: 50, rotation: -5 }, { opacity: 1, y: 0, rotation: 0, duration: 0.6, ease: "back.out(1.4)" }, 0.45);
+      ctaTl.fromTo("#cta-button", { opacity: 0, scale: 0.2, rotation: -180, y: 40 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.8, ease: "elastic.out(1, 0.5)" }, 0.55);
       ctaTl.call(() => sfxClick(), [], 0.85);
 
     }, wrapperRef);
@@ -947,26 +959,13 @@ export default function PreviewLanding() {
             }}
           />
 
-          {/* ── Glass strips (desktop only) ── */}
-          {!m && (
-            <>
-              <div id="glass-strip-1" style={{ position: "fixed", left: X(24), top: Y(229), width: W(984), height: H(152), background: "rgba(255,255,255,0.08)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "0 12px 12px 0", zIndex: 2, opacity: 0 }} />
-              <div id="glass-strip-2" style={{ position: "fixed", left: X(24), top: Y(652), width: W(984), height: H(141), background: "rgba(255,255,255,0.08)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "0 12px 12px 0", zIndex: 2, opacity: 0 }} />
-            </>
-          )}
-          {m && (
-            <>
-              <div id="glass-strip-1" style={{ position: "absolute", opacity: 0, pointerEvents: "none" }} />
-              <div id="glass-strip-2" style={{ position: "absolute", opacity: 0, pointerEvents: "none" }} />
-            </>
-          )}
 
           {/* ── Gradient blobs ── */}
           <div id="blob-coral" className="gradient-blob gradient-blob-coral" style={{ width: m ? "100vw" : "80vw", height: m ? "100vw" : "80vw", left: "-30%", top: "-20%", opacity: 0, zIndex: 1 }} />
           <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ width: m ? "90vw" : "70vw", height: m ? "90vw" : "70vw", right: "-20%", bottom: "-25%", left: "auto", top: "auto", opacity: 0, zIndex: 1 }} />
 
           {/* ═══ HERO SECTION ═══ */}
-          <div id="section-hero" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="section-hero" style={{ position: "relative", width: "100%", height: "85dvh", overflow: "hidden" }}>
           <div id="hero-layer" style={{ position: "absolute", inset: 0, zIndex: 5, pointerEvents: "auto", opacity: 0 }}>
             <div id="hero-card" style={{
               position: "absolute",
@@ -1078,7 +1077,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ PAIN SECTION ═══ */}
-          <div id="section-pain" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="section-pain" style={{ position: "relative", width: "100%", height: "85dvh", overflow: "hidden" }}>
           <div id="pain-layer" style={{ position: "absolute", inset: 0, zIndex: 4 }}>
             <div id="pain-blob" className="gradient-blob gradient-blob-coral" style={{
               position: "absolute",
@@ -1130,7 +1129,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ CALC SECTION ═══ */}
-          <div id="section-calc" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="section-calc" style={{ position: "relative", width: "100%", height: "85dvh", overflow: "hidden" }}>
           <div id="calc-layer" style={{ position: "absolute", inset: 0, zIndex: 6 }}>
             <div id="calc-panel" style={{
               position: "absolute",
@@ -1195,7 +1194,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ SOLUTION SECTION ═══ */}
-          <div id="section-sol" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="section-sol" style={{ position: "relative", width: "100%", height: "85dvh", overflow: "hidden" }}>
           <div id="sol-layer" style={{ position: "absolute", inset: 0, zIndex: 3 }}>
             <div id="sol-text-1" style={{
               position: "absolute",
@@ -1235,7 +1234,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ NO SECTION ═══ */}
-          <div id="section-no" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="section-no" style={{ position: "relative", width: "100%", height: "85dvh", overflow: "hidden" }}>
           <div id="no-layer" style={{ position: "absolute", inset: 0, zIndex: 3 }}>
             <div id="no-text" style={{
               position: "absolute",
@@ -1289,7 +1288,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ HOW SECTION ═══ */}
-          <div id="section-how" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="section-how" style={{ position: "relative", width: "100%", height: "85dvh", overflow: "hidden" }}>
           <div id="how-layer" style={{ position: "absolute", inset: 0, zIndex: 3 }}>
             <div id="how-step-1" style={{
               position: "absolute",
@@ -1340,7 +1339,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ VALUE SECTION ═══ */}
-          <div id="section-val" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="section-val" style={{ position: "relative", width: "100%", height: "85dvh", overflow: "hidden" }}>
           <div id="val-layer" style={{ position: "absolute", inset: 0, zIndex: 3 }}>
             <div id="val-one" style={{
               position: "absolute",
@@ -1377,7 +1376,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ CTA SECTION ═══ */}
-          <div id="section-cta" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="section-cta" style={{ position: "relative", width: "100%", height: "85dvh", overflow: "hidden" }}>
           <div id="cta-layer" style={{ position: "absolute", inset: 0, zIndex: 3 }}>
             {/* Orange icon — desktop only, hidden on mobile */}
             <div id="cta-icon" style={{
@@ -1460,7 +1459,7 @@ export default function PreviewLanding() {
           </div>
 
           {/* ═══ SIGNUP LAYER ═══ */}
-          <div ref={signupLayerRef} id="signup-layer" style={{ position: "absolute", inset: 0, zIndex: 20, opacity: 0, pointerEvents: "none" }}>
+          <div ref={signupLayerRef} id="signup-layer" style={{ position: "fixed", inset: 0, zIndex: 20, opacity: 0, pointerEvents: "none" }}>
             <div id="signup-bg" style={{ position: "absolute", inset: 0, background: "#ffffff" }} />
             <div id="signup-blobs">
               <div className="gradient-blob gradient-blob-coral" style={{ width: m ? "100vw" : "80vw", height: m ? "100vw" : "80vw", left: "-30%", top: "-30%", transform: "rotate(-134.46deg)" }} />
