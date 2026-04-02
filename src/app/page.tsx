@@ -41,7 +41,7 @@ export default function PreviewLanding() {
   const [isMobile, setIsMobile] = useState(false);
   const [loadPct, setLoadPct] = useState(0);
   const [loaded, setLoaded] = useState(false);
-  const [soundMuted, setSoundMuted] = useState(false);
+  const [soundMuted, setSoundMuted] = useState(true);
   const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", company: "" });
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
@@ -548,7 +548,7 @@ export default function PreviewLanding() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const swooshPlayedRef = useRef(false);
-  const soundMutedRef = useRef(false);
+  const soundMutedRef = useRef(true);
 
   // Keep ref in sync with state
   useEffect(() => { soundMutedRef.current = soundMuted; }, [soundMuted]);
@@ -817,7 +817,7 @@ export default function PreviewLanding() {
       noise.start();
 
       audioRef.current = { ctx, gain: master, fadeUntil: ctx.currentTime + 4 };
-      master.gain.setTargetAtTime(BASE_VOL, ctx.currentTime, 1.0);
+      master.gain.setTargetAtTime(soundMutedRef.current ? 0 : BASE_VOL, ctx.currentTime, 1.0);
     }
 
     // Resume AudioContext and init oscillators — uses .then() to catch async resume
@@ -1749,33 +1749,33 @@ export default function PreviewLanding() {
           aria-label={soundMuted ? "Unmute sound" : "Mute sound"}
           style={{
             position: "fixed",
-            bottom: m ? 16 : 24,
-            right: m ? 16 : 24,
-            width: m ? 36 : 40,
-            height: m ? 36 : 40,
+            bottom: m ? 18 : 28,
+            left: m ? 18 : 28,
+            width: m ? 42 : 46,
+            height: m ? 42 : 46,
             borderRadius: "50%",
-            background: "rgba(255,255,255,0.08)",
-            backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-            border: "1px solid rgba(255,255,255,0.18)",
+            background: "rgba(255,255,255,0.12)",
+            backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
+            border: "1.5px solid rgba(255,255,255,0.25)",
             display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "pointer",
             zIndex: 100,
             transition: "all 300ms ease",
-            opacity: 0.6,
+            boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
           }}
-          onMouseOver={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.background = "rgba(255,255,255,0.14)"; }}
-          onMouseOut={(e) => { e.currentTarget.style.opacity = "0.6"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+          onMouseOver={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.22)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.4)"; e.currentTarget.style.transform = "scale(1.08)"; }}
+          onMouseOut={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)"; e.currentTarget.style.transform = "scale(1)"; }}
         >
           {soundMuted ? (
             /* Speaker muted icon */
-            <svg width={m ? 16 : 18} height={m ? 16 : 18} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg width={m ? 18 : 20} height={m ? 18 : 20} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
               <line x1="23" y1="9" x2="17" y2="15" />
               <line x1="17" y1="9" x2="23" y2="15" />
             </svg>
           ) : (
             /* Speaker on icon */
-            <svg width={m ? 16 : 18} height={m ? 16 : 18} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <svg width={m ? 18 : 20} height={m ? 18 : 20} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
               <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
