@@ -39,6 +39,9 @@ export default function PreviewLanding() {
   const mobileBgRef = useRef<HTMLDivElement>(null);
   const lenisRef = useRef<InstanceType<typeof Lenis> | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [loadPct, setLoadPct] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const [soundMuted, setSoundMuted] = useState(false);
   const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", company: "" });
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
@@ -175,109 +178,104 @@ export default function PreviewLanding() {
     tl.to(signup.querySelector("#signup-bg"), { opacity: 0, duration: 0.3, ease: "power2.in" }, "<");
   }, []);
 
-  /* ── Splash intro animation ── */
+  /* ── Loading screen — percentage counter, auto-dismiss ── */
   useEffect(() => {
-    const loader = loaderRef.current;
-    if (!loader) return;
-    const icon = loader.querySelector("#splash-icon");
-    const logo = loader.querySelector("#splash-logo");
-    const btn = loader.querySelector("#splash-btn");
-    const tagline = loader.querySelector("#splash-tagline");
-    const blob1 = loader.querySelector("#splash-blob-1");
-    const blob2 = loader.querySelector("#splash-blob-2");
+    if (loaded) return;
+    let pct = 0;
+    const start = Date.now();
+    const minDuration = 1800; // minimum loader visible time (ms)
 
-    gsap.set([icon, logo, btn, tagline], { opacity: 0 });
+    // Simulate progress up to 90% quickly, then wait for real load
+    const interval = setInterval(() => {
+      if (pct < 90) {
+        pct += Math.random() * 12 + 3;
+        if (pct > 90) pct = 90;
+        setLoadPct(Math.round(pct));
+      }
+    }, 120);
 
-    const tl = gsap.timeline({ delay: 0.2 });
-    tl.fromTo(blob1, { opacity: 0, scale: 0.5 }, { opacity: 0.4, scale: 1, duration: 1.5, ease: "power2.out" });
-    tl.fromTo(blob2, { opacity: 0, scale: 0.5 }, { opacity: 0.3, scale: 1, duration: 1.5, ease: "power2.out" }, "<0.2");
-    tl.fromTo(icon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "back.out(2.5)" }, 0.3);
-    tl.fromTo(logo, { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power3.out" }, "-=0.3");
-    tl.fromTo(tagline, { opacity: 0, letterSpacing: "0.5em", y: 10 }, { opacity: 0.7, letterSpacing: "0.2em", y: 0, duration: 0.8, ease: "power2.out" }, "-=0.2");
-    tl.fromTo(btn, { opacity: 0, scale: 0.5, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.6, ease: "back.out(3)" }, "-=0.3");
+    const onReady = () => {
+      clearInterval(interval);
+      // Animate remaining 90→100
+      const finish = () => {
+        pct = 100;
+        setLoadPct(100);
+        // Wait a beat then dismiss
+        const elapsed = Date.now() - start;
+        const remaining = Math.max(0, minDuration - elapsed);
+        setTimeout(() => {
+          const loader = loaderRef.current;
+          const vp = viewportRef.current;
+          if (!loader) { setLoaded(true); return; }
 
-    // Gentle continuous blob drift
-    gsap.to(blob1, { rotation: 360, duration: 40, repeat: -1, ease: "none" });
-    gsap.to(blob2, { rotation: -360, duration: 50, repeat: -1, ease: "none" });
+          gsap.to(loader, {
+            opacity: 0, duration: 0.5, ease: "power2.in",
+            onComplete: () => {
+              gsap.set(loader, { display: "none" });
+              setLoaded(true);
 
-    // Subtle icon float
-    gsap.to(icon, { y: -8, duration: 2.5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.2 });
+              // Play hero entrance
+              if (!vp) return;
+              const heroLayer = vp.querySelector("#hero-layer") as HTMLElement;
+              const heroCard = vp.querySelector("#hero-card") as HTMLElement;
+              const heroIcon = vp.querySelector("#hero-icon") as HTMLElement;
+              const heroAlpha = vp.querySelector("#hero-alpha") as HTMLElement;
+              const heroLogo = vp.querySelector("#hero-logo") as HTMLElement;
+              const heroHeadline = vp.querySelector("#hero-headline") as HTMLElement;
+              const heroBtn = vp.querySelector("#hero-btn") as HTMLElement;
 
-    // Tagline gentle opacity pulse
-    gsap.to(tagline, { opacity: 0.5, duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 2 });
+              gsap.set(heroLayer, { opacity: 1 });
+              gsap.set([heroCard, heroIcon, heroAlpha, heroLogo, heroHeadline, heroBtn], { opacity: 0 });
+              gsap.set(heroCard, { clipPath: "inset(100% 0 0 0)" });
+              gsap.set(heroLogo, { clipPath: "inset(0 100% 0 0)" });
+              gsap.set(heroHeadline, { clipPath: "inset(0 0 100% 0)" });
 
-    // Button border glow pulse
-    gsap.to(btn, {
-      boxShadow: "0 0 20px 2px rgba(139,242,211,0.15), inset 0 0 20px rgba(255,255,255,0.04)",
-      borderColor: "rgba(255,255,255,0.5)",
-      duration: 2, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.5,
+              const hero = gsap.timeline();
+              hero.to(heroCard, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power4.out" });
+              hero.fromTo(heroIcon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, "-=0.5");
+              hero.to(heroLogo, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power3.out" }, "-=0.4");
+              hero.to(heroHeadline, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "power3.out" }, "-=0.5");
+              hero.fromTo(heroAlpha, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
+              hero.fromTo(heroBtn, { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.5)" }, "-=0.2");
+              hero.call(() => sfxClick(), [], 0.4);
+              hero.call(() => sfxClick(), [], 0.7);
+            },
+          });
+        }, remaining);
+      };
+      // Quick animate from current to 100
+      const step = () => {
+        pct += 3;
+        if (pct >= 100) { finish(); return; }
+        setLoadPct(Math.round(pct));
+        requestAnimationFrame(step);
+      };
+      step();
+    };
+
+    if (document.readyState === "complete") {
+      onReady();
+    } else {
+      window.addEventListener("load", onReady);
+    }
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("load", onReady);
+    };
+  }, [loaded]);
+
+  /* ── Sound toggle handler ── */
+  const toggleSound = useCallback(() => {
+    setSoundMuted((prev) => {
+      const next = !prev;
+      const a = audioRef.current;
+      if (a && a.ctx.state === "running") {
+        a.gain.gain.cancelScheduledValues(a.ctx.currentTime);
+        a.gain.gain.setTargetAtTime(next ? 0 : 0.096, a.ctx.currentTime, 0.15);
+      }
+      return next;
     });
-
-    return () => { tl.kill(); };
-  }, []);
-
-  /* ── Splash "Begin" handler ── */
-  const handleBegin = useCallback(() => {
-    // Haptic feedback on mobile
-    if (navigator.vibrate) navigator.vibrate(15);
-
-    // Scroll to top
-    window.scrollTo(0, 0);
-    lenisRef.current?.scrollTo(0, { immediate: true });
-
-    // Cinematic exit
-    const loader = loaderRef.current;
-    const vp = viewportRef.current;
-    if (!loader) return;
-    const btn = loader.querySelector("#splash-btn");
-    const icon = loader.querySelector("#splash-icon");
-    const logo = loader.querySelector("#splash-logo");
-    const tagline = loader.querySelector("#splash-tagline");
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        gsap.set(loader, { display: "none" });
-
-        // Play hero entrance after splash is gone
-        if (!vp) return;
-        const heroLayer = vp.querySelector("#hero-layer") as HTMLElement;
-        const heroCard = vp.querySelector("#hero-card") as HTMLElement;
-        const heroIcon = vp.querySelector("#hero-icon") as HTMLElement;
-        const heroAlpha = vp.querySelector("#hero-alpha") as HTMLElement;
-        const heroLogo = vp.querySelector("#hero-logo") as HTMLElement;
-        const heroHeadline = vp.querySelector("#hero-headline") as HTMLElement;
-        const heroBtn = vp.querySelector("#hero-btn") as HTMLElement;
-
-        // Hero layer is hidden in JSX (opacity:0). Set up initial states then animate.
-        gsap.set(heroLayer, { opacity: 1 });
-        gsap.set([heroCard, heroIcon, heroAlpha, heroLogo, heroHeadline, heroBtn], { opacity: 0 });
-        gsap.set(heroCard, { clipPath: "inset(100% 0 0 0)" });
-        gsap.set(heroLogo, { clipPath: "inset(0 100% 0 0)" });
-        gsap.set(heroHeadline, { clipPath: "inset(0 0 100% 0)" });
-
-        const hero = gsap.timeline();
-        hero.to(heroCard, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power4.out" });
-        hero.fromTo(heroIcon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, "-=0.5");
-        hero.to(heroLogo, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power3.out" }, "-=0.4");
-        hero.to(heroHeadline, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "power3.out" }, "-=0.5");
-        hero.fromTo(heroAlpha, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
-        hero.fromTo(heroBtn, { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.5)" }, "-=0.2");
-        hero.call(() => sfxClick(), [], 0.4);
-        hero.call(() => sfxClick(), [], 0.7);
-      },
-    });
-
-    // Button collapses inward with a flash
-    tl.to(btn, { scale: 0.85, duration: 0.08, ease: "power2.in" });
-    tl.to(btn, { scale: 1.15, opacity: 0, duration: 0.25, ease: "power2.out" });
-
-    // Logo and icon fly apart
-    tl.to(icon, { scale: 1.3, opacity: 0, rotation: 90, duration: 0.4, ease: "power2.in" }, "-=0.15");
-    tl.to(logo, { opacity: 0, clipPath: "inset(0 0 0 100%)", duration: 0.35, ease: "power2.in" }, "<");
-    tl.to(tagline, { opacity: 0, y: -10, duration: 0.2, ease: "power2.in" }, "<");
-
-    // Background sweeps away
-    tl.to(loader, { clipPath: "inset(0 0 100% 0)", duration: 0.5, ease: "power3.inOut" }, "-=0.1");
   }, []);
 
   /* ── Lenis smooth scroll ── */
@@ -550,12 +548,17 @@ export default function PreviewLanding() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const scrollTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const swooshPlayedRef = useRef(false);
+  const soundMutedRef = useRef(false);
+
+  // Keep ref in sync with state
+  useEffect(() => { soundMutedRef.current = soundMuted; }, [soundMuted]);
 
   // SFX functions — plain functions using refs, no closure issues
   function sfxClick() {
     try {
       // Haptic feedback on mobile
       if (navigator.vibrate) navigator.vibrate(8);
+      if (soundMutedRef.current) return;
 
       const a = audioRef.current;
       if (!a || a.ctx.state !== "running") return;
@@ -594,6 +597,7 @@ export default function PreviewLanding() {
 
   function sfxSwoosh() {
     try {
+      if (soundMutedRef.current) return;
       const a = audioRef.current;
       if (!a || a.ctx.state !== "running") return;
       // Only play once per scroll session — reset when scrolling stops
@@ -624,6 +628,7 @@ export default function PreviewLanding() {
   // Soft tonal hover sound — gentle rising tone for button interactions
   function sfxHover() {
     try {
+      if (soundMutedRef.current) return;
       const a = audioRef.current;
       if (!a || a.ctx.state !== "running") return;
       if (navigator.vibrate) navigator.vibrate(5);
@@ -655,6 +660,7 @@ export default function PreviewLanding() {
   // Satisfying button press sound — descending tone + thump to complement the hover's rising tone
   function sfxPress() {
     try {
+      if (soundMutedRef.current) return;
       const a = audioRef.current;
       if (!a || a.ctx.state !== "running") return;
       if (navigator.vibrate) navigator.vibrate(10);
@@ -693,6 +699,7 @@ export default function PreviewLanding() {
   // Subtle mechanical key-press sound for typing in inputs
   function sfxType() {
     try {
+      if (soundMutedRef.current) return;
       const a = audioRef.current;
       if (!a || a.ctx.state !== "running") return;
       const ctx = a.ctx;
@@ -833,14 +840,14 @@ export default function PreviewLanding() {
 
     function onScrollActivity() {
       const a = audioRef.current;
-      if (!a || a.ctx.state !== "running") return;
+      if (!a || a.ctx.state !== "running" || soundMutedRef.current) return;
       if (a.ctx.currentTime < a.fadeUntil) return;
       a.gain.gain.cancelScheduledValues(a.ctx.currentTime);
       a.gain.gain.setTargetAtTime(SCROLL_VOL, a.ctx.currentTime, 0.12);
       if (scrollTimerRef.current) clearTimeout(scrollTimerRef.current);
       scrollTimerRef.current = setTimeout(() => {
         const a2 = audioRef.current;
-        if (!a2 || a2.ctx.state !== "running") return;
+        if (!a2 || a2.ctx.state !== "running" || soundMutedRef.current) return;
         a2.gain.gain.cancelScheduledValues(a2.ctx.currentTime);
         a2.gain.gain.setTargetAtTime(BASE_VOL, a2.ctx.currentTime, 0.4);
         // Reset swoosh flag when scrolling stops
@@ -1734,81 +1741,66 @@ export default function PreviewLanding() {
         </div>
       </div>
 
-      {/* ── Splash screen ── */}
+      {/* ── Sound toggle button ── */}
+      {loaded && (
+        <button
+          onClick={toggleSound}
+          onMouseEnter={() => sfxHover()}
+          aria-label={soundMuted ? "Unmute sound" : "Mute sound"}
+          style={{
+            position: "fixed",
+            bottom: m ? 16 : 24,
+            right: m ? 16 : 24,
+            width: m ? 36 : 40,
+            height: m ? 36 : 40,
+            borderRadius: "50%",
+            background: "rgba(255,255,255,0.08)",
+            backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+            border: "1px solid rgba(255,255,255,0.18)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer",
+            zIndex: 100,
+            transition: "all 300ms ease",
+            opacity: 0.6,
+          }}
+          onMouseOver={(e) => { e.currentTarget.style.opacity = "1"; e.currentTarget.style.background = "rgba(255,255,255,0.14)"; }}
+          onMouseOut={(e) => { e.currentTarget.style.opacity = "0.6"; e.currentTarget.style.background = "rgba(255,255,255,0.08)"; }}
+        >
+          {soundMuted ? (
+            /* Speaker muted icon */
+            <svg width={m ? 16 : 18} height={m ? 16 : 18} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <line x1="23" y1="9" x2="17" y2="15" />
+              <line x1="17" y1="9" x2="23" y2="15" />
+            </svg>
+          ) : (
+            /* Speaker on icon */
+            <svg width={m ? 16 : 18} height={m ? 16 : 18} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+            </svg>
+          )}
+        </button>
+      )}
+
+      {/* ── Loading screen ── */}
       <div ref={loaderRef} style={{
         position: "fixed", inset: m ? "-5vh -5vw" : 0, zIndex: 200, background: "#ff6b5c",
-        display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column",
-        overflow: "hidden", clipPath: "inset(0 0 0% 0)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        overflow: "hidden",
       }}>
-        {/* Animated background blobs */}
-        <div id="splash-blob-1" className="gradient-blob" style={{
-          position: "absolute", width: m ? "120vw" : "70vw", height: m ? "120vw" : "70vw",
-          left: "-20%", top: "-30%", opacity: 0,
-          background: "radial-gradient(ellipse at center, rgba(139,242,211,0.35) 0%, rgba(139,242,211,0.12) 40%, transparent 70%)",
-        }} />
-        <div id="splash-blob-2" className="gradient-blob" style={{
-          position: "absolute", width: m ? "100vw" : "60vw", height: m ? "100vw" : "60vw",
-          right: "-15%", bottom: "-25%", left: "auto", top: "auto", opacity: 0,
-          background: "radial-gradient(ellipse at center, rgba(0,60,70,0.2) 0%, rgba(0,60,70,0.08) 40%, transparent 70%)",
-        }} />
-
-        <div id="splash-icon" style={{ marginBottom: m ? 16 : 24, opacity: 0 }}>
-          <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={m ? 120 : 160} height={m ? 120 : 160} priority style={{ filter: "drop-shadow(3px 3px 24px rgba(0,0,0,0.2))" }} />
-        </div>
-        <div id="splash-logo" className="font-qurova" style={{
-          fontSize: m ? 60 : 88, color: "#8bf2d3", letterSpacing: "0.04em",
-          marginBottom: m ? 12 : 16, opacity: 0,
-          filter: "drop-shadow(2px 2px 12px rgba(0,0,0,0.12))",
-        }}>mentic</div>
-        <div id="splash-tagline" style={{
-          fontSize: m ? 12 : 14, fontWeight: 400, color: "#faf9f6",
-          letterSpacing: "0.2em", textTransform: "uppercase" as const,
-          marginBottom: m ? 52 : 72, opacity: 0,
-        }}>The Autonomous Advertising Agent</div>
-        <button
-          id="splash-btn"
-          onClick={() => { sfxPress(); handleBegin(); }}
-          style={{
-            position: "relative", background: "rgba(255,255,255,0.06)",
-            border: "1.5px solid rgba(255,255,255,0.35)",
-            borderRadius: m ? 50 : 60,
-            padding: m ? "14px 52px" : "18px 72px",
-            fontSize: m ? 14 : 16, fontWeight: 600,
-            color: "rgba(255,255,255,0.85)", letterSpacing: "3px", textTransform: "uppercase" as const,
-            fontFamily: "'Nunito Sans', sans-serif",
-            cursor: "pointer", opacity: 0,
-            backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-            boxShadow: "0 0 0 0 rgba(139,242,211,0), inset 0 0 20px rgba(255,255,255,0.04)",
-            transition: "all 400ms cubic-bezier(0.165, 0.84, 0.44, 1)",
-          }}
-          onMouseEnter={(e) => {
-            sfxHover();
-            const el = e.currentTarget;
-            el.style.borderColor = "rgba(139,242,211,0.6)";
-            el.style.background = "rgba(139,242,211,0.1)";
-            el.style.color = "#8bf2d3";
-            el.style.boxShadow = "0 0 32px 4px rgba(139,242,211,0.2), inset 0 0 24px rgba(139,242,211,0.06)";
-            el.style.transform = "scale(1.06)";
-            el.style.letterSpacing = "4px";
-          }}
-          onMouseLeave={(e) => {
-            const el = e.currentTarget;
-            el.style.borderColor = "rgba(255,255,255,0.35)";
-            el.style.background = "rgba(255,255,255,0.06)";
-            el.style.color = "rgba(255,255,255,0.85)";
-            el.style.boxShadow = "0 0 0 0 rgba(139,242,211,0), inset 0 0 20px rgba(255,255,255,0.04)";
-            el.style.transform = "scale(1)";
-            el.style.letterSpacing = "3px";
-          }}
-          onPointerDown={(e) => {
-            e.currentTarget.style.transform = "scale(0.95)";
-          }}
-          onPointerUp={(e) => {
-            e.currentTarget.style.transform = "scale(1.06)";
-          }}
-        >
-          Begin
-        </button>
+        <span style={{
+          fontSize: m ? "28vw" : "14vw",
+          fontWeight: 200,
+          color: "white",
+          fontFamily: "'Nunito Sans', sans-serif",
+          letterSpacing: "-0.02em",
+          lineHeight: 1,
+          userSelect: "none",
+        }}>
+          {loadPct}%
+        </span>
       </div>
     </>
   );
