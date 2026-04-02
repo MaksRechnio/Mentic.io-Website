@@ -29,7 +29,7 @@ const MW = (w: number) => `${(w / 393) * 100}%`;
 const MH = (h: number) => `${(h / 852) * 100}%`;
 const MFS = (px: number) => `${(px / 393) * 100}vw`;
 
-const TOTAL_FRAMES = 67;
+// Layout uses normal-flow sections with ScrollTrigger animations
 
 export default function PreviewLanding() {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -288,257 +288,140 @@ export default function PreviewLanding() {
     return () => { lenis.destroy(); lenisRef.current = null; };
   }, []);
 
-  /* ── Master scroll-scrubbed timeline ── */
+  /* ── Per-section scroll-triggered animations ── */
   useEffect(() => {
-    if (!wrapperRef.current || !viewportRef.current) return;
+    if (!wrapperRef.current) return;
     const ctx = gsap.context(() => {
-      const vp = viewportRef.current!;
-      const mob = isMobile;
-      const f = (n: number) => (n - 1) / (TOTAL_FRAMES - 1);
-      const d1 = 1 / (TOTAL_FRAMES - 1);
       const ease = "power2.out";
-      const easeOut = "power2.in";
-      const ds = d1 * 0.6;
+      const dur = 0.6;
+      const stagger = 0.15;
 
-      const sectionStops = [
-        f(1), f(2), f(7), f(8), f(9), f(10),
-        f(17), f(18), f(19), f(20),
-        f(28), f(29), f(30), f(31),
-        f(38), f(39), f(40), f(41), f(42), f(43),
-        f(49), f(50), f(51), f(52),
-        f(57), f(58), f(59),
-        f(64), f(65), f(67),
-      ];
-
-      const master = gsap.timeline({
-        scrollTrigger: {
-          trigger: wrapperRef.current, start: "top top", end: "bottom bottom", scrub: 1,
-          snap: {
-            snapTo: sectionStops,
-            duration: { min: 0.2, max: 0.6 },
-            delay: 0.08,
-            ease: "power1.inOut",
-            directional: true,
+      // Helper: animate children in on enter, reverse on leave
+      function sectionAnim(trigger: string, targets: Array<{ sel: string; from: gsap.TweenVars }>) {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger,
+            start: "top 80%",
+            end: "bottom 20%",
+            toggleActions: "play reverse play reverse",
           },
+        });
+        targets.forEach(({ sel, from }, i) => {
+          tl.fromTo(sel, { opacity: 0, ...from }, { opacity: 1, x: 0, y: 0, scale: 1, rotation: 0, duration: dur, ease }, i * stagger);
+          tl.call(() => sfxClick(), [], i * stagger + dur * 0.7);
+        });
+        return tl;
+      }
+
+      /* ═══ Hero — already visible from loader, fade out on scroll ═══ */
+      ScrollTrigger.create({
+        trigger: "#section-hero",
+        start: "bottom 60%",
+        end: "bottom top",
+        onLeave: () => gsap.to("#hero-layer", { opacity: 0, duration: 0.4, ease }),
+        onEnterBack: () => gsap.to("#hero-layer", { opacity: 1, duration: 0.4, ease }),
+      });
+
+      /* ═══ Pain ═══ */
+      ScrollTrigger.create({
+        trigger: "#section-pain",
+        start: "top 80%",
+        end: "bottom 20%",
+        toggleActions: "play reverse play reverse",
+        onEnter: () => {
+          gsap.to(["#glass-card", "#icon-teal"], { opacity: 1, duration: 0.5, ease });
+          gsap.to("#bg", { backgroundColor: "#ffe5e5", duration: 0.6, ease });
+        },
+        onLeaveBack: () => {
+          gsap.to(["#glass-card", "#icon-teal"], { opacity: 0, duration: 0.5, ease });
         },
       });
 
-      // Helper: schedule a click sound at the end of an element's appear animation
-      const clk = (pos: number) => master.call(() => sfxClick(), [], pos + ds);
+      sectionAnim("#section-pain", [
+        { sel: "#pain-blob", from: { scale: 0.6 } },
+        { sel: "#pain-text-1", from: { y: 30 } },
+        { sel: "#glass-strip-1", from: {} },
+        { sel: "#pain-text-2", from: { y: 30 } },
+        { sel: "#glass-strip-2", from: {} },
+        { sel: "#pain-text-3", from: { y: 30 } },
+      ]);
 
-      const bg = vp.querySelector("#bg") as HTMLElement;
-      const heroCard = vp.querySelector("#hero-card") as HTMLElement;
-      const heroIcon = vp.querySelector("#hero-icon") as HTMLElement;
-      const heroAlpha = vp.querySelector("#hero-alpha") as HTMLElement;
-      const heroHeadline = vp.querySelector("#hero-headline") as HTMLElement;
-      const heroLogo = vp.querySelector("#hero-logo") as HTMLElement;
-      const heroBtn = vp.querySelector("#hero-btn") as HTMLElement;
-      const iconTeal = vp.querySelector("#icon-teal") as HTMLElement;
-      const glassCard = vp.querySelector("#glass-card") as HTMLElement;
-      const glassStrip1 = vp.querySelector("#glass-strip-1") as HTMLElement;
-      const glassStrip2 = vp.querySelector("#glass-strip-2") as HTMLElement;
-      const painBlob = vp.querySelector("#pain-blob") as HTMLElement;
-      const painText1 = vp.querySelector("#pain-text-1") as HTMLElement;
-      const painText2 = vp.querySelector("#pain-text-2") as HTMLElement;
-      const painText3 = vp.querySelector("#pain-text-3") as HTMLElement;
-      const calcPanel = vp.querySelector("#calc-panel") as HTMLElement;
-      const calcHeading = vp.querySelector("#calc-heading") as HTMLElement;
-      const calcAmount = vp.querySelector("#calc-amount") as HTMLElement;
-      const calcFifty = vp.querySelector("#calc-fifty") as HTMLElement;
-      const calcFees = vp.querySelector("#calc-fees") as HTMLElement;
-      const calcNotads = vp.querySelector("#calc-notads") as HTMLElement;
-      const blobCoral = vp.querySelector("#blob-coral") as HTMLElement;
-      const blobMint = vp.querySelector("#blob-mint") as HTMLElement;
-      const solText1 = vp.querySelector("#sol-text-1") as HTMLElement;
-      const solText2 = vp.querySelector("#sol-text-2") as HTMLElement;
-      const solText3 = vp.querySelector("#sol-text-3") as HTMLElement;
-      const noText = vp.querySelector("#no-text") as HTMLElement;
-      const noItem1 = vp.querySelector("#no-item-1") as HTMLElement;
-      const noItem2 = vp.querySelector("#no-item-2") as HTMLElement;
-      const noItem3 = vp.querySelector("#no-item-3") as HTMLElement;
-      const noItem4 = vp.querySelector("#no-item-4") as HTMLElement;
-      const noDot = vp.querySelector("#no-dot") as HTMLElement;
-      const howStep1 = vp.querySelector("#how-step-1") as HTMLElement;
-      const howStep2 = vp.querySelector("#how-step-2") as HTMLElement;
-      const howStep3 = vp.querySelector("#how-step-3") as HTMLElement;
-      const howMentic = vp.querySelector("#how-mentic") as HTMLElement;
-      const howRest = vp.querySelector("#how-rest") as HTMLElement;
-      const valOne = vp.querySelector("#val-one") as HTMLElement;
-      const valEvery = vp.querySelector("#val-every") as HTMLElement;
-      const valAll = vp.querySelector("#val-all") as HTMLElement;
-      const ctaIcon = vp.querySelector("#cta-icon") as HTMLElement;
-      const ctaSign = vp.querySelector("#cta-sign") as HTMLElement;
-      const ctaUp = vp.querySelector("#cta-up") as HTMLElement;
-      const ctaNow = vp.querySelector("#cta-now") as HTMLElement;
-      const ctaAlpha = vp.querySelector("#cta-alpha") as HTMLElement;
-      const ctaButton = vp.querySelector("#cta-button") as HTMLElement;
-      const heroLayer = vp.querySelector("#hero-layer") as HTMLElement;
-      const painLayer = vp.querySelector("#pain-layer") as HTMLElement;
-      const calcLayer = vp.querySelector("#calc-layer") as HTMLElement;
-      const solLayer = vp.querySelector("#sol-layer") as HTMLElement;
-      const noLayer = vp.querySelector("#no-layer") as HTMLElement;
-      const howLayer = vp.querySelector("#how-layer") as HTMLElement;
-      const valLayer = vp.querySelector("#val-layer") as HTMLElement;
-      const ctaLayer = vp.querySelector("#cta-layer") as HTMLElement;
+      /* ═══ Calc ═══ */
+      ScrollTrigger.create({
+        trigger: "#section-calc",
+        start: "top 70%",
+        end: "bottom 30%",
+        onEnter: () => gsap.to("#bg", { backgroundColor: "#ff6b5c", duration: 0.6, ease }),
+        onLeaveBack: () => gsap.to("#bg", { backgroundColor: "#ffe5e5", duration: 0.6, ease }),
+      });
 
-      /* ═══ Hero → Pain (exit mirrors entrance so scroll-back replays it) ═��═ */
-      master.to(heroBtn, { opacity: 0, scale: 0.5, y: 20, duration: d1 * 1.2, ease: easeOut }, f(3));
-      master.to(heroAlpha, { opacity: 0, y: 10, duration: d1 * 1.2, ease: easeOut }, f(3));
-      master.to(heroHeadline, { opacity: 0, clipPath: "inset(0 0 100% 0)", duration: d1 * 1.5, ease: easeOut }, f(3.2));
-      master.to(heroLogo, { opacity: 0, clipPath: "inset(0 100% 0 0)", duration: d1 * 1.5, ease: easeOut }, f(3.4));
-      master.to(heroIcon, { opacity: 0, scale: 0, rotation: -180, duration: d1 * 1.5, ease: easeOut }, f(3.5));
-      master.to(heroCard, { opacity: 0, clipPath: "inset(100% 0 0 0)", duration: d1 * 2, ease: easeOut }, f(3.8));
-      master.to(heroCard, { backgroundColor: "rgba(255,255,255,0.1)", boxShadow: "none", backdropFilter: "blur(12px)", duration: d1 * 2.5, ease }, f(3.5));
-      master.to(heroLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 0.5, ease: easeOut }, f(5.5));
-      master.to(painLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2.5, ease }, f(4));
-      master.to(iconTeal, { opacity: 1, duration: d1 * 2, ease }, f(4));
-      master.to(glassCard, { opacity: 1, duration: d1 * 2, ease }, f(4));
+      sectionAnim("#section-calc", [
+        { sel: "#calc-panel", from: {} },
+        { sel: "#calc-heading", from: { y: 25 } },
+        { sel: "#calc-amount", from: { scale: 0.9 } },
+        { sel: "#calc-fifty", from: { scale: 0.5 } },
+        { sel: "#calc-fees", from: { x: -25 } },
+        { sel: "#calc-notads", from: { y: 20 } },
+      ]);
 
-      /* ═══ Pain IN ═══ */
-      master.fromTo(painText1, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(7));
-      master.fromTo(painBlob, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: ds, ease }, f(7));
-      clk(f(7));
-      master.fromTo(painText2, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(8));
-      master.fromTo(glassStrip1, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(8));
-      clk(f(8));
-      if (!mob) {
-        master.to(painBlob, { width: W(1051), height: H(666), left: X(220), top: Y(813), duration: ds, ease }, f(8));
-      } else {
-        master.to(painBlob, { scale: 1.2, duration: ds, ease }, f(8));
-      }
-      master.fromTo(painText3, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(9));
-      master.fromTo(glassStrip2, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(9));
-      clk(f(9));
-      if (!mob) {
-        master.to(painBlob, { width: W(1232), height: H(848), left: X(130), top: Y(908), duration: ds, ease }, f(9));
-      } else {
-        master.to(painBlob, { scale: 1.4, duration: ds, ease }, f(9));
-      }
+      /* ═══ Solution ═══ */
+      ScrollTrigger.create({
+        trigger: "#section-sol",
+        start: "top 70%",
+        end: "bottom 30%",
+        onEnter: () => {
+          gsap.to("#bg", { backgroundColor: "#ffffff", duration: 0.6, ease });
+          gsap.to(["#blob-coral", "#blob-mint"], { opacity: 1, duration: 0.8, ease });
+          gsap.to("#icon-teal", { opacity: 1, duration: 0.5, ease });
+        },
+        onLeaveBack: () => {
+          gsap.to("#bg", { backgroundColor: "#ff6b5c", duration: 0.6, ease });
+          gsap.to(["#blob-coral", "#blob-mint"], { opacity: 0, duration: 0.5, ease });
+        },
+      });
 
-      /* Pain OUT */
-      master.to(painText3, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(11));
-      master.to(glassStrip2, { opacity: 0, duration: ds, ease: easeOut }, f(11));
-      master.to(painText2, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(12));
-      master.to(glassStrip1, { opacity: 0, duration: ds, ease: easeOut }, f(12));
-      master.to(painText1, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(12));
-      master.to(painBlob, { opacity: 0, duration: ds, ease: easeOut }, f(12));
+      sectionAnim("#section-sol", [
+        { sel: "#sol-text-1", from: { y: 30 } },
+        { sel: "#sol-text-2", from: { y: 25 } },
+        { sel: "#sol-text-3", from: { y: 20 } },
+      ]);
 
-      /* ═══ Pain → Calc ═══ */
-      master.to(painLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 1.5, ease }, f(13));
-      master.to(bg, { backgroundColor: "#ff6b5c", duration: d1 * 3, ease }, f(13));
-      master.to(calcLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2, ease }, f(14.5));
+      /* ═══ NO ═══ */
+      sectionAnim("#section-no", [
+        { sel: "#no-text", from: { scale: 0.3 } },
+        { sel: "#no-item-1", from: { x: 50 } },
+        { sel: "#no-item-2", from: { x: 50 } },
+        { sel: "#no-item-3", from: { x: 50 } },
+        { sel: "#no-item-4", from: { x: 50 } },
+        { sel: "#no-dot", from: { scale: 0 } },
+      ]);
 
-      /* ═══ Calc IN ═══ */
-      master.fromTo(calcPanel, { opacity: 0 }, { opacity: 1, duration: ds, ease }, f(17));
-      master.fromTo(calcHeading, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(17));
-      clk(f(17));
-      master.fromTo(calcAmount, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: ds, ease }, f(18));
-      master.fromTo(calcFifty, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: ds, ease }, f(18));
-      clk(f(18));
-      master.fromTo(calcFees, { opacity: 0, x: -20 }, { opacity: 1, x: 0, duration: ds, ease }, f(19));
-      master.fromTo(calcNotads, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: ds, ease }, f(19));
-      clk(f(19));
+      /* ═══ How ═══ */
+      sectionAnim("#section-how", [
+        { sel: "#how-step-1", from: { y: 30 } },
+        { sel: "#how-step-2", from: { y: 30 } },
+        { sel: "#how-step-3", from: { y: 30 } },
+        { sel: "#how-mentic", from: { x: 60 } },
+        { sel: "#how-rest", from: { y: 15 } },
+      ]);
 
-      /* Calc OUT */
-      master.to(calcFees, { opacity: 0, x: 20, duration: ds, ease: easeOut }, f(21));
-      master.to(calcNotads, { opacity: 0, y: -10, duration: ds, ease: easeOut }, f(21));
-      master.to(calcAmount, { opacity: 0, scale: 0.9, duration: ds, ease: easeOut }, f(22));
-      master.to(calcFifty, { opacity: 0, scale: 0.8, duration: ds, ease: easeOut }, f(22));
-      master.to(calcPanel, { opacity: 0, duration: ds, ease: easeOut }, f(22));
-      master.to(calcHeading, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(22));
+      /* ═══ Value ═══ */
+      sectionAnim("#section-val", [
+        { sel: "#val-one", from: { x: -40 } },
+        { sel: "#val-every", from: { x: -40 } },
+        { sel: "#val-all", from: { x: -40 } },
+      ]);
 
-      /* ═══ Calc → Solution ═══ */
-      master.to(calcLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 1.5, ease }, f(23));
-      master.to(iconTeal, { opacity: 0, duration: d1 * 1.5, ease }, f(23));
-      master.to(bg, { backgroundColor: "#ffffff", duration: d1 * 3.5, ease }, f(23));
-      master.fromTo(blobCoral, { opacity: 0 }, { opacity: 1, duration: d1 * 3, ease }, f(24));
-      master.fromTo(blobMint, { opacity: 0 }, { opacity: 1, duration: d1 * 3, ease }, f(24));
-      const blobDuration = f(67) - f(27);
-      master.to(blobCoral, { rotation: 60, x: "5vw", y: "5vh", scale: 1.1, duration: blobDuration, ease: "none" }, f(27));
-      master.to(blobMint, { rotation: -45, x: "-5vw", y: "-5vh", scale: 1.1, duration: blobDuration, ease: "none" }, f(27));
-      master.to(solLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2, ease }, f(25));
-      master.to(iconTeal, { opacity: 1, duration: d1 * 2, ease }, f(25.5));
+      /* ═══ CTA ═══ */
+      sectionAnim("#section-cta", [
+        { sel: "#cta-icon", from: { scale: 0.3, rotation: -180 } },
+        { sel: "#cta-sign", from: { x: -60 } },
+        { sel: "#cta-up", from: { y: 40 } },
+        { sel: "#cta-now", from: { x: 40 } },
+        { sel: "#cta-alpha", from: { y: 20 } },
+        { sel: "#cta-button", from: { scale: 0.85 } },
+      ]);
 
-      /* ═══ Solution IN ═══ */
-      master.fromTo(solText1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(28));
-      clk(f(28));
-      master.fromTo(solText2, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(29));
-      clk(f(29));
-      master.fromTo(solText3, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: ds, ease }, f(30));
-      clk(f(30));
-      master.to(solText3, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(32));
-      master.to(solText2, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(33));
-      master.to(solText1, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(33));
-
-      /* ═══ Solution → NO ═══ */
-      master.to(solLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 2, ease }, f(34));
-      master.to(noLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2, ease }, f(35.5));
-
-      /* ═══ NO IN ═══ */
-      master.fromTo(noText, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: ds, ease }, f(38));
-      clk(f(38));
-      master.fromTo(noItem1, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(39));
-      clk(f(39));
-      master.fromTo(noItem2, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(40));
-      clk(f(40));
-      master.fromTo(noItem3, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(41));
-      clk(f(41));
-      master.fromTo(noItem4, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: ds, ease }, f(42));
-      master.fromTo(noDot, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: ds, ease }, f(42));
-      clk(f(42));
-      master.to(noItem4, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(44));
-      master.to(noDot, { opacity: 0, scale: 0, duration: ds, ease: easeOut }, f(44));
-      master.to(noItem3, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(44));
-      master.to(noItem2, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(44));
-      master.to(noItem1, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(44));
-      master.to(noText, { opacity: 0, scale: 0.5, duration: ds, ease: easeOut }, f(45));
-
-      /* ═══ NO → How ═══ */
-      master.to(noLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 2, ease }, f(46));
-      master.to(howLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2, ease }, f(46.5));
-
-      /* ═══ How IN ═══ */
-      master.fromTo(howStep1, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(49));
-      clk(f(49));
-      master.fromTo(howStep2, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(50));
-      master.fromTo(howStep3, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: ds, ease }, f(50));
-      clk(f(50));
-      master.fromTo(howMentic, { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: ds, ease }, f(51));
-      master.fromTo(howRest, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: ds, ease }, f(51));
-      clk(f(51));
-      master.to(howStep3, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(53));
-      master.to(howStep2, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(53));
-      master.to(howStep1, { opacity: 0, y: -15, duration: ds, ease: easeOut }, f(53));
-      master.to(howMentic, { opacity: 0, x: -30, duration: ds, ease: easeOut }, f(53));
-      master.to(howRest, { opacity: 0, y: -10, duration: ds, ease: easeOut }, f(53));
-
-      /* ═══ How → Value ═══ */
-      master.to(howLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 2, ease }, f(54));
-      master.to(valLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 2, ease }, f(54.5));
-
-      /* ═══ Value IN ═══ */
-      master.fromTo(valOne, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(57));
-      clk(f(57));
-      master.fromTo(valEvery, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(58));
-      master.fromTo(valAll, { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: ds, ease }, f(58));
-      clk(f(58));
-      master.to(valAll, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(60));
-      master.to(valEvery, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(60));
-      master.to(valOne, { opacity: 0, x: 30, duration: ds, ease: easeOut }, f(60));
-
-      /* ═══ Value → CTA ═══ */
-      master.to(valLayer, { opacity: 0, pointerEvents: "none", duration: d1 * 1.5, ease }, f(61));
-      master.to(ctaLayer, { opacity: 1, pointerEvents: "auto", duration: d1 * 1.5, ease }, f(61.5));
-
-      /* ═══ CTA IN ═══ */
-      master.fromTo(ctaIcon, { opacity: 0, scale: 0.3, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: ds * 2, ease }, f(64));
-      master.fromTo(ctaSign, { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: ds, ease }, f(64));
-      master.fromTo(ctaUp, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: ds, ease }, f(64));
-      clk(f(64));
-      master.fromTo(ctaNow, { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: ds, ease }, f(65));
-      master.fromTo(ctaAlpha, { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: ds, ease }, f(65));
-      master.fromTo(ctaButton, { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: ds, ease: "back.out(1.4)" }, f(65));
-      clk(f(65));
     }, wrapperRef);
     return () => ctx.revert();
   }, [isMobile]);
@@ -1007,8 +890,8 @@ export default function PreviewLanding() {
       {/* ── Mobile: extra background layer OUTSIDE viewport to cover iOS safe areas ── */}
       {m && <div ref={mobileBgRef} style={{ position: "fixed", inset: "-100vh -100vw", zIndex: -1, backgroundColor: "#ffe5e5", pointerEvents: "none" }} />}
 
-      <div ref={wrapperRef} style={{ height: `${TOTAL_FRAMES * 8}vh`, position: "relative" }}>
-        <div ref={viewportRef} style={{ position: "sticky", top: 0, width: "100vw", height: "100dvh", overflow: "hidden" }}>
+      <div ref={wrapperRef} style={{ position: "relative" }}>
+        <div ref={viewportRef} style={{ position: "relative", width: "100vw" }}>
 
           {/* ── Background — fixed so it covers behind iOS browser chrome ── */}
           <div id="bg" style={{ position: "fixed", inset: m ? "-50vh -25vw" : "-5vh -5vw", backgroundColor: "#ffe5e5", zIndex: 0 }} />
@@ -1018,71 +901,11 @@ export default function PreviewLanding() {
             id="icon-teal"
             onClick={() => {
               sfxPress();
-              const vp = viewportRef.current;
-              if (!vp) return;
-
-              // 1. Stop Lenis so it doesn't animate the scroll
-              lenisRef.current?.stop();
-
-              // 2. Hide entire viewport instantly (no visible scroll)
-              gsap.set(vp, { opacity: 0 });
-
-              // 3. Teleport to top — no scroll events since viewport is hidden
-              window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-
-              // 4. Reset all layers to initial state (hero visible, others hidden)
-              const allLayers = ["#pain-layer", "#calc-layer", "#sol-layer", "#no-layer", "#how-layer", "#val-layer", "#cta-layer"];
-              allLayers.forEach(sel => {
-                const el = vp.querySelector(sel) as HTMLElement;
-                if (el) gsap.set(el, { opacity: 0, pointerEvents: "none" });
-              });
-              gsap.set(vp.querySelector("#glass-card"), { opacity: 0 });
-              gsap.set(vp.querySelector("#icon-teal"), { opacity: 0 });
-              gsap.set(vp.querySelector("#bg"), { backgroundColor: "#ffe5e5" });
-
-              // Reset hero to visible
-              const heroEls = ["#hero-card", "#hero-icon", "#hero-alpha", "#hero-headline", "#hero-logo", "#hero-btn"];
-              heroEls.forEach(sel => {
-                const el = vp.querySelector(sel) as HTMLElement;
-                if (el) gsap.set(el, { opacity: 1, clearProps: "clipPath,scale,rotation,x,y,pointerEvents" });
-              });
-              gsap.set(vp.querySelector("#hero-layer"), { opacity: 1, pointerEvents: "auto" });
-              gsap.set(vp.querySelector("#hero-card"), { backgroundColor: "#ff6b5c", clipPath: "none", boxShadow: "0 6px 32px rgba(0,0,0,0.08)", backdropFilter: "none" });
-
-              // 5. Show viewport, replay hero entrance animation, restart Lenis
-              requestAnimationFrame(() => {
-                gsap.set(vp, { opacity: 1 });
-                ScrollTrigger.refresh();
-                lenisRef.current?.start();
-
-                // Replay hero entrance animation (same as handleBegin onComplete)
-                const heroLayer = vp.querySelector("#hero-layer") as HTMLElement;
-                const heroCard = vp.querySelector("#hero-card") as HTMLElement;
-                const heroIcon = vp.querySelector("#hero-icon") as HTMLElement;
-                const heroAlpha = vp.querySelector("#hero-alpha") as HTMLElement;
-                const heroLogo = vp.querySelector("#hero-logo") as HTMLElement;
-                const heroHeadline = vp.querySelector("#hero-headline") as HTMLElement;
-                const heroBtn = vp.querySelector("#hero-btn") as HTMLElement;
-
-                gsap.set(heroLayer, { opacity: 1 });
-                gsap.set([heroCard, heroIcon, heroAlpha, heroLogo, heroHeadline, heroBtn], { opacity: 0 });
-                gsap.set(heroCard, { clipPath: "inset(100% 0 0 0)" });
-                gsap.set(heroLogo, { clipPath: "inset(0 100% 0 0)" });
-                gsap.set(heroHeadline, { clipPath: "inset(0 0 100% 0)" });
-
-                const hero = gsap.timeline();
-                hero.to(heroCard, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.9, ease: "power4.out" });
-                hero.fromTo(heroIcon, { opacity: 0, scale: 0, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, "-=0.5");
-                hero.to(heroLogo, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power3.out" }, "-=0.4");
-                hero.to(heroHeadline, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "power3.out" }, "-=0.5");
-                hero.fromTo(heroAlpha, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }, "-=0.3");
-                hero.fromTo(heroBtn, { opacity: 0, scale: 0.5, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.5)" }, "-=0.2");
-                hero.call(() => sfxClick(), [], 0.4);
-                hero.call(() => sfxClick(), [], 0.7);
-              });
+              // Smooth scroll to top
+              lenisRef.current?.scrollTo(0, { duration: 1.5 });
             }}
             style={{
-              position: "absolute",
+              position: "fixed",
               top: m ? MY(25) : Y(53), left: m ? MX(32) : X(61),
               width: m ? MW(65) : W(65), height: "auto",
               zIndex: 10, opacity: 0,
@@ -1100,7 +923,7 @@ export default function PreviewLanding() {
           <div
             id="glass-card"
             style={{
-              position: "absolute",
+              position: "fixed",
               top: m ? MY(15) : Y(20), left: m ? MX(16) : X(24),
               width: m ? MW(362) : W(1443), height: m ? MH(822) : H(919),
               background: "rgba(255,255,255,0.08)",
@@ -1115,8 +938,8 @@ export default function PreviewLanding() {
           {/* ── Glass strips (desktop only) ── */}
           {!m && (
             <>
-              <div id="glass-strip-1" style={{ position: "absolute", left: X(24), top: Y(229), width: W(984), height: H(152), background: "rgba(255,255,255,0.08)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "0 12px 12px 0", zIndex: 2, opacity: 0 }} />
-              <div id="glass-strip-2" style={{ position: "absolute", left: X(24), top: Y(652), width: W(984), height: H(141), background: "rgba(255,255,255,0.08)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "0 12px 12px 0", zIndex: 2, opacity: 0 }} />
+              <div id="glass-strip-1" style={{ position: "fixed", left: X(24), top: Y(229), width: W(984), height: H(152), background: "rgba(255,255,255,0.08)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "0 12px 12px 0", zIndex: 2, opacity: 0 }} />
+              <div id="glass-strip-2" style={{ position: "fixed", left: X(24), top: Y(652), width: W(984), height: H(141), background: "rgba(255,255,255,0.08)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "0 12px 12px 0", zIndex: 2, opacity: 0 }} />
             </>
           )}
           {m && (
@@ -1130,7 +953,8 @@ export default function PreviewLanding() {
           <div id="blob-coral" className="gradient-blob gradient-blob-coral" style={{ width: m ? "100vw" : "80vw", height: m ? "100vw" : "80vw", left: "-30%", top: "-20%", opacity: 0, zIndex: 1 }} />
           <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ width: m ? "90vw" : "70vw", height: m ? "90vw" : "70vw", right: "-20%", bottom: "-25%", left: "auto", top: "auto", opacity: 0, zIndex: 1 }} />
 
-          {/* ═══ HERO LAYER ═══ */}
+          {/* ═══ HERO SECTION ═══ */}
+          <div id="section-hero" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="hero-layer" style={{ position: "absolute", inset: 0, zIndex: 5, pointerEvents: "auto", opacity: 0 }}>
             <div id="hero-card" style={{
               position: "absolute",
@@ -1239,9 +1063,11 @@ export default function PreviewLanding() {
               Sign up!
             </button>
           </div>
+          </div>
 
-          {/* ═══ PAIN LAYER ═══ */}
-          <div id="pain-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0, pointerEvents: "none" }}>
+          {/* ═══ PAIN SECTION ═══ */}
+          <div id="section-pain" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="pain-layer" style={{ position: "absolute", inset: 0, zIndex: 4 }}>
             <div id="pain-blob" className="gradient-blob gradient-blob-coral" style={{
               position: "absolute",
               width: m ? MW(304) : W(836), height: m ? MH(334) : H(544),
@@ -1289,9 +1115,11 @@ export default function PreviewLanding() {
               <span style={{ fontWeight: 700 }}>take</span>.
             </div>
           </div>
+          </div>
 
-          {/* ═══ CALC LAYER ═══ */}
-          <div id="calc-layer" style={{ position: "absolute", inset: 0, zIndex: 6, opacity: 0, pointerEvents: "none" }}>
+          {/* ═══ CALC SECTION ═══ */}
+          <div id="section-calc" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="calc-layer" style={{ position: "absolute", inset: 0, zIndex: 6 }}>
             <div id="calc-panel" style={{
               position: "absolute",
               top: m ? MY(15) : Y(20), right: m ? undefined : X(24),
@@ -1352,9 +1180,11 @@ export default function PreviewLanding() {
               <span style={{ color: "white", fontWeight: 600 }}>ADS</span>
             </div>
           </div>
+          </div>
 
-          {/* ═══ SOLUTION LAYER ═══ */}
-          <div id="sol-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0, pointerEvents: "none" }}>
+          {/* ═══ SOLUTION SECTION ═══ */}
+          <div id="section-sol" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="sol-layer" style={{ position: "absolute", inset: 0, zIndex: 3 }}>
             <div id="sol-text-1" style={{
               position: "absolute",
               top: m ? MY(663) : Y(698), left: m ? MX(44) : X(94),
@@ -1390,9 +1220,11 @@ export default function PreviewLanding() {
               <span style={{ fontWeight: 800, color: "#ff6b5c" }}>agentic</span> infrastructure.
             </div>
           </div>
+          </div>
 
-          {/* ═══ NO LAYER ═══ */}
-          <div id="no-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0, pointerEvents: "none" }}>
+          {/* ═══ NO SECTION ═══ */}
+          <div id="section-no" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="no-layer" style={{ position: "absolute", inset: 0, zIndex: 3 }}>
             <div id="no-text" style={{
               position: "absolute",
               top: m ? MY(264) : Y(545.12), left: m ? MX(64) : X(61),
@@ -1442,9 +1274,11 @@ export default function PreviewLanding() {
               borderRadius: "50%", background: "#003c46", zIndex: 2, opacity: 0,
             }} />
           </div>
+          </div>
 
-          {/* ═══ HOW LAYER ═══ */}
-          <div id="how-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0, pointerEvents: "none" }}>
+          {/* ═══ HOW SECTION ═══ */}
+          <div id="section-how" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="how-layer" style={{ position: "absolute", inset: 0, zIndex: 3 }}>
             <div id="how-step-1" style={{
               position: "absolute",
               top: m ? MY(262) : Y(338), left: m ? MX(70) : X(265.86),
@@ -1491,9 +1325,11 @@ export default function PreviewLanding() {
               <span style={{ fontWeight: 300 }}>rest.</span>
             </div>
           </div>
+          </div>
 
-          {/* ═══ VALUE LAYER ═══ */}
-          <div id="val-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0, pointerEvents: "none" }}>
+          {/* ═══ VALUE SECTION ═══ */}
+          <div id="section-val" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="val-layer" style={{ position: "absolute", inset: 0, zIndex: 3 }}>
             <div id="val-one" style={{
               position: "absolute",
               top: m ? MY(310) : Y(287), left: m ? MX(44) : X(301),
@@ -1526,9 +1362,11 @@ export default function PreviewLanding() {
               </span>
             </div>
           </div>
+          </div>
 
-          {/* ═══ CTA LAYER ═══ */}
-          <div id="cta-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0, pointerEvents: "none" }}>
+          {/* ═══ CTA SECTION ═══ */}
+          <div id="section-cta" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="cta-layer" style={{ position: "absolute", inset: 0, zIndex: 3 }}>
             {/* Orange icon — desktop only, hidden on mobile */}
             <div id="cta-icon" style={{
               position: "absolute",
@@ -1606,6 +1444,7 @@ export default function PreviewLanding() {
             >
               Sign up!
             </button>
+          </div>
           </div>
 
           {/* ═══ SIGNUP LAYER ═══ */}
