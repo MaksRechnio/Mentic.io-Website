@@ -280,7 +280,7 @@ export default function PreviewLanding() {
 
   /* ── Lenis smooth scroll ── */
   useEffect(() => {
-    const lenis = new Lenis({ duration: 2.2, easing: (t: number) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)), smoothWheel: true });
+    const lenis = new Lenis({ duration: 0.8, easing: (t: number) => 1 - Math.pow(1 - t, 3), smoothWheel: true });
     lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
@@ -292,135 +292,147 @@ export default function PreviewLanding() {
   useEffect(() => {
     if (!wrapperRef.current) return;
     const ctx = gsap.context(() => {
-      const ease = "power2.out";
-      const dur = 0.6;
-      const stagger = 0.15;
 
-      // Helper: animate children in on enter, reverse on leave
-      function sectionAnim(trigger: string, targets: Array<{ sel: string; from: gsap.TweenVars }>) {
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger,
-            start: "top 80%",
-            end: "bottom 20%",
-            toggleActions: "play reverse play reverse",
-          },
-        });
-        targets.forEach(({ sel, from }, i) => {
-          tl.fromTo(sel, { opacity: 0, ...from }, { opacity: 1, x: 0, y: 0, scale: 1, rotation: 0, duration: dur, ease }, i * stagger);
-          tl.call(() => sfxClick(), [], i * stagger + dur * 0.7);
-        });
-        return tl;
-      }
-
-      /* ═══ Hero — already visible from loader, fade out on scroll ═══ */
-      ScrollTrigger.create({
-        trigger: "#section-hero",
-        start: "bottom 60%",
-        end: "bottom top",
-        onLeave: () => gsap.to("#hero-layer", { opacity: 0, duration: 0.4, ease }),
-        onEnterBack: () => gsap.to("#hero-layer", { opacity: 1, duration: 0.4, ease }),
-      });
+      /* ═══ Hero — clip-path exit on scroll ═══ */
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: "#section-hero",
+          start: "60% top",
+          end: "bottom top",
+          scrub: 0.4,
+        },
+      })
+      .to("#hero-btn", { opacity: 0, scale: 0.6, y: 20, duration: 0.3, ease: "power3.in" }, 0)
+      .to("#hero-alpha", { opacity: 0, y: 15, duration: 0.3, ease: "power3.in" }, 0)
+      .to("#hero-headline", { opacity: 0, clipPath: "inset(0 0 100% 0)", duration: 0.4, ease: "power3.in" }, 0.05)
+      .to("#hero-logo", { opacity: 0, clipPath: "inset(0 100% 0 0)", duration: 0.4, ease: "power3.in" }, 0.1)
+      .to("#hero-icon", { opacity: 0, scale: 0, rotation: -90, duration: 0.4, ease: "power3.in" }, 0.1)
+      .to("#hero-card", { opacity: 0, clipPath: "inset(100% 0 0 0)", duration: 0.5, ease: "power3.in" }, 0.15);
 
       /* ═══ Pain ═══ */
       ScrollTrigger.create({
         trigger: "#section-pain",
-        start: "top 80%",
-        end: "bottom 20%",
-        toggleActions: "play reverse play reverse",
+        start: "top 75%",
         onEnter: () => {
-          gsap.to(["#glass-card", "#icon-teal"], { opacity: 1, duration: 0.5, ease });
-          gsap.to("#bg", { backgroundColor: "#ffe5e5", duration: 0.6, ease });
+          gsap.to(["#glass-card", "#icon-teal"], { opacity: 1, duration: 0.6, ease: "power2.out" });
+          gsap.to("#bg", { backgroundColor: "#ffe5e5", duration: 0.8, ease: "power2.out" });
         },
         onLeaveBack: () => {
-          gsap.to(["#glass-card", "#icon-teal"], { opacity: 0, duration: 0.5, ease });
+          gsap.to(["#glass-card", "#icon-teal"], { opacity: 0, duration: 0.4, ease: "power2.in" });
         },
       });
 
-      sectionAnim("#section-pain", [
-        { sel: "#pain-blob", from: { scale: 0.6 } },
-        { sel: "#pain-text-1", from: { y: 30 } },
-        { sel: "#glass-strip-1", from: {} },
-        { sel: "#pain-text-2", from: { y: 30 } },
-        { sel: "#glass-strip-2", from: {} },
-        { sel: "#pain-text-3", from: { y: 30 } },
-      ]);
+      const painTl = gsap.timeline({
+        scrollTrigger: { trigger: "#section-pain", start: "top 70%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
+      });
+      painTl.fromTo("#pain-blob", { opacity: 0, scale: 0.4, rotation: -120 }, { opacity: 1, scale: 1, rotation: -90, duration: 0.8, ease: "back.out(1.4)" }, 0);
+      painTl.fromTo("#pain-text-1", { opacity: 0, y: 40, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power3.out" }, 0.15);
+      painTl.call(() => sfxClick(), [], 0.6);
+      painTl.fromTo("#glass-strip-1", { opacity: 0, scaleX: 0, transformOrigin: "left" }, { opacity: 1, scaleX: 1, duration: 0.6, ease: "power4.out" }, 0.3);
+      painTl.fromTo("#pain-text-2", { opacity: 0, y: 35, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power3.out" }, 0.35);
+      painTl.call(() => sfxClick(), [], 0.8);
+      painTl.fromTo("#glass-strip-2", { opacity: 0, scaleX: 0, transformOrigin: "left" }, { opacity: 1, scaleX: 1, duration: 0.6, ease: "power4.out" }, 0.5);
+      painTl.fromTo("#pain-text-3", { opacity: 0, y: 35, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power3.out" }, 0.55);
+      painTl.call(() => sfxClick(), [], 1.0);
 
       /* ═══ Calc ═══ */
       ScrollTrigger.create({
         trigger: "#section-calc",
-        start: "top 70%",
-        end: "bottom 30%",
-        onEnter: () => gsap.to("#bg", { backgroundColor: "#ff6b5c", duration: 0.6, ease }),
-        onLeaveBack: () => gsap.to("#bg", { backgroundColor: "#ffe5e5", duration: 0.6, ease }),
+        start: "top 65%",
+        onEnter: () => gsap.to("#bg", { backgroundColor: "#ff6b5c", duration: 0.8, ease: "power2.out" }),
+        onLeaveBack: () => gsap.to("#bg", { backgroundColor: "#ffe5e5", duration: 0.6, ease: "power2.out" }),
       });
 
-      sectionAnim("#section-calc", [
-        { sel: "#calc-panel", from: {} },
-        { sel: "#calc-heading", from: { y: 25 } },
-        { sel: "#calc-amount", from: { scale: 0.9 } },
-        { sel: "#calc-fifty", from: { scale: 0.5 } },
-        { sel: "#calc-fees", from: { x: -25 } },
-        { sel: "#calc-notads", from: { y: 20 } },
-      ]);
+      const calcTl = gsap.timeline({
+        scrollTrigger: { trigger: "#section-calc", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
+      });
+      calcTl.fromTo("#calc-panel", { opacity: 0, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, clipPath: "inset(0 0 0 0%)", duration: 0.7, ease: "power4.out" }, 0);
+      calcTl.fromTo("#calc-heading", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.15);
+      calcTl.call(() => sfxClick(), [], 0.5);
+      calcTl.fromTo("#calc-amount", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(1.8)" }, 0.3);
+      calcTl.fromTo("#calc-fifty", { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(2.5)" }, 0.35);
+      calcTl.call(() => sfxClick(), [], 0.7);
+      calcTl.fromTo("#calc-fees", { opacity: 0, x: -40, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "power3.out" }, 0.5);
+      calcTl.fromTo("#calc-notads", { opacity: 0, y: 25, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "back.out(1.4)" }, 0.6);
+      calcTl.call(() => sfxClick(), [], 0.9);
 
       /* ═══ Solution ═══ */
       ScrollTrigger.create({
         trigger: "#section-sol",
-        start: "top 70%",
-        end: "bottom 30%",
+        start: "top 65%",
         onEnter: () => {
-          gsap.to("#bg", { backgroundColor: "#ffffff", duration: 0.6, ease });
-          gsap.to(["#blob-coral", "#blob-mint"], { opacity: 1, duration: 0.8, ease });
-          gsap.to("#icon-teal", { opacity: 1, duration: 0.5, ease });
+          gsap.to("#bg", { backgroundColor: "#ffffff", duration: 0.8, ease: "power2.out" });
+          gsap.to(["#blob-coral", "#blob-mint"], { opacity: 1, duration: 1, ease: "power2.out" });
+          gsap.to("#icon-teal", { opacity: 1, duration: 0.6, ease: "power2.out" });
         },
         onLeaveBack: () => {
-          gsap.to("#bg", { backgroundColor: "#ff6b5c", duration: 0.6, ease });
-          gsap.to(["#blob-coral", "#blob-mint"], { opacity: 0, duration: 0.5, ease });
+          gsap.to("#bg", { backgroundColor: "#ff6b5c", duration: 0.6, ease: "power2.out" });
+          gsap.to(["#blob-coral", "#blob-mint"], { opacity: 0, duration: 0.5, ease: "power2.in" });
         },
       });
 
-      sectionAnim("#section-sol", [
-        { sel: "#sol-text-1", from: { y: 30 } },
-        { sel: "#sol-text-2", from: { y: 25 } },
-        { sel: "#sol-text-3", from: { y: 20 } },
-      ]);
+      const solTl = gsap.timeline({
+        scrollTrigger: { trigger: "#section-sol", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
+      });
+      solTl.fromTo("#sol-text-1", { opacity: 0, y: 50, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.8, ease: "power3.out" }, 0);
+      solTl.call(() => sfxClick(), [], 0.5);
+      solTl.fromTo("#sol-text-2", { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.2);
+      solTl.call(() => sfxClick(), [], 0.7);
+      solTl.fromTo("#sol-text-3", { opacity: 0, y: 25, scale: 0.95 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "power3.out" }, 0.4);
+      solTl.call(() => sfxClick(), [], 0.85);
 
       /* ═══ NO ═══ */
-      sectionAnim("#section-no", [
-        { sel: "#no-text", from: { scale: 0.3 } },
-        { sel: "#no-item-1", from: { x: 50 } },
-        { sel: "#no-item-2", from: { x: 50 } },
-        { sel: "#no-item-3", from: { x: 50 } },
-        { sel: "#no-item-4", from: { x: 50 } },
-        { sel: "#no-dot", from: { scale: 0 } },
-      ]);
+      const noTl = gsap.timeline({
+        scrollTrigger: { trigger: "#section-no", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
+      });
+      noTl.fromTo("#no-text", { opacity: 0, scale: 0.15, rotation: -15 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, 0);
+      noTl.call(() => sfxClick(), [], 0.5);
+      noTl.fromTo("#no-item-1", { opacity: 0, x: 60, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.5, ease: "power4.out" }, 0.2);
+      noTl.call(() => sfxClick(), [], 0.55);
+      noTl.fromTo("#no-item-2", { opacity: 0, x: 60, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.5, ease: "power4.out" }, 0.35);
+      noTl.call(() => sfxClick(), [], 0.7);
+      noTl.fromTo("#no-item-3", { opacity: 0, x: 60, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.5, ease: "power4.out" }, 0.5);
+      noTl.call(() => sfxClick(), [], 0.85);
+      noTl.fromTo("#no-item-4", { opacity: 0, x: 60, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.5, ease: "power4.out" }, 0.65);
+      noTl.fromTo("#no-dot", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(3)" }, 0.8);
+      noTl.call(() => sfxClick(), [], 0.95);
 
       /* ═══ How ═══ */
-      sectionAnim("#section-how", [
-        { sel: "#how-step-1", from: { y: 30 } },
-        { sel: "#how-step-2", from: { y: 30 } },
-        { sel: "#how-step-3", from: { y: 30 } },
-        { sel: "#how-mentic", from: { x: 60 } },
-        { sel: "#how-rest", from: { y: 15 } },
-      ]);
+      const howTl = gsap.timeline({
+        scrollTrigger: { trigger: "#section-how", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
+      });
+      howTl.fromTo("#how-step-1", { opacity: 0, y: 40, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.6, ease: "power3.out" }, 0);
+      howTl.call(() => sfxClick(), [], 0.4);
+      howTl.fromTo("#how-step-2", { opacity: 0, y: 35, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.6, ease: "power3.out" }, 0.15);
+      howTl.fromTo("#how-step-3", { opacity: 0, y: 30, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.6, ease: "power3.out" }, 0.3);
+      howTl.call(() => sfxClick(), [], 0.65);
+      howTl.fromTo("#how-mentic", { opacity: 0, x: 80, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.7, ease: "power4.out" }, 0.4);
+      howTl.fromTo("#how-rest", { opacity: 0, y: 15, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 0.55);
+      howTl.call(() => sfxClick(), [], 0.85);
 
       /* ═══ Value ═══ */
-      sectionAnim("#section-val", [
-        { sel: "#val-one", from: { x: -40 } },
-        { sel: "#val-every", from: { x: -40 } },
-        { sel: "#val-all", from: { x: -40 } },
-      ]);
+      const valTl = gsap.timeline({
+        scrollTrigger: { trigger: "#section-val", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
+      });
+      valTl.fromTo("#val-one", { opacity: 0, x: -60, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out" }, 0);
+      valTl.call(() => sfxClick(), [], 0.5);
+      valTl.fromTo("#val-every", { opacity: 0, x: -50, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out" }, 0.2);
+      valTl.call(() => sfxClick(), [], 0.7);
+      valTl.fromTo("#val-all", { opacity: 0, x: -40, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out" }, 0.4);
+      valTl.call(() => sfxClick(), [], 0.9);
 
       /* ═══ CTA ═══ */
-      sectionAnim("#section-cta", [
-        { sel: "#cta-icon", from: { scale: 0.3, rotation: -180 } },
-        { sel: "#cta-sign", from: { x: -60 } },
-        { sel: "#cta-up", from: { y: 40 } },
-        { sel: "#cta-now", from: { x: 40 } },
-        { sel: "#cta-alpha", from: { y: 20 } },
-        { sel: "#cta-button", from: { scale: 0.85 } },
-      ]);
+      const ctaTl = gsap.timeline({
+        scrollTrigger: { trigger: "#section-cta", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
+      });
+      ctaTl.fromTo("#cta-icon", { opacity: 0, scale: 0.2, rotation: -180 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "back.out(1.8)" }, 0);
+      ctaTl.fromTo("#cta-sign", { opacity: 0, x: -80, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "power4.out" }, 0.1);
+      ctaTl.fromTo("#cta-up", { opacity: 0, y: 50, scale: 0.7 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: "back.out(1.6)" }, 0.2);
+      ctaTl.call(() => sfxClick(), [], 0.55);
+      ctaTl.fromTo("#cta-now", { opacity: 0, x: 50, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.6, ease: "power4.out" }, 0.3);
+      ctaTl.fromTo("#cta-alpha", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.45);
+      ctaTl.fromTo("#cta-button", { opacity: 0, scale: 0.6, y: 15 }, { opacity: 1, scale: 1, y: 0, duration: 0.5, ease: "back.out(2.5)" }, 0.55);
+      ctaTl.call(() => sfxClick(), [], 0.85);
 
     }, wrapperRef);
     return () => ctx.revert();
@@ -890,7 +902,7 @@ export default function PreviewLanding() {
       {/* ── Mobile: extra background layer OUTSIDE viewport to cover iOS safe areas ── */}
       {m && <div ref={mobileBgRef} style={{ position: "fixed", inset: "-100vh -100vw", zIndex: -1, backgroundColor: "#ffe5e5", pointerEvents: "none" }} />}
 
-      <div ref={wrapperRef} style={{ position: "relative" }}>
+      <div ref={wrapperRef} style={{ position: "relative", overflow: "hidden" }}>
         <div ref={viewportRef} style={{ position: "relative", width: "100vw" }}>
 
           {/* ── Background — fixed so it covers behind iOS browser chrome ── */}
