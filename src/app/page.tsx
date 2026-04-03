@@ -965,7 +965,7 @@ export default function PreviewLanding() {
           <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ width: m ? "90vw" : "70vw", height: m ? "90vw" : "70vw", right: "-20%", bottom: "-25%", left: "auto", top: "auto", opacity: 0, zIndex: 1 }} />
 
           {/* ═══ HERO SECTION ═══ */}
-          <div id="section-hero" style={{ position: "relative", width: "100%", height: "85dvh", overflow: "hidden" }}>
+          <div id="section-hero" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="hero-layer" style={{ position: "absolute", inset: 0, zIndex: 5, pointerEvents: "auto", opacity: 0 }}>
             <div id="hero-card" style={{
               position: "absolute",
