@@ -293,7 +293,7 @@ export default function PreviewLanding() {
     if (!wrapperRef.current) return;
     const ctx = gsap.context(() => {
 
-      /* ═══ Hero — dramatic exit on scroll ═══ */
+      /* ═══ Hero — clean fade-up exit on scroll ═══ */
       gsap.timeline({
         scrollTrigger: {
           trigger: "#section-hero",
@@ -302,12 +302,12 @@ export default function PreviewLanding() {
           scrub: 0.4,
         },
       })
-      .to("#hero-btn", { opacity: 0, y: -60, rotation: 8, duration: 0.3, ease: "power3.in" }, 0)
-      .to("#hero-alpha", { opacity: 0, x: 120, duration: 0.3, ease: "power3.in" }, 0)
-      .to("#hero-headline", { opacity: 0, y: -80, skewY: 4, duration: 0.4, ease: "power3.in" }, 0.05)
-      .to("#hero-logo", { opacity: 0, x: -150, rotation: -12, duration: 0.4, ease: "power3.in" }, 0.08)
-      .to("#hero-icon", { opacity: 0, scale: 0.1, rotation: -270, duration: 0.5, ease: "power4.in" }, 0.1)
-      .to("#hero-card", { opacity: 0, y: 120, scale: 0.85, duration: 0.5, ease: "power3.in" }, 0.12);
+      .to("#hero-btn", { opacity: 0, y: -30, duration: 0.3, ease: "power2.in" }, 0)
+      .to("#hero-alpha", { opacity: 0, y: -20, duration: 0.3, ease: "power2.in" }, 0)
+      .to("#hero-headline", { opacity: 0, y: -40, duration: 0.4, ease: "power2.in" }, 0.05)
+      .to("#hero-logo", { opacity: 0, y: -30, duration: 0.4, ease: "power2.in" }, 0.08)
+      .to("#hero-icon", { opacity: 0, scale: 0.7, duration: 0.4, ease: "power2.in" }, 0.1)
+      .to("#hero-card", { opacity: 0, y: 40, duration: 0.5, ease: "power2.in" }, 0.1);
 
       /* ═══ Pain ═══ */
       ScrollTrigger.create({
@@ -321,7 +321,6 @@ export default function PreviewLanding() {
           gsap.to(["#glass-card", "#icon-teal"], { opacity: 0, duration: 0.4, ease: "power2.in" });
         },
       });
-      // Hide glass card when leaving pain section (it only suits the pink bg)
       ScrollTrigger.create({
         trigger: "#section-pain",
         start: "bottom 50%",
@@ -332,13 +331,13 @@ export default function PreviewLanding() {
       const painTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-pain", start: "top 70%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      painTl.fromTo("#pain-blob", { opacity: 0, scale: 0.2, rotation: -200, x: -80 }, { opacity: 1, scale: 1, rotation: -90, x: 0, duration: 1, ease: "elastic.out(1, 0.6)" }, 0);
-      painTl.fromTo("#pain-text-1", { opacity: 0, x: -120, skewX: -8, rotation: -3 }, { opacity: 1, x: 0, skewX: 0, rotation: 0, duration: 0.8, ease: "power4.out" }, 0.1);
+      painTl.fromTo("#pain-blob", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.9, ease: "power3.out" }, 0);
+      painTl.fromTo("#pain-text-1", { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.1);
       painTl.call(() => sfxClick(), [], 0.5);
-      painTl.fromTo("#pain-text-2", { opacity: 0, x: 120, skewX: 8, rotation: 3 }, { opacity: 1, x: 0, skewX: 0, rotation: 0, duration: 0.8, ease: "power4.out" }, 0.3);
-      painTl.call(() => sfxClick(), [], 0.7);
-      painTl.fromTo("#pain-text-3", { opacity: 0, y: 80, scale: 0.7, rotation: 5 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.9, ease: "back.out(1.7)" }, 0.55);
-      painTl.call(() => sfxClick(), [], 0.95);
+      painTl.fromTo("#pain-text-2", { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.25);
+      painTl.call(() => sfxClick(), [], 0.65);
+      painTl.fromTo("#pain-text-3", { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.4);
+      painTl.call(() => sfxClick(), [], 0.8);
 
       /* ═══ Calc ═══ */
       ScrollTrigger.create({
@@ -351,15 +350,15 @@ export default function PreviewLanding() {
       const calcTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-calc", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      calcTl.fromTo("#calc-panel", { opacity: 0, x: 200, rotation: 6, scale: 0.8 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.9, ease: "power4.out" }, 0);
-      calcTl.fromTo("#calc-heading", { opacity: 0, y: -60, skewY: -6 }, { opacity: 1, y: 0, skewY: 0, duration: 0.7, ease: "power3.out" }, 0.15);
+      calcTl.fromTo("#calc-panel", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }, 0);
+      calcTl.fromTo("#calc-heading", { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.1);
       calcTl.call(() => sfxClick(), [], 0.4);
-      calcTl.fromTo("#calc-amount", { opacity: 0, scale: 0.1, rotation: 90 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "elastic.out(1, 0.5)" }, 0.25);
-      calcTl.fromTo("#calc-fifty", { opacity: 0, scale: 3, y: -40 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "back.out(2.5)" }, 0.35);
-      calcTl.call(() => sfxClick(), [], 0.65);
-      calcTl.fromTo("#calc-fees", { opacity: 0, x: -100, rotation: -4, skewX: -6 }, { opacity: 1, x: 0, rotation: 0, skewX: 0, duration: 0.7, ease: "power4.out" }, 0.45);
-      calcTl.fromTo("#calc-notads", { opacity: 0, y: 60, scale: 0.5, rotation: -8 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.7, ease: "back.out(2)" }, 0.6);
-      calcTl.call(() => sfxClick(), [], 0.85);
+      calcTl.fromTo("#calc-amount", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 0.2);
+      calcTl.fromTo("#calc-fifty", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.4)" }, 0.3);
+      calcTl.call(() => sfxClick(), [], 0.6);
+      calcTl.fromTo("#calc-fees", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 0.4);
+      calcTl.fromTo("#calc-notads", { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.5);
+      calcTl.call(() => sfxClick(), [], 0.75);
 
       /* ═══ Solution ═══ */
       ScrollTrigger.create({
@@ -379,12 +378,12 @@ export default function PreviewLanding() {
       const solTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-sol", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      solTl.fromTo("#sol-text-1", { opacity: 0, y: 100, rotation: -6, scale: 0.8 }, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.9, ease: "power4.out" }, 0);
+      solTl.fromTo("#sol-text-1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0);
       solTl.call(() => sfxClick(), [], 0.4);
-      solTl.fromTo("#sol-text-2", { opacity: 0, x: -100, skewX: -10 }, { opacity: 1, x: 0, skewX: 0, duration: 0.8, ease: "power4.out" }, 0.15);
-      solTl.call(() => sfxClick(), [], 0.6);
-      solTl.fromTo("#sol-text-3", { opacity: 0, x: 100, skewX: 10, scale: 0.85 }, { opacity: 1, x: 0, skewX: 0, scale: 1, duration: 0.8, ease: "back.out(1.5)" }, 0.35);
-      solTl.call(() => sfxClick(), [], 0.8);
+      solTl.fromTo("#sol-text-2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.15);
+      solTl.call(() => sfxClick(), [], 0.55);
+      solTl.fromTo("#sol-text-3", { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.3);
+      solTl.call(() => sfxClick(), [], 0.7);
 
       /* ═══ NO ═══ */
       ScrollTrigger.create({
@@ -397,54 +396,54 @@ export default function PreviewLanding() {
       const noTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-no", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      noTl.fromTo("#no-text", { opacity: 0, scale: 0.05, rotation: -25, y: 60 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.9, ease: "elastic.out(1, 0.5)" }, 0);
-      noTl.call(() => sfxClick(), [], 0.4);
-      noTl.fromTo("#no-item-1", { opacity: 0, x: 150, rotation: 12, scale: 0.6 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 0.15);
-      noTl.call(() => sfxClick(), [], 0.5);
-      noTl.fromTo("#no-item-2", { opacity: 0, x: -150, rotation: -12, scale: 0.6 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 0.3);
+      noTl.fromTo("#no-text", { opacity: 0, scale: 0.8, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0);
+      noTl.call(() => sfxClick(), [], 0.35);
+      noTl.fromTo("#no-item-1", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.12);
+      noTl.call(() => sfxClick(), [], 0.45);
+      noTl.fromTo("#no-item-2", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.24);
+      noTl.call(() => sfxClick(), [], 0.55);
+      noTl.fromTo("#no-item-3", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.36);
       noTl.call(() => sfxClick(), [], 0.65);
-      noTl.fromTo("#no-item-3", { opacity: 0, y: 80, rotation: 8, scale: 0.6 }, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 0.45);
-      noTl.call(() => sfxClick(), [], 0.8);
-      noTl.fromTo("#no-item-4", { opacity: 0, y: -80, rotation: -8, scale: 0.6 }, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.7, ease: "back.out(1.4)" }, 0.6);
-      noTl.fromTo("#no-dot", { opacity: 0, scale: 0, rotation: 720 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.8, ease: "elastic.out(1, 0.4)" }, 0.75);
-      noTl.call(() => sfxClick(), [], 0.95);
+      noTl.fromTo("#no-item-4", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.48);
+      noTl.fromTo("#no-dot", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" }, 0.6);
+      noTl.call(() => sfxClick(), [], 0.75);
 
       /* ═══ How ═══ */
       const howTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-how", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      howTl.fromTo("#how-step-1", { opacity: 0, x: -120, rotation: -8, scale: 0.7 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, 0);
-      howTl.call(() => sfxClick(), [], 0.35);
-      howTl.fromTo("#how-step-2", { opacity: 0, y: 100, rotation: 6, scale: 0.7 }, { opacity: 1, y: 0, rotation: 0, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, 0.15);
-      howTl.fromTo("#how-step-3", { opacity: 0, x: 120, rotation: 8, scale: 0.7 }, { opacity: 1, x: 0, rotation: 0, scale: 1, duration: 0.8, ease: "back.out(1.4)" }, 0.3);
-      howTl.call(() => sfxClick(), [], 0.6);
-      howTl.fromTo("#how-mentic", { opacity: 0, scale: 0.3, x: 200, rotation: 15 }, { opacity: 1, scale: 1, x: 0, rotation: 0, duration: 0.9, ease: "elastic.out(1, 0.6)" }, 0.4);
-      howTl.fromTo("#how-rest", { opacity: 0, y: -50, skewY: 6, scale: 0.85 }, { opacity: 1, y: 0, skewY: 0, scale: 1, duration: 0.7, ease: "power4.out" }, 0.55);
-      howTl.call(() => sfxClick(), [], 0.85);
+      howTl.fromTo("#how-step-1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0);
+      howTl.call(() => sfxClick(), [], 0.3);
+      howTl.fromTo("#how-step-2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.12);
+      howTl.fromTo("#how-step-3", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.24);
+      howTl.call(() => sfxClick(), [], 0.55);
+      howTl.fromTo("#how-mentic", { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 0.7, ease: "power3.out" }, 0.35);
+      howTl.fromTo("#how-rest", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.45);
+      howTl.call(() => sfxClick(), [], 0.7);
 
       /* ═══ Value ═══ */
       const valTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-val", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      valTl.fromTo("#val-one", { opacity: 0, y: 80, x: -80, rotation: -10, scale: 0.6 }, { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.9, ease: "back.out(1.6)" }, 0);
-      valTl.call(() => sfxClick(), [], 0.4);
-      valTl.fromTo("#val-every", { opacity: 0, y: -60, x: 80, rotation: 10, scale: 0.6 }, { opacity: 1, y: 0, x: 0, rotation: 0, scale: 1, duration: 0.9, ease: "back.out(1.6)" }, 0.2);
-      valTl.call(() => sfxClick(), [], 0.65);
-      valTl.fromTo("#val-all", { opacity: 0, scale: 0.3, rotation: -15, y: 60 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.9, ease: "elastic.out(1, 0.6)" }, 0.4);
-      valTl.call(() => sfxClick(), [], 0.9);
+      valTl.fromTo("#val-one", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0);
+      valTl.call(() => sfxClick(), [], 0.35);
+      valTl.fromTo("#val-every", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.15);
+      valTl.call(() => sfxClick(), [], 0.55);
+      valTl.fromTo("#val-all", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.3);
+      valTl.call(() => sfxClick(), [], 0.75);
 
       /* ═══ CTA ═══ */
       const ctaTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-cta", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      ctaTl.fromTo("#cta-icon", { opacity: 0, scale: 0.1, rotation: -360, y: 80 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 1, ease: "elastic.out(1, 0.5)" }, 0);
-      ctaTl.fromTo("#cta-sign", { opacity: 0, x: -200, skewX: -15, rotation: -8 }, { opacity: 1, x: 0, skewX: 0, rotation: 0, duration: 0.8, ease: "power4.out" }, 0.1);
-      ctaTl.fromTo("#cta-up", { opacity: 0, y: 120, scale: 0.3, rotation: 20 }, { opacity: 1, y: 0, scale: 1, rotation: 0, duration: 0.8, ease: "back.out(2)" }, 0.2);
-      ctaTl.call(() => sfxClick(), [], 0.5);
-      ctaTl.fromTo("#cta-now", { opacity: 0, x: 150, skewX: 15, rotation: 8 }, { opacity: 1, x: 0, skewX: 0, rotation: 0, duration: 0.7, ease: "power4.out" }, 0.3);
-      ctaTl.fromTo("#cta-alpha", { opacity: 0, y: 50, rotation: -5 }, { opacity: 1, y: 0, rotation: 0, duration: 0.6, ease: "back.out(1.4)" }, 0.45);
-      ctaTl.fromTo("#cta-button", { opacity: 0, scale: 0.2, rotation: -180, y: 40 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.8, ease: "elastic.out(1, 0.5)" }, 0.55);
-      ctaTl.call(() => sfxClick(), [], 0.85);
+      ctaTl.fromTo("#cta-icon", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" }, 0);
+      ctaTl.fromTo("#cta-sign", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 0.08);
+      ctaTl.fromTo("#cta-up", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.16);
+      ctaTl.call(() => sfxClick(), [], 0.4);
+      ctaTl.fromTo("#cta-now", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.24);
+      ctaTl.fromTo("#cta-alpha", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.35);
+      ctaTl.fromTo("#cta-button", { opacity: 0, y: 15, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 0.45);
+      ctaTl.call(() => sfxClick(), [], 0.7);
 
     }, wrapperRef);
     return () => ctx.revert();
