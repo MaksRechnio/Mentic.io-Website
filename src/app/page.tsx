@@ -42,6 +42,7 @@ export default function PreviewLanding() {
   const [loadPct, setLoadPct] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [soundMuted, setSoundMuted] = useState(true);
+  const [soundBtnDark, setSoundBtnDark] = useState(false); // true = dark icon for white bg sections
   const [formData, setFormData] = useState({ firstName: "", lastName: "", email: "", company: "" });
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
@@ -331,6 +332,9 @@ export default function PreviewLanding() {
       };
 
       /* ── Per-section enter animations ── */
+      /* Sections with white/light bg need dark sound button */
+      const darkBtnSections = new Set(["section-sol", "section-no", "section-how", "section-val", "section-cta"]);
+
       function enterSection(id: string) {
         const layer = layerMap[id];
         if (!layer) return;
@@ -340,6 +344,9 @@ export default function PreviewLanding() {
 
         // Background color transition
         gsap.to("#bg", { backgroundColor: bgColors[id] || "#ffffff", duration: 0.6, ease: "power2.out" });
+
+        // Update sound button color scheme
+        setSoundBtnDark(darkBtnSections.has(id));
 
         // Section-specific enter animations
         switch (id) {
@@ -1602,8 +1609,15 @@ export default function PreviewLanding() {
         </div>
       </div>
 
-      {/* ── Sound toggle button ── */}
-      {loaded && (
+      {/* ── Sound toggle button — color adapts to section background ── */}
+      {loaded && (() => {
+        const dk = soundBtnDark;
+        const iconColor = dk ? "#003c46" : "white";
+        const bgBase = dk ? "rgba(0,60,70,0.10)" : "rgba(255,255,255,0.12)";
+        const bgHover = dk ? "rgba(0,60,70,0.18)" : "rgba(255,255,255,0.22)";
+        const borderBase = dk ? "rgba(0,60,70,0.22)" : "rgba(255,255,255,0.25)";
+        const borderHover = dk ? "rgba(0,60,70,0.35)" : "rgba(255,255,255,0.4)";
+        return (
         <button
           onClick={toggleSound}
           onMouseEnter={() => sfxHover()}
@@ -1615,35 +1629,34 @@ export default function PreviewLanding() {
             width: m ? 42 : 46,
             height: m ? 42 : 46,
             borderRadius: "50%",
-            background: "rgba(255,255,255,0.12)",
+            background: bgBase,
             backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)",
-            border: "1.5px solid rgba(255,255,255,0.25)",
+            border: `1.5px solid ${borderBase}`,
             display: "flex", alignItems: "center", justifyContent: "center",
             cursor: "pointer",
             zIndex: 100,
             transition: "all 300ms ease",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
+            boxShadow: dk ? "0 2px 12px rgba(0,0,0,0.06)" : "0 2px 12px rgba(0,0,0,0.1)",
           }}
-          onMouseOver={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.22)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.4)"; e.currentTarget.style.transform = "scale(1.08)"; }}
-          onMouseOut={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.12)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)"; e.currentTarget.style.transform = "scale(1)"; }}
+          onMouseOver={(e) => { e.currentTarget.style.background = bgHover; e.currentTarget.style.borderColor = borderHover; e.currentTarget.style.transform = "scale(1.08)"; }}
+          onMouseOut={(e) => { e.currentTarget.style.background = bgBase; e.currentTarget.style.borderColor = borderBase; e.currentTarget.style.transform = "scale(1)"; }}
         >
           {soundMuted ? (
-            /* Speaker muted icon */
-            <svg width={m ? 18 : 20} height={m ? 18 : 20} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width={m ? 18 : 20} height={m ? 18 : 20} viewBox="0 0 24 24" fill="none" stroke={iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
               <line x1="23" y1="9" x2="17" y2="15" />
               <line x1="17" y1="9" x2="23" y2="15" />
             </svg>
           ) : (
-            /* Speaker on icon */
-            <svg width={m ? 18 : 20} height={m ? 18 : 20} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg width={m ? 18 : 20} height={m ? 18 : 20} viewBox="0 0 24 24" fill="none" stroke={iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
               <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
             </svg>
           )}
         </button>
-      )}
+        );
+      })()}
 
       {/* ── Loading screen ── */}
       <div ref={loaderRef} style={{
