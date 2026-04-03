@@ -332,12 +332,12 @@ export default function PreviewLanding() {
         scrollTrigger: { trigger: "#section-pain", start: "top 70%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
       painTl.fromTo("#pain-blob", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.9, ease: "power3.out" }, 0);
-      painTl.fromTo("#pain-text-1", { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.1);
+      painTl.fromTo("#pain-text-1", { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out" }, 0.1);
       painTl.call(() => sfxClick(), [], 0.5);
-      painTl.fromTo("#pain-text-2", { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.25);
-      painTl.call(() => sfxClick(), [], 0.65);
-      painTl.fromTo("#pain-text-3", { opacity: 0, y: 35 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.4);
-      painTl.call(() => sfxClick(), [], 0.8);
+      painTl.fromTo("#pain-text-2", { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out" }, 0.3);
+      painTl.call(() => sfxClick(), [], 0.7);
+      painTl.fromTo("#pain-text-3", { opacity: 0, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.8, ease: "power4.out" }, 0.5);
+      painTl.call(() => sfxClick(), [], 0.9);
 
       /* ═══ Calc ═══ */
       ScrollTrigger.create({
@@ -350,15 +350,15 @@ export default function PreviewLanding() {
       const calcTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-calc", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      calcTl.fromTo("#calc-panel", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.8, ease: "power3.out" }, 0);
-      calcTl.fromTo("#calc-heading", { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.1);
+      calcTl.fromTo("#calc-panel", { opacity: 0, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, clipPath: "inset(0 0 0 0%)", duration: 0.9, ease: "power4.out" }, 0);
+      calcTl.fromTo("#calc-heading", { opacity: 0, y: 20, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power4.out" }, 0.15);
       calcTl.call(() => sfxClick(), [], 0.4);
-      calcTl.fromTo("#calc-amount", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 0.2);
-      calcTl.fromTo("#calc-fifty", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.4)" }, 0.3);
+      calcTl.fromTo("#calc-amount", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out" }, 0.25);
+      calcTl.fromTo("#calc-fifty", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" }, 0.35);
       calcTl.call(() => sfxClick(), [], 0.6);
-      calcTl.fromTo("#calc-fees", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 0.4);
-      calcTl.fromTo("#calc-notads", { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.5);
-      calcTl.call(() => sfxClick(), [], 0.75);
+      calcTl.fromTo("#calc-fees", { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out" }, 0.45);
+      calcTl.fromTo("#calc-notads", { opacity: 0, y: 15, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.6, ease: "power4.out" }, 0.55);
+      calcTl.call(() => sfxClick(), [], 0.8);
 
       /* ═══ Solution ═══ */
       ScrollTrigger.create({
@@ -378,12 +378,12 @@ export default function PreviewLanding() {
       const solTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-sol", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      solTl.fromTo("#sol-text-1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" }, 0);
+      solTl.fromTo("#sol-text-1", { opacity: 0, x: -40, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.9, ease: "power4.out" }, 0);
       solTl.call(() => sfxClick(), [], 0.4);
-      solTl.fromTo("#sol-text-2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.15);
-      solTl.call(() => sfxClick(), [], 0.55);
-      solTl.fromTo("#sol-text-3", { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.3);
-      solTl.call(() => sfxClick(), [], 0.7);
+      solTl.fromTo("#sol-text-2", { opacity: 0, x: 40, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.8, ease: "power4.out" }, 0.2);
+      solTl.call(() => sfxClick(), [], 0.6);
+      solTl.fromTo("#sol-text-3", { opacity: 0, y: 20, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, y: 0, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power4.out" }, 0.4);
+      solTl.call(() => sfxClick(), [], 0.75);
 
       /* ═══ NO ═══ */
       ScrollTrigger.create({
@@ -396,54 +396,54 @@ export default function PreviewLanding() {
       const noTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-no", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      noTl.fromTo("#no-text", { opacity: 0, scale: 0.8, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0);
+      noTl.fromTo("#no-text", { opacity: 0, scale: 0.7, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, scale: 1, clipPath: "inset(0 0 0% 0)", duration: 0.8, ease: "power4.out" }, 0);
       noTl.call(() => sfxClick(), [], 0.35);
-      noTl.fromTo("#no-item-1", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.12);
+      noTl.fromTo("#no-item-1", { opacity: 0, x: 30, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.6, ease: "power4.out" }, 0.15);
       noTl.call(() => sfxClick(), [], 0.45);
-      noTl.fromTo("#no-item-2", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.24);
+      noTl.fromTo("#no-item-2", { opacity: 0, x: 30, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.6, ease: "power4.out" }, 0.28);
       noTl.call(() => sfxClick(), [], 0.55);
-      noTl.fromTo("#no-item-3", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.36);
+      noTl.fromTo("#no-item-3", { opacity: 0, x: 30, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.6, ease: "power4.out" }, 0.41);
       noTl.call(() => sfxClick(), [], 0.65);
-      noTl.fromTo("#no-item-4", { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.48);
-      noTl.fromTo("#no-dot", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" }, 0.6);
-      noTl.call(() => sfxClick(), [], 0.75);
+      noTl.fromTo("#no-item-4", { opacity: 0, x: 30, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.6, ease: "power4.out" }, 0.54);
+      noTl.fromTo("#no-dot", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power3.out" }, 0.67);
+      noTl.call(() => sfxClick(), [], 0.8);
 
       /* ═══ How ═══ */
       const howTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-how", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      howTl.fromTo("#how-step-1", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0);
+      howTl.fromTo("#how-step-1", { opacity: 0, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power4.out" }, 0);
       howTl.call(() => sfxClick(), [], 0.3);
-      howTl.fromTo("#how-step-2", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.12);
-      howTl.fromTo("#how-step-3", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.24);
+      howTl.fromTo("#how-step-2", { opacity: 0, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power4.out" }, 0.15);
+      howTl.fromTo("#how-step-3", { opacity: 0, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power4.out" }, 0.3);
       howTl.call(() => sfxClick(), [], 0.55);
-      howTl.fromTo("#how-mentic", { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 0.7, ease: "power3.out" }, 0.35);
-      howTl.fromTo("#how-rest", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.45);
-      howTl.call(() => sfxClick(), [], 0.7);
+      howTl.fromTo("#how-mentic", { opacity: 0, x: 40, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.8, ease: "power4.out" }, 0.4);
+      howTl.fromTo("#how-rest", { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "power4.out" }, 0.5);
+      howTl.call(() => sfxClick(), [], 0.75);
 
       /* ═══ Value ═══ */
       const valTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-val", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      valTl.fromTo("#val-one", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0);
+      valTl.fromTo("#val-one", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out" }, 0);
       valTl.call(() => sfxClick(), [], 0.35);
-      valTl.fromTo("#val-every", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.15);
+      valTl.fromTo("#val-every", { opacity: 0, x: -25, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out" }, 0.2);
       valTl.call(() => sfxClick(), [], 0.55);
-      valTl.fromTo("#val-all", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out" }, 0.3);
-      valTl.call(() => sfxClick(), [], 0.75);
+      valTl.fromTo("#val-all", { opacity: 0, x: -20, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out" }, 0.4);
+      valTl.call(() => sfxClick(), [], 0.8);
 
       /* ═══ CTA ═══ */
       const ctaTl = gsap.timeline({
         scrollTrigger: { trigger: "#section-cta", start: "top 65%", end: "bottom 20%", toggleActions: "play reverse play reverse" },
       });
-      ctaTl.fromTo("#cta-icon", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.7, ease: "power3.out" }, 0);
-      ctaTl.fromTo("#cta-sign", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }, 0.08);
-      ctaTl.fromTo("#cta-up", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.16);
-      ctaTl.call(() => sfxClick(), [], 0.4);
-      ctaTl.fromTo("#cta-now", { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.5, ease: "power3.out" }, 0.24);
-      ctaTl.fromTo("#cta-alpha", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }, 0.35);
-      ctaTl.fromTo("#cta-button", { opacity: 0, y: 15, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 0.45);
-      ctaTl.call(() => sfxClick(), [], 0.7);
+      ctaTl.fromTo("#cta-icon", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" }, 0);
+      ctaTl.fromTo("#cta-sign", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out" }, 0.1);
+      ctaTl.fromTo("#cta-up", { opacity: 0, clipPath: "inset(100% 0 0 0)" }, { opacity: 1, clipPath: "inset(0% 0 0 0)", duration: 0.7, ease: "power4.out" }, 0.2);
+      ctaTl.call(() => sfxClick(), [], 0.45);
+      ctaTl.fromTo("#cta-now", { opacity: 0, x: 25, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.6, ease: "power4.out" }, 0.3);
+      ctaTl.fromTo("#cta-alpha", { opacity: 0, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.5, ease: "power4.out" }, 0.4);
+      ctaTl.fromTo("#cta-button", { opacity: 0, y: 10, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out" }, 0.5);
+      ctaTl.call(() => sfxClick(), [], 0.75);
 
     }, wrapperRef);
     return () => ctx.revert();
@@ -1457,136 +1457,136 @@ export default function PreviewLanding() {
           </div>
           </div>
 
-          {/* ═══ SIGNUP LAYER ═══ */}
-          <div ref={signupLayerRef} id="signup-layer" style={{ position: "fixed", inset: 0, zIndex: 20, opacity: 0, pointerEvents: "none" }}>
-            <div id="signup-bg" style={{ position: "absolute", inset: 0, background: "#ffffff" }} />
-            <div id="signup-blobs">
-              <div className="gradient-blob gradient-blob-coral" style={{ width: m ? "100vw" : "80vw", height: m ? "100vw" : "80vw", left: "-30%", top: "-30%", transform: "rotate(-134.46deg)" }} />
-              <div className="gradient-blob gradient-blob-mint" style={{ width: m ? "90vw" : "70vw", height: m ? "90vw" : "70vw", right: "-15%", bottom: "-20%", left: "auto", top: "auto", transform: "rotate(-134.46deg)" }} />
-            </div>
-            <div id="signup-glass" style={{
-              position: "absolute",
-              inset: m ? `${MY(15)} ${MX(16)}` : "2.5% 1.6%",
-              background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
-              border: "1px solid rgba(255,255,255,0.18)", borderRadius: m ? "10.012px" : "17.872px",
-              boxShadow: "inset 0 0 30px rgba(255,255,255,0.05)",
-            }} />
+        </div>
+      </div>
 
-            {/* Signup icon */}
-            <div id="signup-icon" style={{
-              position: "absolute",
-              ...(m
-                ? { top: MY(128), left: "50%", transform: "translateX(-50%)", width: MW(139), height: MW(139) }
-                : { top: "50%", left: "30%", transform: "translate(-50%, -50%)", width: 219, height: 219 }),
-            }}>
-              <Image src="/images/mentic-icon-orange.png" alt="Mentic" fill style={{ objectFit: "contain" }} />
-            </div>
+      {/* ═══ SIGNUP LAYER — outside wrapper to avoid overflow:hidden clipping ═══ */}
+      <div ref={signupLayerRef} id="signup-layer" style={{ position: "fixed", inset: 0, zIndex: 200, opacity: 0, pointerEvents: "none" }}>
+        <div id="signup-bg" style={{ position: "absolute", inset: 0, background: "#ffffff" }} />
+        <div id="signup-blobs">
+          <div className="gradient-blob gradient-blob-coral" style={{ width: m ? "100vw" : "80vw", height: m ? "100vw" : "80vw", left: "-30%", top: "-30%", transform: "rotate(-134.46deg)" }} />
+          <div className="gradient-blob gradient-blob-mint" style={{ width: m ? "90vw" : "70vw", height: m ? "90vw" : "70vw", right: "-15%", bottom: "-20%", left: "auto", top: "auto", transform: "rotate(-134.46deg)" }} />
+        </div>
+        <div id="signup-glass" style={{
+          position: "absolute",
+          inset: m ? `${MY(15)} ${MX(16)}` : "2.5% 1.6%",
+          background: "rgba(255,255,255,0.08)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+          border: "1px solid rgba(255,255,255,0.18)", borderRadius: m ? "10.012px" : "17.872px",
+          boxShadow: "inset 0 0 30px rgba(255,255,255,0.05)",
+        }} />
 
-            {/* Signup card */}
-            <div id="signup-card" style={{
-              position: "absolute",
-              ...(m
-                ? { top: MY(352), left: "50%", transform: "translateX(-50%)", width: MW(307) }
-                : { top: "50%", right: "8%", transform: "translateY(-50%)", width: 361 }),
-              background: "#ff6b5c",
-              borderRadius: m ? "15.199px" : "17.872px",
-              boxShadow: m ? "2.551px 2.551px 8.759px rgba(0,0,0,0.25)" : "3px 3px 10.3px rgba(0,0,0,0.25)",
-              padding: m ? "7.5% 9.4%" : "32px 34px",
-              boxSizing: "border-box" as const,
-            }}>
-              <div style={{ marginBottom: m ? "3.8%" : 28 }}>
-                <div style={{ fontSize: m ? "clamp(24px, 8.5vw, 34px)" : 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>Sign</div>
-                <div style={{ fontSize: m ? "clamp(36px, 12.7vw, 50px)" : 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>UP</div>
-              </div>
-              <form id="signup-form" onSubmit={(e) => { sfxPress(); handleFormSubmit(e); }} noValidate>
-                {formError && (
-                  <div style={{
-                    background: "#003c46", color: "#8bf2d3", fontSize: m ? 11 : 13, fontWeight: 600,
-                    padding: m ? "6px 12px" : "8px 14px", borderRadius: m ? 6 : 8,
-                    marginBottom: m ? 10 : 12, lineHeight: 1.4,
-                  }}>{formError}</div>
-                )}
-                <div style={{ display: "flex", gap: m ? "6.8%" : 20, marginBottom: m ? "4%" : 16 }}>
-                  <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Name: <span style={{ color: "#8bf2d3" }}>*</span></label>
-                    <input className="modal-input" placeholder="John" value={formData.firstName} onKeyDown={() => sfxType()} onChange={(e) => { setFormData(p => ({ ...p, firstName: e.target.value })); setFieldErrors(p => ({ ...p, firstName: false })); }} style={{ ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.firstName ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Surname: <span style={{ color: "#8bf2d3" }}>*</span></label>
-                    <input className="modal-input" placeholder="Doe" value={formData.lastName} onKeyDown={() => sfxType()} onChange={(e) => { setFormData(p => ({ ...p, lastName: e.target.value })); setFieldErrors(p => ({ ...p, lastName: false })); }} style={{ ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.lastName ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
-                  </div>
-                </div>
-                <div style={{ marginBottom: m ? "4%" : 16 }}>
-                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Email: <span style={{ color: "#8bf2d3" }}>*</span></label>
-                  <input className="modal-input" type="email" placeholder="example@company.com" value={formData.email} onKeyDown={() => sfxType()} onChange={(e) => { setFormData(p => ({ ...p, email: e.target.value })); setFieldErrors(p => ({ ...p, email: false })); }} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.email ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
-                </div>
-                <div style={{ marginBottom: m ? "5.6%" : 24 }}>
-                  <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company: <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400, fontSize: m ? "clamp(8px, 2.5vw, 10px)" : 11 }}>(optional)</span></label>
-                  <input className="modal-input" placeholder="Example Inc." value={formData.company} onKeyDown={() => sfxType()} onChange={(e) => setFormData(p => ({ ...p, company: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
-                </div>
-                <button type="submit" disabled={formStatus === "submitting"} className="modal-submit" style={{ ...(m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : {}), ...(formStatus === "submitting" ? { opacity: 0.6, cursor: "not-allowed" } : {}), transition: "all 300ms cubic-bezier(0.165, 0.84, 0.44, 1)" }}
-                  onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.transform = "scale(1.06)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(139,242,211,0.35)"; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.boxShadow = "0.841px 0.841px 7.107px rgba(0,0,0,0.25)"; }}
-                >
-                  {formStatus === "submitting" ? "Submitting..." : "Submit!"}
-                </button>
-                <p style={{ margin: "8px 0 0", fontSize: m ? 8 : 9, color: "rgba(255,255,255,0.35)", lineHeight: 1.4, fontFamily: "'Nunito Sans', sans-serif" }}>
-                  Protected by reCAPTCHA. Google{" "}
-                  <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "underline" }}>Privacy</a>{" & "}
-                  <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "underline" }}>Terms</a>.
-                </p>
-              </form>
-            </div>
+        {/* Signup icon */}
+        <div id="signup-icon" style={{
+          position: "absolute",
+          ...(m
+            ? { top: MY(128), left: "50%", transform: "translateX(-50%)", width: MW(139), height: MW(139) }
+            : { top: "50%", left: "30%", transform: "translate(-50%, -50%)", width: 219, height: 219 }),
+        }}>
+          <Image src="/images/mentic-icon-orange.png" alt="Mentic" fill style={{ objectFit: "contain" }} />
+        </div>
 
-            {/* Back button */}
-            <button onClick={() => { sfxPress(); closeSignup(); }} style={{
-              position: "absolute", top: m ? 16 : 24, left: m ? 16 : 28,
-              background: "none", border: "none", padding: m ? 10 : 14,
-              cursor: "pointer", zIndex: 25,
-              transition: "transform 200ms, opacity 200ms",
-            }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.1)"; e.currentTarget.style.opacity = "0.7"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}
-            >
-              <svg width={m ? 28 : 32} height={m ? 28 : 32} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </button>
-
-            {/* ── Success screen ── */}
-            <div id="success-screen" style={{
-              position: "absolute", inset: 0, zIndex: 30, opacity: 0,
-              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-              pointerEvents: formStatus === "success" ? "auto" : "none",
-            }}>
-              <div id="success-icon" style={{ marginBottom: 24, opacity: 0 }}>
-                <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={m ? 100 : 140} height={m ? 100 : 140} style={{ filter: "drop-shadow(2px 2px 16px rgba(0,0,0,0.12))" }} />
-              </div>
-              <div id="success-logo" className="font-qurova" style={{ fontSize: m ? 52 : 72, color: "#8bf2d3", marginBottom: 32, opacity: 0 }}>
-                mentic
-              </div>
-              <div id="success-message" style={{ textAlign: "center", maxWidth: m ? "80%" : 420, marginBottom: 40, opacity: 0 }}>
-                <p style={{ margin: "0 0 10px", fontSize: m ? 20 : 26, color: "#003c46", lineHeight: 1.3 }}>
-                  <span style={{ fontWeight: 300 }}>Thank you for </span><span style={{ fontWeight: 700 }}>signing up.</span>
-                </p>
-                <p style={{ margin: 0, fontSize: m ? 14 : 16, color: "#1e1e1e", lineHeight: 1.6 }}>
-                  <span style={{ fontWeight: 300 }}>We will </span><span style={{ fontWeight: 600 }}>contact you </span><span style={{ fontWeight: 300 }}>soon about your </span><span style={{ fontWeight: 700, color: "#003c46" }}>alpha access.</span>
-                </p>
-              </div>
-              <div id="success-socials" style={{ display: "flex", alignItems: "center", gap: m ? 28 : 36, opacity: 0 }}>
-                <a href="https://www.linkedin.com/company/mentic-io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", color: "#003c46", transition: "transform 200ms, opacity 200ms" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.15)"; e.currentTarget.style.opacity = "0.7"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}>
-                  <svg width={m ? 30 : 36} height={m ? 30 : 36} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
-                </a>
-                <a href="https://www.instagram.com/mentic.io/" target="_blank" rel="noopener noreferrer" style={{ display: "flex", color: "#003c46", transition: "transform 200ms, opacity 200ms" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.15)"; e.currentTarget.style.opacity = "0.7"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}>
-                  <svg width={m ? 30 : 36} height={m ? 30 : 36} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><circle cx="12" cy="12" r="5" /><circle cx="17.5" cy="6.5" r="1.5" fill="#003c46" stroke="none" /></svg>
-                </a>
-                <a href="https://x.com/Mentic_io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", color: "#003c46", transition: "transform 200ms, opacity 200ms" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.15)"; e.currentTarget.style.opacity = "0.7"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}>
-                  <svg width={m ? 28 : 34} height={m ? 28 : 34} viewBox="0 0 24 24" fill="#003c46"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
-                </a>
-              </div>
-            </div>
+        {/* Signup card */}
+        <div id="signup-card" style={{
+          position: "absolute",
+          ...(m
+            ? { top: MY(352), left: "50%", transform: "translateX(-50%)", width: MW(307) }
+            : { top: "50%", right: "8%", transform: "translateY(-50%)", width: 361 }),
+          background: "#ff6b5c",
+          borderRadius: m ? "15.199px" : "17.872px",
+          boxShadow: m ? "2.551px 2.551px 8.759px rgba(0,0,0,0.25)" : "3px 3px 10.3px rgba(0,0,0,0.25)",
+          padding: m ? "7.5% 9.4%" : "32px 34px",
+          boxSizing: "border-box" as const,
+        }}>
+          <div style={{ marginBottom: m ? "3.8%" : 28 }}>
+            <div style={{ fontSize: m ? "clamp(24px, 8.5vw, 34px)" : 39, fontWeight: 700, color: "#003c46", lineHeight: 1.1 }}>Sign</div>
+            <div style={{ fontSize: m ? "clamp(36px, 12.7vw, 50px)" : 59, fontWeight: 700, color: "#8bf2d3", lineHeight: 1 }}>UP</div>
           </div>
+          <form id="signup-form" onSubmit={(e) => { sfxPress(); handleFormSubmit(e); }} noValidate>
+            {formError && (
+              <div style={{
+                background: "#003c46", color: "#8bf2d3", fontSize: m ? 11 : 13, fontWeight: 600,
+                padding: m ? "6px 12px" : "8px 14px", borderRadius: m ? 6 : 8,
+                marginBottom: m ? 10 : 12, lineHeight: 1.4,
+              }}>{formError}</div>
+            )}
+            <div style={{ display: "flex", gap: m ? "6.8%" : 20, marginBottom: m ? "4%" : 16 }}>
+              <div style={{ flex: 1 }}>
+                <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Name: <span style={{ color: "#8bf2d3" }}>*</span></label>
+                <input className="modal-input" placeholder="John" value={formData.firstName} onKeyDown={() => sfxType()} onChange={(e) => { setFormData(p => ({ ...p, firstName: e.target.value })); setFieldErrors(p => ({ ...p, firstName: false })); }} style={{ ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.firstName ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Surname: <span style={{ color: "#8bf2d3" }}>*</span></label>
+                <input className="modal-input" placeholder="Doe" value={formData.lastName} onKeyDown={() => sfxType()} onChange={(e) => { setFormData(p => ({ ...p, lastName: e.target.value })); setFieldErrors(p => ({ ...p, lastName: false })); }} style={{ ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.lastName ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
+              </div>
+            </div>
+            <div style={{ marginBottom: m ? "4%" : 16 }}>
+              <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Email: <span style={{ color: "#8bf2d3" }}>*</span></label>
+              <input className="modal-input" type="email" placeholder="example@company.com" value={formData.email} onKeyDown={() => sfxType()} onChange={(e) => { setFormData(p => ({ ...p, email: e.target.value })); setFieldErrors(p => ({ ...p, email: false })); }} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}), ...(fieldErrors.email ? { border: "2px solid #003c46", background: "rgba(255,255,255,0.28)" } : {}) }} />
+            </div>
+            <div style={{ marginBottom: m ? "5.6%" : 24 }}>
+              <label style={{ display: "block", fontSize: m ? "clamp(9px, 3vw, 12px)" : 14, fontWeight: 600, color: "white", marginBottom: m ? 4 : 6 }}>Company: <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400, fontSize: m ? "clamp(8px, 2.5vw, 10px)" : 11 }}>(optional)</span></label>
+              <input className="modal-input" placeholder="Example Inc." value={formData.company} onKeyDown={() => sfxType()} onChange={(e) => setFormData(p => ({ ...p, company: e.target.value }))} style={{ width: "100%", ...(m ? { height: "clamp(22px, 6.9vw, 28px)", borderRadius: "4.252px", fontSize: "clamp(9px, 3vw, 12px)" } : {}) }} />
+            </div>
+            <button type="submit" disabled={formStatus === "submitting"} className="modal-submit" style={{ ...(m ? { fontSize: "clamp(8px, 2.7vw, 11px)", padding: "5px 14px", borderRadius: "7.152px" } : {}), ...(formStatus === "submitting" ? { opacity: 0.6, cursor: "not-allowed" } : {}), transition: "all 300ms cubic-bezier(0.165, 0.84, 0.44, 1)" }}
+              onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.transform = "scale(1.06)"; e.currentTarget.style.boxShadow = "0 4px 16px rgba(139,242,211,0.35)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.boxShadow = "0.841px 0.841px 7.107px rgba(0,0,0,0.25)"; }}
+            >
+              {formStatus === "submitting" ? "Submitting..." : "Submit!"}
+            </button>
+            <p style={{ margin: "8px 0 0", fontSize: m ? 8 : 9, color: "rgba(255,255,255,0.35)", lineHeight: 1.4, fontFamily: "'Nunito Sans', sans-serif" }}>
+              Protected by reCAPTCHA. Google{" "}
+              <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "underline" }}>Privacy</a>{" & "}
+              <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,0.45)", textDecoration: "underline" }}>Terms</a>.
+            </p>
+          </form>
+        </div>
 
+        {/* Back button */}
+        <button onClick={() => { sfxPress(); closeSignup(); }} style={{
+          position: "absolute", top: m ? 16 : 24, left: m ? 16 : 28,
+          background: "none", border: "none", padding: m ? 10 : 14,
+          cursor: "pointer", zIndex: 25,
+          transition: "transform 200ms, opacity 200ms",
+        }}
+          onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.1)"; e.currentTarget.style.opacity = "0.7"; }}
+          onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}
+        >
+          <svg width={m ? 28 : 32} height={m ? 28 : 32} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        {/* ── Success screen ── */}
+        <div id="success-screen" style={{
+          position: "absolute", inset: 0, zIndex: 30, opacity: 0,
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          pointerEvents: formStatus === "success" ? "auto" : "none",
+        }}>
+          <div id="success-icon" style={{ marginBottom: 24, opacity: 0 }}>
+            <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={m ? 100 : 140} height={m ? 100 : 140} style={{ filter: "drop-shadow(2px 2px 16px rgba(0,0,0,0.12))" }} />
+          </div>
+          <div id="success-logo" className="font-qurova" style={{ fontSize: m ? 52 : 72, color: "#8bf2d3", marginBottom: 32, opacity: 0 }}>
+            mentic
+          </div>
+          <div id="success-message" style={{ textAlign: "center", maxWidth: m ? "80%" : 420, marginBottom: 40, opacity: 0 }}>
+            <p style={{ margin: "0 0 10px", fontSize: m ? 20 : 26, color: "#003c46", lineHeight: 1.3 }}>
+              <span style={{ fontWeight: 300 }}>Thank you for </span><span style={{ fontWeight: 700 }}>signing up.</span>
+            </p>
+            <p style={{ margin: 0, fontSize: m ? 14 : 16, color: "#1e1e1e", lineHeight: 1.6 }}>
+              <span style={{ fontWeight: 300 }}>We will </span><span style={{ fontWeight: 600 }}>contact you </span><span style={{ fontWeight: 300 }}>soon about your </span><span style={{ fontWeight: 700, color: "#003c46" }}>alpha access.</span>
+            </p>
+          </div>
+          <div id="success-socials" style={{ display: "flex", alignItems: "center", gap: m ? 28 : 36, opacity: 0 }}>
+            <a href="https://www.linkedin.com/company/mentic-io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", color: "#003c46", transition: "transform 200ms, opacity 200ms" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.15)"; e.currentTarget.style.opacity = "0.7"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}>
+              <svg width={m ? 30 : 36} height={m ? 30 : 36} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
+            </a>
+            <a href="https://www.instagram.com/mentic.io/" target="_blank" rel="noopener noreferrer" style={{ display: "flex", color: "#003c46", transition: "transform 200ms, opacity 200ms" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.15)"; e.currentTarget.style.opacity = "0.7"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}>
+              <svg width={m ? 30 : 36} height={m ? 30 : 36} viewBox="0 0 24 24" fill="none" stroke="#003c46" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><circle cx="12" cy="12" r="5" /><circle cx="17.5" cy="6.5" r="1.5" fill="#003c46" stroke="none" /></svg>
+            </a>
+            <a href="https://x.com/Mentic_io" target="_blank" rel="noopener noreferrer" style={{ display: "flex", color: "#003c46", transition: "transform 200ms, opacity 200ms" }} onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.15)"; e.currentTarget.style.opacity = "0.7"; }} onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; e.currentTarget.style.opacity = "1"; }}>
+              <svg width={m ? 28 : 34} height={m ? 28 : 34} viewBox="0 0 24 24" fill="#003c46"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+            </a>
+          </div>
         </div>
       </div>
 
