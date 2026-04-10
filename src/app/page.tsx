@@ -12,7 +12,7 @@ const EMAILJS_PUBLIC_KEY = "vL-JN3gWKUaXsCkWK";
 const EMAILJS_SERVICE_ID = "service_43fsg3n";
 const EMAILJS_TEMPLATE_USER = "template_6i6qlv1";
 const EMAILJS_TEMPLATE_TEAM = "template_ahcl5qh";
-const GOOGLE_SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbz-Rb1bbvSv75Kbp8fjdrZfa3_ZtvJ6EPRmD35OcXxuOjJXH7XsKIH5IL8YW3VPhXRt/exec";
+const GOOGLE_SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbyiDLOmuxOYJhyRIlBan_Mb19UXxjB8Fos6bIbwWUJjSXq9XJJzlYVbkVy1Ld-MgGIp/exec";
 const RECAPTCHA_SITE_KEY = "6Ldl23wsAAAAALU_SmSuijf2skLsOd6eZ74Dv4C2";
 
 /* ── Desktop: Figma frame = 1491 × 967 px ── */
