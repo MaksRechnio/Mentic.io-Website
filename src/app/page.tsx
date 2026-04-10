@@ -1188,8 +1188,8 @@ export default function PreviewLanding() {
             </div>
             <div id="calc-glass" style={{
               position: "absolute",
-              top: m ? MY(470) : Y(540), left: m ? MX(40) : X(40),
-              width: m ? MW(330) : W(1410), height: m ? MH(340) : H(380),
+              top: m ? MY(15) : Y(20), left: m ? MX(16) : X(24),
+              width: m ? MW(362) : W(1443), height: m ? MH(822) : H(919),
               background: "rgba(255,255,255,0.08)",
               backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
               border: "1px solid rgba(255,255,255,0.18)",
