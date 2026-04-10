@@ -93,10 +93,19 @@ export default function PreviewLanding() {
         const grecaptcha = (window as unknown as Record<string, unknown>).grecaptcha as { ready: (cb: () => void) => void; execute: (key: string, opts: { action: string }) => Promise<string> } | undefined;
         let token = "";
         if (grecaptcha) { token = await new Promise<string>((res) => { grecaptcha.ready(() => { grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: "signup" }).then(res).catch(() => res("")); }); }); }
-        const sheetPayload = JSON.stringify({ firstName: fn, lastName: ln, email: em, company: co, recaptchaToken: token, timestamp });
+        // Use hidden iframe + form to bypass CORS — Apps Script redirects break fetch
+        const iframe = document.createElement("iframe");
+        iframe.name = "sheet-submit"; iframe.style.display = "none";
+        document.body.appendChild(iframe);
+        const form = document.createElement("form");
+        form.method = "POST"; form.action = GOOGLE_SHEET_WEBHOOK; form.target = "sheet-submit";
+        for (const [k, v] of Object.entries({ firstName: fn, lastName: ln, email: em, company: co, recaptchaToken: token, timestamp })) {
+          const input = document.createElement("input"); input.type = "hidden"; input.name = k; input.value = v; form.appendChild(input);
+        }
+        document.body.appendChild(form); form.submit();
+        setTimeout(() => { form.remove(); iframe.remove(); }, 10000);
         const emailParams = { first_name: fn, last_name: ln, email: em, to_email: em, reply_to: em, company: co || "N/A", timestamp };
         await Promise.all([
-          fetch(GOOGLE_SHEET_WEBHOOK, { method: "POST", body: sheetPayload }),
           emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_USER, emailParams),
           emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_TEAM, emailParams),
         ]);
