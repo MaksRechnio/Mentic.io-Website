@@ -97,11 +97,14 @@ export default function PreviewLanding() {
         });
       }
 
-      await fetch(GOOGLE_SHEET_WEBHOOK, {
-        method: "POST", mode: "no-cors",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify({ firstName: firstName.trim(), lastName: lastName.trim(), email: email.trim(), company: company.trim(), recaptchaToken: token, timestamp }),
-      });
+      const sheetData = new FormData();
+      sheetData.append("firstName", firstName.trim());
+      sheetData.append("lastName", lastName.trim());
+      sheetData.append("email", email.trim());
+      sheetData.append("company", company.trim());
+      sheetData.append("recaptchaToken", token);
+      sheetData.append("timestamp", timestamp);
+      await fetch(GOOGLE_SHEET_WEBHOOK, { method: "POST", mode: "no-cors", body: sheetData });
 
       const emailParams = {
         first_name: firstName.trim(), last_name: lastName.trim(),
