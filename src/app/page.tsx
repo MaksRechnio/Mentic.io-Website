@@ -12,7 +12,6 @@ const EMAILJS_PUBLIC_KEY = "vL-JN3gWKUaXsCkWK";
 const EMAILJS_SERVICE_ID = "service_43fsg3n";
 const EMAILJS_TEMPLATE_USER = "template_6i6qlv1";
 const EMAILJS_TEMPLATE_TEAM = "template_ahcl5qh";
-const GOOGLE_SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbyiDLOmuxOYJhyRIlBan_Mb19UXxjB8Fos6bIbwWUJjSXq9XJJzlYVbkVy1Ld-MgGIp/exec";
 const RECAPTCHA_SITE_KEY = "6Ldl23wsAAAAALU_SmSuijf2skLsOd6eZ74Dv4C2";
 
 /* ── Desktop: Figma frame = 1491 × 967 px ── */
@@ -85,40 +84,25 @@ export default function PreviewLanding() {
       return;
     }
 
-    setFormStatus("submitting");
     const fn = firstName.trim(), ln = lastName.trim(), em = email.trim(), co = company.trim();
     const timestamp = new Date().toISOString();
 
-    // Get reCAPTCHA token — blocks bots before any sends happen
-    try {
-      const grecaptcha = (window as unknown as Record<string, unknown>).grecaptcha as { ready: (cb: () => void) => void; execute: (key: string, opts: { action: string }) => Promise<string> } | undefined;
-      let token = "";
-      if (grecaptcha) {
-        token = await new Promise<string>((res) => {
-          grecaptcha.ready(() => { grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: "signup" }).then(res).catch(() => res("")); });
-        });
-      }
-
-      // Send sheet data (includes token for server-side score check) + emails in parallel
-      const emailParams = { first_name: fn, last_name: ln, email: em, to_email: em, reply_to: em, company: co || "N/A", timestamp };
-      fetch(GOOGLE_SHEET_WEBHOOK, {
-        method: "POST", mode: "no-cors",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify({ firstName: fn, lastName: ln, email: em, company: co, recaptchaToken: token, timestamp }),
-      }).catch(() => {});
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_USER, emailParams).catch(() => {});
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_TEAM, emailParams).catch(() => {});
-    } catch {
-      // reCAPTCHA failed to load — still allow submission
-      const emailParams = { first_name: fn, last_name: ln, email: em, to_email: em, reply_to: em, company: co || "N/A", timestamp };
-      fetch(GOOGLE_SHEET_WEBHOOK, {
-        method: "POST", mode: "no-cors",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify({ firstName: fn, lastName: ln, email: em, company: co, recaptchaToken: "", timestamp }),
-      }).catch(() => {});
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_USER, emailParams).catch(() => {});
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_TEAM, emailParams).catch(() => {});
+    // Get reCAPTCHA token
+    const grecaptcha = (window as unknown as Record<string, unknown>).grecaptcha as { ready: (cb: () => void) => void; execute: (key: string, opts: { action: string }) => Promise<string> } | undefined;
+    let token = "";
+    if (grecaptcha) {
+      try { token = await new Promise<string>((res) => { grecaptcha.ready(() => { grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: "signup" }).then(res).catch(() => res("")); }); }); } catch { /* continue without token */ }
     }
+
+    // Send to our API route (server-side proxy to Google Sheets — no CORS issues)
+    const emailParams = { first_name: fn, last_name: ln, email: em, to_email: em, reply_to: em, company: co || "N/A", timestamp };
+    fetch("/api/signup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firstName: fn, lastName: ln, email: em, company: co, recaptchaToken: token, timestamp }),
+    }).catch(() => {});
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_USER, emailParams).catch(() => {});
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_TEAM, emailParams).catch(() => {});
 
     setFormStatus("success");
     // Animate to success screen
