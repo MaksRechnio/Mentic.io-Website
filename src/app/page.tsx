@@ -93,10 +93,10 @@ export default function PreviewLanding() {
         const grecaptcha = (window as unknown as Record<string, unknown>).grecaptcha as { ready: (cb: () => void) => void; execute: (key: string, opts: { action: string }) => Promise<string> } | undefined;
         let token = "";
         if (grecaptcha) { token = await new Promise<string>((res) => { grecaptcha.ready(() => { grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: "signup" }).then(res).catch(() => res("")); }); }); }
-        const sheetParams = new URLSearchParams({ firstName: fn, lastName: ln, email: em, company: co, recaptchaToken: token, timestamp });
+        const sheetPayload = JSON.stringify({ firstName: fn, lastName: ln, email: em, company: co, recaptchaToken: token, timestamp });
         const emailParams = { first_name: fn, last_name: ln, email: em, to_email: em, reply_to: em, company: co || "N/A", timestamp };
         await Promise.all([
-          fetch(`${GOOGLE_SHEET_WEBHOOK}?${sheetParams.toString()}`, { mode: "no-cors" }),
+          fetch(GOOGLE_SHEET_WEBHOOK, { method: "POST", body: sheetPayload }),
           emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_USER, emailParams),
           emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_TEAM, emailParams),
         ]);
