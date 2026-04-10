@@ -281,7 +281,7 @@ export default function PreviewLanding() {
 
   /* ── Lenis smooth scroll ── */
   useEffect(() => {
-    const lenis = new Lenis({ duration: 0.8, easing: (t: number) => 1 - Math.pow(1 - t, 3), smoothWheel: true });
+    const lenis = new Lenis({ duration: 0, smoothWheel: false });
     lenisRef.current = lenis;
     lenis.on("scroll", ScrollTrigger.update);
     gsap.ticker.add((time) => lenis.raf(time * 1000));
@@ -297,13 +297,19 @@ export default function PreviewLanding() {
 
     const ctx = gsap.context(() => {
 
-      /* ── Snap scrolling: lock to section boundaries ── */
+      /* ── Gentle snap: only corrects when very close to a section boundary ── */
+      const step = 1 / (totalSections - 1);
       ScrollTrigger.create({
         snap: {
-          snapTo: 1 / (totalSections - 1),
-          duration: { min: 0.25, max: 0.6 },
-          delay: 0.05,
-          ease: "power2.inOut",
+          snapTo(progress: number) {
+            const nearest = Math.round(progress / step) * step;
+            const distance = Math.abs(progress - nearest);
+            // Only snap if within 5% of a section boundary
+            return distance < 0.05 ? nearest : progress;
+          },
+          duration: { min: 0.2, max: 0.4 },
+          delay: 0.1,
+          ease: "power1.out",
         },
       });
 
@@ -858,8 +864,8 @@ export default function PreviewLanding() {
     };
 
     const tick = () => {
-      curX += (mouseX - curX) * 0.18;
-      curY += (mouseY - curY) * 0.18;
+      curX = mouseX;
+      curY = mouseY;
       cursor.style.transform = `translate(${curX - 12}px, ${curY - 12}px)`;
       raf = requestAnimationFrame(tick);
     };
