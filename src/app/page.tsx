@@ -371,6 +371,7 @@ export default function PreviewLanding() {
             gsap.fromTo("#calc-panel", { opacity: 0, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, clipPath: "inset(0 0 0 0%)", duration: 0.8, ease: "power4.out" });
             gsap.fromTo("#calc-heading", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power4.out", delay: 0.15 });
             gsap.fromTo("#calc-amount", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out", delay: 0.25 });
+            gsap.fromTo("#calc-glass", { opacity: 0 }, { opacity: 1, duration: 0.6, ease: "power2.out", delay: 0.3 });
             gsap.fromTo("#calc-fifty", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power3.out", delay: 0.35 });
             gsap.fromTo("#calc-fees", { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out", delay: 0.4 });
             gsap.fromTo("#calc-notads", { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.5, ease: "power4.out", delay: 0.5 });
@@ -1185,6 +1186,17 @@ export default function PreviewLanding() {
               <span style={{ color: "#8bf2d3" }}>6 000</span>
               <span style={{ color: "white" }}> USD</span>
             </div>
+            <div id="calc-glass" style={{
+              position: "absolute",
+              top: m ? MY(470) : Y(540), left: m ? MX(40) : X(40),
+              width: m ? MW(330) : W(1410), height: m ? MH(340) : H(380),
+              background: "rgba(255,255,255,0.08)",
+              backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+              border: "1px solid rgba(255,255,255,0.18)",
+              borderRadius: m ? "10.012px" : "17.872px",
+              boxShadow: "inset 0 0 30px rgba(255,255,255,0.05)",
+              zIndex: 2, opacity: 0,
+            }} />
             <div id="calc-fifty" style={{
               position: "absolute",
               top: m ? MY(495) : Y(580), left: m ? MX(61) : X(70),
