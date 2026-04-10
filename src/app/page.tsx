@@ -93,13 +93,10 @@ export default function PreviewLanding() {
         const grecaptcha = (window as unknown as Record<string, unknown>).grecaptcha as { ready: (cb: () => void) => void; execute: (key: string, opts: { action: string }) => Promise<string> } | undefined;
         let token = "";
         if (grecaptcha) { token = await new Promise<string>((res) => { grecaptcha.ready(() => { grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: "signup" }).then(res).catch(() => res("")); }); }); }
-        const sheetData = new FormData();
-        sheetData.append("firstName", fn); sheetData.append("lastName", ln);
-        sheetData.append("email", em); sheetData.append("company", co);
-        sheetData.append("recaptchaToken", token); sheetData.append("timestamp", timestamp);
+        const sheetParams = new URLSearchParams({ firstName: fn, lastName: ln, email: em, company: co, recaptchaToken: token, timestamp });
         const emailParams = { first_name: fn, last_name: ln, email: em, to_email: em, reply_to: em, company: co || "N/A", timestamp };
         await Promise.all([
-          fetch(GOOGLE_SHEET_WEBHOOK, { method: "POST", mode: "no-cors", body: sheetData }),
+          fetch(`${GOOGLE_SHEET_WEBHOOK}?${sheetParams.toString()}`, { mode: "no-cors" }),
           emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_USER, emailParams),
           emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_TEAM, emailParams),
         ]);
