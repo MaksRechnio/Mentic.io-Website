@@ -13,7 +13,6 @@ const EMAILJS_SERVICE_ID = "service_43fsg3n";
 const EMAILJS_TEMPLATE_USER = "template_6i6qlv1";
 const EMAILJS_TEMPLATE_TEAM = "template_ahcl5qh";
 const GOOGLE_SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbz-Rb1bbvSv75Kbp8fjdrZfa3_ZtvJ6EPRmD35OcXxuOjJXH7XsKIH5IL8YW3VPhXRt/exec";
-const RECAPTCHA_SITE_KEY = "6Ldl23wsAAAAALU_SmSuijf2skLsOd6eZ74Dv4C2";
 
 /* ── Desktop: Figma frame = 1491 × 967 px ── */
 const X = (x: number) => `${(x / 1491) * 100}%`;
@@ -58,12 +57,6 @@ export default function PreviewLanding() {
   /* ── Load reCAPTCHA + init EmailJS ── */
   useEffect(() => {
     emailjs.init(EMAILJS_PUBLIC_KEY);
-    if (!document.querySelector(`script[src*="recaptcha"]`)) {
-      const s = document.createElement("script");
-      s.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
-      s.async = true;
-      document.head.appendChild(s);
-    }
   }, []);
 
   const handleFormSubmit = useCallback(async (e: React.FormEvent) => {
@@ -85,32 +78,17 @@ export default function PreviewLanding() {
       return;
     }
 
-    // Fire-and-forget: send emails + sheet in background
-    const timestamp = new Date().toISOString();
+    // Fire-and-forget: send emails + log to sheet in background
     const fn = firstName.trim(), ln = lastName.trim(), em = email.trim(), co = company.trim();
-    (async () => {
-      try {
-        const grecaptcha = (window as unknown as Record<string, unknown>).grecaptcha as { ready: (cb: () => void) => void; execute: (key: string, opts: { action: string }) => Promise<string> } | undefined;
-        let token = "";
-        if (grecaptcha) { token = await new Promise<string>((res) => { grecaptcha.ready(() => { grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: "signup" }).then(res).catch(() => res("")); }); }); }
-        // Use hidden iframe + form to bypass CORS — Apps Script redirects break fetch
-        const iframe = document.createElement("iframe");
-        iframe.name = "sheet-submit"; iframe.style.display = "none";
-        document.body.appendChild(iframe);
-        const form = document.createElement("form");
-        form.method = "POST"; form.action = GOOGLE_SHEET_WEBHOOK; form.target = "sheet-submit";
-        for (const [k, v] of Object.entries({ firstName: fn, lastName: ln, email: em, company: co, recaptchaToken: token, timestamp })) {
-          const input = document.createElement("input"); input.type = "hidden"; input.name = k; input.value = v; form.appendChild(input);
-        }
-        document.body.appendChild(form); form.submit();
-        setTimeout(() => { form.remove(); iframe.remove(); }, 10000);
-        const emailParams = { first_name: fn, last_name: ln, email: em, to_email: em, reply_to: em, company: co || "N/A", timestamp };
-        await Promise.all([
-          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_USER, emailParams),
-          emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_TEAM, emailParams),
-        ]);
-      } catch (err) { console.error("Background signup send failed:", err); }
-    })();
+    const timestamp = new Date().toISOString();
+    const emailParams = { first_name: fn, last_name: ln, email: em, to_email: em, reply_to: em, company: co || "N/A", timestamp };
+    fetch(GOOGLE_SHEET_WEBHOOK, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ firstName: fn, lastName: ln, email: em, company: co, timestamp }),
+    }).catch(() => {});
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_USER, emailParams).catch(() => {});
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_TEAM, emailParams).catch(() => {});
 
     setFormStatus("success");
     // Animate to success screen
