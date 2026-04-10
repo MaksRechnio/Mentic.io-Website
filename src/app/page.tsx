@@ -356,6 +356,10 @@ export default function PreviewLanding() {
 
         // Section-specific enter animations
         switch (id) {
+          case "section-hero":
+            gsap.to("#icon-teal", { opacity: 0, duration: 0.3, ease: "power2.in" });
+            break;
+
           case "section-pain":
             gsap.to(["#glass-card", "#icon-teal"], { opacity: 1, duration: 0.5, ease: "power2.out" });
             gsap.fromTo("#pain-blob", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" });
