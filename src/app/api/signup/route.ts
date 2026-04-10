@@ -4,16 +4,17 @@ const GOOGLE_SHEET_WEBHOOK = "https://script.google.com/macros/s/AKfycbx1G7rgvig
 
 export async function POST(req: Request) {
   const data = await req.json();
-
-  // Apps Script executes doPost on this request, then returns a 302.
-  // The script already runs and saves data before redirecting.
-  // We don't need to follow the redirect.
-  await fetch(GOOGLE_SHEET_WEBHOOK, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-    redirect: "manual",
+  const params = new URLSearchParams({
+    firstName: data.firstName || "",
+    lastName: data.lastName || "",
+    email: data.email || "",
+    company: data.company || "",
+    recaptchaToken: data.recaptchaToken || "",
+    timestamp: data.timestamp || new Date().toISOString(),
   });
 
-  return NextResponse.json({ ok: true });
+  // GET with query params — survives Apps Script's 302 redirect
+  const resp = await fetch(`${GOOGLE_SHEET_WEBHOOK}?${params.toString()}`);
+  const text = await resp.text();
+  return NextResponse.json({ ok: true, upstream: text });
 }
