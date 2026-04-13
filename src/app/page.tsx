@@ -239,15 +239,28 @@ export default function PreviewLanding() {
       step();
     };
 
-    if (document.readyState === "complete") {
+    let firedOnce = false;
+    const fireOnce = () => {
+      if (firedOnce) return;
+      firedOnce = true;
       onReady();
+    };
+
+    if (document.readyState === "complete") {
+      fireOnce();
     } else {
-      window.addEventListener("load", onReady);
+      window.addEventListener("load", fireOnce);
     }
+
+    // Failsafe: Safari can delay or swallow `window.load` when dynamically
+    // appended scripts (reCAPTCHA, Meta Pixel) are pending. Force-dismiss
+    // the loader after a hard ceiling so the page never stays frozen.
+    const failsafe = setTimeout(fireOnce, 3500);
 
     return () => {
       clearInterval(interval);
-      window.removeEventListener("load", onReady);
+      clearTimeout(failsafe);
+      window.removeEventListener("load", fireOnce);
     };
   }, [loaded]);
 
