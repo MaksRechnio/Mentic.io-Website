@@ -55,7 +55,6 @@ html {
   scroll-behavior: auto;
   scrollbar-width: none;
   cursor: none !important;
-  height: -webkit-fill-available;
   overscroll-behavior: none;
   background: var(--coral);
 }
@@ -95,10 +94,8 @@ body {
   background: var(--coral);
   color: var(--dark-teal);
   font-family: var(--font-nunito), "Nunito Sans", sans-serif;
-  overflow-x: hidden;
   cursor: none !important;
   min-height: 100dvh;
-  min-height: -webkit-fill-available;
 }
 
 /* ── Hide native cursor everywhere ── */
