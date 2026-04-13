@@ -64,6 +64,31 @@ html::-webkit-scrollbar {
   display: none;
 }
 
+/* ── Lenis smooth-scroll required styles ──
+   Without these, Safari (which strictly honors `-webkit-fill-available`
+   on html) ends up with a non-scrollable root element when Lenis adds
+   its classes. See https://github.com/darkroomengineering/lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
 body {
   margin: 0;
   padding: 0;
