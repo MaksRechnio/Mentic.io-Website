@@ -1,0 +1,429 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id                   String            @id @default(uuid())
+  email                String            @unique
+  password             String?
+  name                 String?
+  surname              String?
+  companyName          String?           @map("company_name")
+  linkedinUrl          String?           @map("linkedin_url")
+  niche                String?
+  sellType             String?           @map("sell_type")       // "product" or "service"
+  businessDescription  String?           @map("business_description")
+  usp                  String?
+  location             String?
+  targetAudience       String?           @map("target_audience")
+  competitors          String[]          @default([])
+  monthlyAdBudget      Float?            @map("monthly_ad_budget")
+  adBudgetCurrency     String?           @default("USD") @map("ad_budget_currency")
+  advertisingGoal      String?           @map("advertising_goal")
+  googleId             String?           @unique @map("google_id")
+  avatarUrl            String?           @map("avatar_url")
+  createdAt            DateTime          @default(now()) @map("created_at")
+  updatedAt            DateTime          @updatedAt @map("updated_at")
+  campaigns            Campaign[]
+
+  emailVerified Boolean    @default(false)
+  image         String?
+  sessions      Session[]
+  accounts      Account[]
+  passkeys      Passkey[]
+
+  // Admin plugin fields
+  role          String?
+  banned        Boolean?
+  banReason     String?   @map("ban_reason")
+  banExpires    DateTime? @map("ban_expires")
+
+  // Campaign / ad profile fields (migrated from BusinessProfile)
+  objective            String?           @default("OUTCOME_LEADS")
+  ageMin               Int?              @default(18) @map("age_min")
+  ageMax               Int?              @default(65) @map("age_max")
+  placements           Json?
+  pageId               String?           @map("page_id")
+  destinationUrl       String?           @map("destination_url")
+  callToAction         String?           @default("LEARN_MORE") @map("call_to_action")
+  bidStrategy          String?           @default("LOWEST_COST_WITHOUT_CAP") @map("bid_strategy")
+  bidAmountCents       Int?              @map("bid_amount_cents")
+  roasFloor            Int?              @map("roas_floor")
+  startDate            DateTime?         @map("start_date")
+  endDate              DateTime?         @map("end_date")
+  pixelId              String?           @map("pixel_id")
+  applicationId        String?           @map("application_id")
+  objectStoreUrl       String?           @map("object_store_url")
+  destinationType      String?           @map("destination_type")
+  optimizationGoal     String?           @map("optimization_goal")
+  customEventType      String?           @map("custom_event_type")
+  productCatalogId     String?           @map("product_catalog_id")
+  productSetId         String?           @map("product_set_id")
+  leadGenFormId        String?           @map("lead_gen_form_id")
+  whatsappPhoneNumberId String?          @map("whatsapp_phone_number_id")
+  instagramActorId     String?           @map("instagram_actor_id")
+  dsaBeneficiary       String?           @map("dsa_beneficiary")
+  dsaPayor             String?           @map("dsa_payor")
+  adConstraints        Json?             @map("ad_constraints")
+
+  creativeAssets       CreativeAsset[]
+  adAccountConnections AdAccountConnection[]
+  tokenVaults          TokenVault[]
+  strategyBlueprints   StrategyBlueprint[]
+  campaignDeployments  CampaignDeployment[]
+  researchReports      ResearchReport[]
+  optimisationPlans    OptimisationPlan[]
+  executionRuns        ExecutionRun[]
+  metricSnapshots      MetricSnapshot[]
+  auditLogs            AuditLog[]
+  cronJobs             CronJob[]
+  adSnapshots          AdSnapshot[]
+  agentDrafts          AgentDraft[]
+  creativeAnalyses     CreativeAnalysis[]
+
+  @@map("users")
+}
+
+model CreativeAsset {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  type         String
+  filename     String
+  filepath     String
+  originalName String?   @map("original_name")
+  headline      String?
+  primaryText   String?   @map("primary_text")
+  description   String?
+  copyVariants  Json?     @map("copy_variants")
+  format        String    @default("single_image")
+  carouselOrder Int?      @map("carousel_order")
+  linkUrl       String?   @map("link_url")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  user         User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("creative_assets")
+}
+
+model AdAccountConnection {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  platform    String    @default("meta")
+  accountId   String?   @map("account_id")
+  accountName String?   @map("account_name")
+  status      String    @default("pending")
+  selected    Boolean   @default(false)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, platform])
+  @@map("ad_account_connections")
+}
+
+model TokenVault {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  platform    String    @default("meta")
+  iv          String
+  authTag     String    @map("auth_tag")
+  ciphertext  String
+  keyVersion  Int       @default(1) @map("key_version")
+  expiresAt   DateTime? @map("expires_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, platform])
+  @@map("token_vaults")
+}
+
+model StrategyBlueprint {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  version     Int       @default(0)
+  strategy    Json
+  createdAt   DateTime  @default(now()) @map("created_at")
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("strategy_blueprints")
+}
+
+model CampaignDeployment {
+  id             String    @id @default(uuid())
+  userId         String    @map("user_id")
+  blueprintId    String?   @map("blueprint_id")
+  idempotencyKey String?   @unique @map("idempotency_key")
+  status         String    @default("pending")
+  metaCampaignId String?   @map("meta_campaign_id")
+  mocked         Boolean   @default(false)
+  result         Json?
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  user           User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([blueprintId])
+  @@map("campaign_deployments")
+}
+
+model ResearchReport {
+  id            String                @id @default(uuid())
+  userId        String                @map("user_id")
+  status        ResearchReportStatus  @default(COMPLETED)
+  startedAt     DateTime              @default(now()) @map("started_at")
+  completedAt   DateTime?             @map("completed_at")
+  errorMessage  String?               @map("error_message")
+  report        Json?
+  createdAt     DateTime              @default(now()) @map("created_at")
+  user          User                  @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([userId, status, createdAt])
+  @@map("research_reports")
+}
+
+enum ResearchReportStatus {
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+model OptimisationPlan {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  plan        Json
+  createdAt   DateTime  @default(now()) @map("created_at")
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("optimisation_plans")
+}
+
+model ExecutionRun {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  planId      String    @map("plan_id")
+  status      String    @default("pending")
+  results     Json?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([planId])
+  @@map("execution_runs")
+}
+
+model MetricSnapshot {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  metrics     Json
+  source      String    @default("mock")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("metric_snapshots")
+}
+
+model AuditLog {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  actor       String
+  action      String
+  entity      String?
+  entityId    String?   @map("entity_id")
+  details     Json?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
+  @@map("audit_logs")
+}
+
+model CronJob {
+  id            String       @id @default(uuid())
+  userId        String       @map("user_id")
+  adAccountId   String       @map("ad_account_id")
+  adAccountName String?      @map("ad_account_name")
+  platform      String       @default("meta")
+  active        Boolean      @default(true)
+  lastRunAt     DateTime?    @map("last_run_at")
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  snapshots     AdSnapshot[]
+
+  @@unique([userId, adAccountId, platform])
+  @@index([userId])
+  @@index([active])
+  @@map("cron_jobs")
+}
+
+model AdSnapshot {
+  id          String    @id @default(uuid())
+  cronJobId   String    @map("cron_job_id")
+  userId      String    @map("user_id")
+  adAccountId String    @map("ad_account_id")
+  dataHash    String    @map("data_hash")
+  data        Json
+  capturedAt  DateTime  @default(now()) @map("captured_at")
+  cronJob     CronJob   @relation(fields: [cronJobId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([cronJobId, capturedAt])
+  @@index([userId])
+  @@map("ad_snapshots")
+}
+
+model Campaign {
+  id                 String    @id @default(uuid())
+  userId             String    @map("user_id")
+  externalCampaignId String    @map("external_campaign_id")
+  provider           String    @default("meta")
+  name               String
+  status             String    @default("UNKNOWN")
+  dailyBudget        Float?    @map("daily_budget")
+  spend7d            Float?    @map("spend_7d")
+  lastSyncedAt       DateTime? @map("last_synced_at")
+  deploymentId       String?   @map("deployment_id")
+  needsReauth        Boolean   @default(false) @map("needs_reauth")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  user               User      @relation(fields: [userId], references: [id])
+
+  @@unique([externalCampaignId, provider])
+  @@index([userId])
+  @@index([userId, status])
+  @@map("campaigns")
+}
+
+model CreativeAnalysis {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  imageUrl    String?   @map("image_url")
+  mediaType   String    @map("media_type")
+  score       Int
+  grade       String
+  conceptType String    @map("concept_type")
+  analysis    Json
+  campaignId  String?   @map("campaign_id")
+  adSetId     String?   @map("ad_set_id")
+  analyzedAt  DateTime  @default(now()) @map("analyzed_at")
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([analyzedAt])
+  @@map("creative_analyses")
+}
+
+model AgentDraft {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  type        String    // "optimization" | "campaign_launch"
+  status      String    @default("in_progress")
+  name        String
+  threadId    String    @map("thread_id")
+  state       Json
+  campaignIds Json?     @map("campaign_ids") // Meta campaign IDs this draft applies to
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  completedAt DateTime? @map("completed_at")
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId, status])
+  @@map("agent_drafts")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy  String?  @map("impersonated_by")
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+model Passkey {
+  id           String    @id
+  name         String?
+  publicKey    String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialID String    @unique
+  counter      Int
+  deviceType   String
+  backedUp     Boolean
+  transports   String?
+  createdAt    DateTime?
+  aaguid       String?
+
+  @@index([userId])
+  @@map("passkey")
+}
+
+model WebsiteEmailList {
+  id          String    @id @default(uuid())
+  email       String    @unique
+  firstname   String?
+  lastname    String?
+  company     String?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([email])
+  @@map("website_email_list")
+}
