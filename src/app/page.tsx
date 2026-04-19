@@ -11,7 +11,7 @@ const EMAILJS_PUBLIC_KEY = "vL-JN3gWKUaXsCkWK";
 const EMAILJS_SERVICE_ID = "service_43fsg3n";
 const EMAILJS_TEMPLATE_USER = "template_6i6qlv1";
 const EMAILJS_TEMPLATE_TEAM = "template_ahcl5qh";
-const RECAPTCHA_SITE_KEY = "6Ldl23wsAAAAALU_SmSuijf2skLsOd6eZ74Dv4C2";
+const RECAPTCHA_SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY ?? "";
 
 /* ── Desktop: Figma frame = 1491 × 967 px ── */
 const X = (x: number) => `${(x / 1491) * 100}%`;
