@@ -46,6 +46,12 @@ export async function POST(req: Request) {
   const verdict = await verifyRecaptcha(token, remoteIp);
 
   if (!verdict.success || verdict.action !== "signup" || (verdict.score ?? 0) < RECAPTCHA_MIN_SCORE) {
+    console.warn("[signup] recaptcha rejected", {
+      success: verdict.success,
+      action: verdict.action,
+      score: verdict.score,
+      errorCodes: verdict["error-codes"],
+    });
     return NextResponse.json(
       { ok: false, error: "recaptcha verification failed" },
       { status: 400 },
