@@ -3,7 +3,6 @@
 import { useEffect, useRef, useCallback, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
 import Image from "next/image";
 import emailjs from "@emailjs/browser";
 gsap.registerPlugin(ScrollTrigger);
@@ -36,7 +35,6 @@ export default function PreviewLanding() {
   const loaderRef = useRef<HTMLDivElement>(null);
   const signupLayerRef = useRef<HTMLDivElement>(null);
   const mobileBgRef = useRef<HTMLDivElement>(null);
-  const lenisRef = useRef<InstanceType<typeof Lenis> | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [loadPct, setLoadPct] = useState(0);
   const [loaded, setLoaded] = useState(false);
@@ -134,7 +132,7 @@ export default function PreviewLanding() {
   const openSignup = useCallback(() => {
     if (!signupLayerRef.current) return;
     const signup = signupLayerRef.current;
-    lenisRef.current?.stop();
+    document.documentElement.style.overflow = "hidden";
     const tl = gsap.timeline();
     tl.set(signup, { opacity: 1, pointerEvents: "auto" });
     tl.fromTo("#signup-bg", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" });
@@ -152,7 +150,7 @@ export default function PreviewLanding() {
     const tl = gsap.timeline({
       onComplete: () => {
         gsap.set(signup, { opacity: 0, pointerEvents: "none" });
-        lenisRef.current?.start();
+        document.documentElement.style.overflow = "";
       },
     });
     const mob = window.innerWidth < 1024;
@@ -277,15 +275,7 @@ export default function PreviewLanding() {
     });
   }, []);
 
-  /* ── Lenis smooth scroll ── */
-  useEffect(() => {
-    const lenis = new Lenis({ duration: 0, smoothWheel: false });
-    lenisRef.current = lenis;
-    lenis.on("scroll", ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-    return () => { lenis.destroy(); lenisRef.current = null; };
-  }, []);
+  /* ── Native scroll: let Safari handle it. GSAP ScrollTrigger syncs automatically. ── */
 
   /* ── Per-section scroll-triggered animations — one frame at a time ── */
   useEffect(() => {
@@ -941,7 +931,7 @@ export default function PreviewLanding() {
       {/* ── Mobile: extra background layer OUTSIDE viewport to cover iOS safe areas ── */}
       {m && <div ref={mobileBgRef} style={{ position: "fixed", inset: "-100vh -100vw", zIndex: -1, backgroundColor: "#ffe5e5", pointerEvents: "none" }} />}
 
-      <div ref={wrapperRef} style={{ position: "relative", overflow: "hidden" }}>
+      <div ref={wrapperRef} style={{ position: "relative", overflowX: "clip" }}>
         <div ref={viewportRef} style={{ position: "relative", width: "100vw" }}>
 
           {/* ── Background — fixed so it covers behind iOS browser chrome ── */}
@@ -953,7 +943,7 @@ export default function PreviewLanding() {
             onClick={() => {
               sfxPress();
               // Smooth scroll to top
-              lenisRef.current?.scrollTo(0, { duration: 1.5 });
+              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             style={{
               position: "fixed",
