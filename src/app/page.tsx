@@ -1170,14 +1170,14 @@ export default function PreviewLanding() {
               width: m ? MW(267) : W(685), height: m ? MH(251) : H(357),
               background: "#ff6b5c",
               borderRadius: m ? "0 0 0 50px" : "0 0 0 100px",
-              zIndex: 2, opacity: 0,
+              zIndex: 3, opacity: 0,
             }} />
             <div id="calc-heading" style={{
               position: "absolute",
               top: m ? MY(90) : Y(79), left: m ? MX(142) : X(904),
               width: m ? MW(236) : W(508),
               fontSize: m ? MFS(20) : FS(40), color: "white", lineHeight: 1.3,
-              zIndex: 3, opacity: 0,
+              zIndex: 4, opacity: 0,
             }}>
               <span style={{ fontWeight: 400 }}>MONTHLY </span>
               <span style={{ fontWeight: 700, color: "#8bf2d3" }}>ADVERTISING </span>
@@ -1188,7 +1188,7 @@ export default function PreviewLanding() {
               top: m ? MY(176) : Y(199), left: m ? MX(142) : X(903),
               width: m ? MW(214) : W(509),
               fontSize: m ? MFS(40) : FS(80), fontWeight: 800, lineHeight: 1,
-              zIndex: 3, opacity: 0,
+              zIndex: 4, opacity: 0,
             }}>
               <span style={{ color: "#8bf2d3" }}>6 000</span>
               <span style={{ color: "white" }}> USD</span>
