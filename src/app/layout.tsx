@@ -18,14 +18,101 @@ export const viewport: Viewport = {
   themeColor: "#ff6b5c",
 };
 
+const SITE_URL = "https://mentic.io";
+const SITE_TITLE = "Mentic — Autonomous AI Advertising Agent";
+const SITE_DESCRIPTION =
+  "Mentic builds your strategy, launches your campaigns, and optimises them autonomously — powered by a vast agentic infrastructure.";
+
 export const metadata: Metadata = {
-  title: "mentic",
-  description:
-    "Mentic builds your strategy, launches your campaigns, and optimises them autonomously.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_TITLE,
+    template: "%s | Mentic",
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: "Mentic",
+  category: "Technology",
+  keywords: [
+    "AI advertising",
+    "autonomous marketing",
+    "AI ad agent",
+    "campaign optimisation",
+    "agentic advertising",
+    "Mentic",
+  ],
+  authors: [{ name: "Mentic" }],
+  creator: "Mentic",
+  publisher: "Mentic",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Mentic",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    creator: "@Mentic_io",
+    site: "@Mentic_io",
+  },
   icons: {
     icon: "/favicon.png",
     apple: "/favicon.png",
   },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${SITE_URL}/#organization`,
+      name: "Mentic",
+      url: SITE_URL,
+      logo: `${SITE_URL}/images/logo.png`,
+      sameAs: [
+        "https://www.linkedin.com/company/mentic-io",
+        "https://www.instagram.com/mentic.io/",
+        "https://x.com/Mentic_io",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: "Mentic",
+      description: SITE_DESCRIPTION,
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      inLanguage: "en-US",
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": `${SITE_URL}/#product`,
+      name: "Mentic",
+      description: SITE_DESCRIPTION,
+      url: SITE_URL,
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      publisher: { "@id": `${SITE_URL}/#organization` },
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+        availability: "https://schema.org/PreOrder",
+      },
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -36,6 +123,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={nunitoSans.variable}>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <noscript>
           <img
             height="1"
