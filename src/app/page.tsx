@@ -940,7 +940,7 @@ export default function PreviewLanding() {
             onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.transform = "scale(1.12) rotate(-8deg)"; e.currentTarget.style.filter = "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.25)) drop-shadow(0 0 12px rgba(139,242,211,0.4))"; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1) rotate(0)"; e.currentTarget.style.filter = "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.25))"; }}
           >
-            <Image src="/images/mentic-icon-teal.png" alt="Mentic" width={65} height={65} style={{ width: "100%", height: "auto" }} />
+            <Image src="/images/mentic-icon-teal.png" alt="Back to top" width={65} height={65} style={{ width: "100%", height: "auto" }} />
           </button>
 
           {/* ── Persistent glass card ── */}
@@ -965,7 +965,7 @@ export default function PreviewLanding() {
           <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ width: m ? "90vw" : "70vw", height: m ? "90vw" : "70vw", right: "-20%", bottom: "-25%", left: "auto", top: "auto", opacity: 0, zIndex: 1 }} />
 
           {/* ═══ HERO SECTION ═══ */}
-          <div id="section-hero" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-hero" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="hero-layer" style={{ position: "absolute", inset: 0, zIndex: 5, pointerEvents: "auto", opacity: 0 }}>
             <div id="hero-card" style={{
               position: "absolute",
@@ -976,7 +976,7 @@ export default function PreviewLanding() {
                 ? "0 4px 24px rgba(0,0,0,0.08)"
                 : "0 6px 32px rgba(0,0,0,0.08)",
             }} />
-            <Image id="hero-icon" src="/images/mentic-icon-mint.png" alt="Mentic" width={65} height={65} style={{
+            <Image id="hero-icon" src="/images/mentic-icon-mint.png" alt="Mentic logo" width={65} height={65} style={{
               position: "absolute",
               top: m ? MY(33) : Y(51), left: m ? MX(41) : X(61),
               width: m ? MW(65) : W(65), height: "auto", zIndex: 2,
@@ -1018,19 +1018,20 @@ export default function PreviewLanding() {
                 </svg>
               </a>
             </div>
-            <div id="hero-headline" style={{
+            <h1 id="hero-headline" style={{
               position: "absolute",
               top: m ? MY(330) : Y(381), left: m ? MX(110) : X(850),
               width: m ? MW(249) : W(544),
               fontSize: m ? MFS(28.444) : FS(40), fontWeight: 300,
               color: "#faf9f6", lineHeight: 1.25, zIndex: 2,
+              margin: 0,
             }}>
               The{" "}
               <span style={{ fontWeight: 600 }}>A</span>
               <span style={{ fontWeight: 700 }}>utonomous </span>
               <span style={{ fontWeight: 700, color: "#8bf2d3" }}>Advertising Agent</span>
               <span style={{ fontWeight: 300 }}> for your business.</span>
-            </div>
+            </h1>
             <div id="hero-logo" className="font-qurova" style={{
               position: "absolute",
               top: m ? MY(666) : Y(700), left: m ? MX(40) : X(94),
@@ -1074,10 +1075,10 @@ export default function PreviewLanding() {
               Sign up!
             </button>
           </div>
-          </div>
+          </section>
 
           {/* ═══ PAIN SECTION ═══ */}
-          <div id="section-pain" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-pain" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="pain-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
             <div id="pain-blob" className="gradient-blob gradient-blob-coral" style={{
               position: "absolute",
@@ -1126,10 +1127,10 @@ export default function PreviewLanding() {
               <span style={{ fontWeight: 700 }}>take</span>.
             </div>
           </div>
-          </div>
+          </section>
 
           {/* ═══ CALC SECTION ═══ */}
-          <div id="section-calc" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-calc" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="calc-layer" style={{ position: "absolute", inset: 0, zIndex: 6, opacity: 0 }}>
             <div id="calc-panel" style={{
               position: "absolute",
@@ -1202,10 +1203,10 @@ export default function PreviewLanding() {
               <span style={{ color: "white", fontWeight: 600 }}>ADS</span>
             </div>
           </div>
-          </div>
+          </section>
 
           {/* ═══ SOLUTION SECTION ═══ */}
-          <div id="section-sol" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-sol" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="sol-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
             <div id="sol-text-1" style={{
               position: "absolute",
@@ -1242,10 +1243,10 @@ export default function PreviewLanding() {
               <span style={{ fontWeight: 800, color: "#ff6b5c" }}>agentic</span> infrastructure.
             </div>
           </div>
-          </div>
+          </section>
 
           {/* ═══ NO SECTION ═══ */}
-          <div id="section-no" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-no" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="no-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
             <div id="no-text" style={{
               position: "absolute",
@@ -1296,10 +1297,10 @@ export default function PreviewLanding() {
               borderRadius: "50%", background: "#003c46", zIndex: 2, opacity: 0,
             }} />
           </div>
-          </div>
+          </section>
 
           {/* ═══ HOW SECTION ═══ */}
-          <div id="section-how" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-how" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="how-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
             <div id="how-step-1" style={{
               position: "absolute",
@@ -1347,10 +1348,10 @@ export default function PreviewLanding() {
               <span style={{ fontWeight: 300 }}>rest.</span>
             </div>
           </div>
-          </div>
+          </section>
 
           {/* ═══ VALUE SECTION ═══ */}
-          <div id="section-val" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-val" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="val-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
             <div id="val-one" style={{
               position: "absolute",
@@ -1384,10 +1385,10 @@ export default function PreviewLanding() {
               </span>
             </div>
           </div>
-          </div>
+          </section>
 
           {/* ═══ CTA SECTION ═══ */}
-          <div id="section-cta" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-cta" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="cta-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
             {/* Orange icon — desktop only, hidden on mobile */}
             <div id="cta-icon" style={{
@@ -1397,7 +1398,7 @@ export default function PreviewLanding() {
                 : { top: Y(374), left: X(671), width: W(219), height: H(219) }),
               zIndex: 2, opacity: 0,
             }}>
-              <Image src="/images/mentic-icon-orange.png" alt="Mentic" fill style={{ objectFit: "contain" }} />
+              <Image src="/images/mentic-icon-orange.png" alt="Mentic — sign up for early access" fill style={{ objectFit: "contain" }} />
             </div>
             <div id="cta-sign" style={{
               position: "absolute",
@@ -1467,7 +1468,7 @@ export default function PreviewLanding() {
               Sign up!
             </button>
           </div>
-          </div>
+          </section>
 
         </div>
       </div>
@@ -1494,7 +1495,7 @@ export default function PreviewLanding() {
             ? { top: MY(128), left: "50%", transform: "translateX(-50%)", width: MW(139), height: MW(139) }
             : { top: "50%", left: "30%", transform: "translate(-50%, -50%)", width: 219, height: 219 }),
         }}>
-          <Image src="/images/mentic-icon-orange.png" alt="Mentic" fill style={{ objectFit: "contain" }} />
+          <Image src="/images/mentic-icon-orange.png" alt="Mentic signup" fill style={{ objectFit: "contain" }} />
         </div>
 
         {/* Signup card */}
@@ -1575,7 +1576,7 @@ export default function PreviewLanding() {
           pointerEvents: formStatus === "success" ? "auto" : "none",
         }}>
           <div id="success-icon" style={{ marginBottom: 24, opacity: 0 }}>
-            <Image src="/images/mentic-icon-mint.png" alt="Mentic" width={m ? 100 : 140} height={m ? 100 : 140} style={{ filter: "drop-shadow(2px 2px 16px rgba(0,0,0,0.12))" }} />
+            <Image src="/images/mentic-icon-mint.png" alt="Signup confirmed" width={m ? 100 : 140} height={m ? 100 : 140} style={{ filter: "drop-shadow(2px 2px 16px rgba(0,0,0,0.12))" }} />
           </div>
           <div id="success-logo" className="font-qurova" style={{ fontSize: m ? 52 : 72, color: "#8bf2d3", marginBottom: 32, opacity: 0 }}>
             mentic
