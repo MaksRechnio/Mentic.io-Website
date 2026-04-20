@@ -914,7 +914,7 @@ export default function PreviewLanding() {
       {/* ── Mobile: extra background layer OUTSIDE viewport to cover iOS safe areas ── */}
       {m && <div ref={mobileBgRef} style={{ position: "fixed", inset: "-100vh -100vw", zIndex: -1, backgroundColor: "#ffe5e5", pointerEvents: "none" }} />}
 
-      <div ref={wrapperRef} style={{ position: "relative", overflowX: "clip" }}>
+      <div ref={wrapperRef} style={{ position: "relative", overflow: "clip" }}>
         <div ref={viewportRef} style={{ position: "relative", width: "100vw" }}>
 
           {/* ── Background — fixed so it covers behind iOS browser chrome ── */}
