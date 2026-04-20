@@ -275,6 +275,30 @@ export default function PreviewLanding() {
     });
   }, []);
 
+  /* ── Gradient-blob parallax: rotation + gentle drift as the user
+     scrolls the page. GSAP owns the transform so the rotate and the
+     xPercent/yPercent drift compose into one matrix. ── */
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.set(["#blob-coral", "#blob-mint"], { rotation: -134.457 });
+      gsap.to("#blob-coral", {
+        xPercent: -18,
+        yPercent: 18,
+        rotation: -134.457,
+        ease: "none",
+        scrollTrigger: { start: 0, end: "max", scrub: 0.6 },
+      });
+      gsap.to("#blob-mint", {
+        xPercent: 18,
+        yPercent: -18,
+        rotation: -134.457,
+        ease: "none",
+        scrollTrigger: { start: 0, end: "max", scrub: 0.6 },
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
   /* ── Scroll-stop snap: only locks onto a section when the user stops
      within 15% of a section boundary. Debounced so it never fights an
      active scroll gesture. ── */
@@ -992,9 +1016,11 @@ export default function PreviewLanding() {
 
 
           {/* ── Gradient blobs — pinned to viewport so they sit in the
-               corners on sections 4+ (matches frame-4.svg design) ── */}
-          <div id="blob-coral" className="gradient-blob gradient-blob-coral" style={{ position: "fixed", width: m ? "120vw" : "85vw", height: m ? "120vw" : "85vw", left: "-25vw", top: "-25vh", transform: "rotate(-134.457deg)", opacity: 0, zIndex: 1 }} />
-          <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ position: "fixed", width: m ? "110vw" : "75vw", height: m ? "110vw" : "75vw", right: "-25vw", bottom: "-25vh", left: "auto", top: "auto", transform: "rotate(-134.457deg)", opacity: 0, zIndex: 1 }} />
+               corners on sections 4+ (matches frame-4.svg design).
+               Rotation + parallax drift are driven by GSAP so they
+               compose cleanly as one transform matrix. ── */}
+          <div id="blob-coral" className="gradient-blob gradient-blob-coral" style={{ position: "fixed", width: m ? "120vw" : "85vw", height: m ? "120vw" : "85vw", left: "-25vw", top: "-25vh", opacity: 0, zIndex: 1 }} />
+          <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ position: "fixed", width: m ? "110vw" : "75vw", height: m ? "110vw" : "75vw", right: "-25vw", bottom: "-25vh", left: "auto", top: "auto", opacity: 0, zIndex: 1 }} />
 
           {/* ═══ HERO SECTION ═══ */}
           <section id="section-hero" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
