@@ -991,9 +991,10 @@ export default function PreviewLanding() {
           />
 
 
-          {/* ── Gradient blobs ── */}
-          <div id="blob-coral" className="gradient-blob gradient-blob-coral" style={{ width: m ? "100vw" : "80vw", height: m ? "100vw" : "80vw", left: "-30%", top: "-20%", opacity: 0, zIndex: 1 }} />
-          <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ width: m ? "90vw" : "70vw", height: m ? "90vw" : "70vw", right: "-20%", bottom: "-25%", left: "auto", top: "auto", opacity: 0, zIndex: 1 }} />
+          {/* ── Gradient blobs — pinned to viewport so they sit in the
+               corners on sections 4+ (matches frame-4.svg design) ── */}
+          <div id="blob-coral" className="gradient-blob gradient-blob-coral" style={{ position: "fixed", width: m ? "120vw" : "85vw", height: m ? "120vw" : "85vw", left: "-25vw", top: "-25vh", transform: "rotate(-134.457deg)", opacity: 0, zIndex: 1 }} />
+          <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ position: "fixed", width: m ? "110vw" : "75vw", height: m ? "110vw" : "75vw", right: "-25vw", bottom: "-25vh", left: "auto", top: "auto", transform: "rotate(-134.457deg)", opacity: 0, zIndex: 1 }} />
 
           {/* ═══ HERO SECTION ═══ */}
           <section id="section-hero" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
