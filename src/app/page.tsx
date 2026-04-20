@@ -275,6 +275,37 @@ export default function PreviewLanding() {
     });
   }, []);
 
+  /* ── Scroll-stop snap: only locks onto a section when the user stops
+     within 15% of a section boundary. Debounced so it never fights an
+     active scroll gesture. ── */
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    let programmatic = false;
+    let programmaticUntil = 0;
+    const onScroll = () => {
+      // Ignore scroll events produced by our own smooth scrollTo.
+      if (programmatic && Date.now() < programmaticUntil) return;
+      programmatic = false;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        const vh = window.innerHeight;
+        const y = window.scrollY;
+        const nearest = Math.round(y / vh) * vh;
+        const dist = Math.abs(y - nearest);
+        if (dist > 0 && dist <= vh * 0.15) {
+          programmatic = true;
+          programmaticUntil = Date.now() + 900;
+          window.scrollTo({ top: nearest, behavior: "smooth" });
+        }
+      }, 220);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (timer) clearTimeout(timer);
+    };
+  }, []);
+
   /* ── Per-section scroll-triggered animations — one frame at a time ── */
   useEffect(() => {
     if (!wrapperRef.current) return;
