@@ -275,31 +275,14 @@ export default function PreviewLanding() {
     });
   }, []);
 
-  /* ── Native scroll: let Safari handle it. GSAP ScrollTrigger syncs automatically. ── */
-
   /* ── Per-section scroll-triggered animations — one frame at a time ── */
   useEffect(() => {
     if (!wrapperRef.current) return;
     const sections = gsap.utils.toArray<HTMLElement>("[id^='section-']");
-    const totalSections = sections.length;
 
     const ctx = gsap.context(() => {
 
-      /* ── Gentle snap: only corrects when very close to a section boundary ── */
-      const step = 1 / (totalSections - 1);
-      ScrollTrigger.create({
-        snap: {
-          snapTo(progress: number) {
-            const nearest = Math.round(progress / step) * step;
-            const distance = Math.abs(progress - nearest);
-            // Only snap if within 5% of a section boundary
-            return distance < 0.05 ? nearest : progress;
-          },
-          duration: { min: 0.2, max: 0.4 },
-          delay: 0.1,
-          ease: "power1.out",
-        },
-      });
+      /* ── Snap is handled natively by CSS scroll-snap-type: y proximity ── */
 
       /* ── Layer IDs inside each section (content to show/hide) ── */
       const layerMap: Record<string, string> = {
@@ -446,8 +429,8 @@ export default function PreviewLanding() {
 
         ScrollTrigger.create({
           trigger: section,
-          start: "top 55%",
-          end: "bottom 45%",
+          start: "top 50%",
+          end: "bottom 50%",
           onEnter: () => enterSection(id),
           onEnterBack: () => enterSection(id),
           onLeave: () => exitSection(id),
