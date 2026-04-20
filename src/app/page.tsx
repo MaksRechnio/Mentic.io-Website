@@ -292,7 +292,7 @@ export default function PreviewLanding() {
         const y = window.scrollY;
         const nearest = Math.round(y / vh) * vh;
         const dist = Math.abs(y - nearest);
-        if (dist > 0 && dist <= vh * 0.15) {
+        if (dist > 0 && dist <= vh * 0.2) {
           programmatic = true;
           programmaticUntil = Date.now() + 900;
           window.scrollTo({ top: nearest, behavior: "smooth" });
