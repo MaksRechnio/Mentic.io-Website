@@ -8,73 +8,88 @@ datasource db {
 }
 
 model User {
-  id                   String            @id @default(uuid())
-  email                String            @unique
-  password             String?
-  name                 String?
-  surname              String?
-  companyName          String?           @map("company_name")
-  linkedinUrl          String?           @map("linkedin_url")
-  niche                String?
-  sellType             String?           @map("sell_type")       // "product" or "service"
-  businessDescription  String?           @map("business_description")
-  usp                  String?
-  location             String?
-  targetAudience       String?           @map("target_audience")
-  competitors          String[]          @default([])
-  monthlyAdBudget      Float?            @map("monthly_ad_budget")
-  adBudgetCurrency     String?           @default("USD") @map("ad_budget_currency")
-  advertisingGoal      String?           @map("advertising_goal")
-  googleId             String?           @unique @map("google_id")
-  avatarUrl            String?           @map("avatar_url")
-  createdAt            DateTime          @default(now()) @map("created_at")
-  updatedAt            DateTime          @updatedAt @map("updated_at")
-  campaigns            Campaign[]
+  id                  String     @id @default(uuid())
+  email               String     @unique
+  password            String?
+  name                String?
+  surname             String?
+  companyName         String?    @map("company_name")
+  linkedinUrl         String?    @map("linkedin_url")
+  websiteUrl          String?    @map("website_url")
+  niche               String?
+  sellType            String?    @map("sell_type") // "product" or "service"
+  businessDescription String?    @map("business_description")
+  usp                 String?
+  location            String?
+  targetAudience      String?    @map("target_audience")
+  competitors         String[]   @default([])
+  monthlyAdBudget     Float?     @map("monthly_ad_budget")
+  adBudgetCurrency    String?    @default("USD") @map("ad_budget_currency")
+  advertisingGoal     String?    @map("advertising_goal")
+  googleId            String?    @unique @map("google_id")
+  avatarUrl           String?    @map("avatar_url")
+  createdAt           DateTime   @default(now()) @map("created_at")
+  updatedAt           DateTime   @updatedAt @map("updated_at")
+  campaigns           Campaign[]
 
-  emailVerified Boolean    @default(false)
+  emailVerified Boolean   @default(false)
   image         String?
   sessions      Session[]
   accounts      Account[]
   passkeys      Passkey[]
 
   // Admin plugin fields
-  role          String?
-  banned        Boolean?
-  banReason     String?   @map("ban_reason")
-  banExpires    DateTime? @map("ban_expires")
+  role       String?
+  banned     Boolean?
+  banReason  String?   @map("ban_reason")
+  banExpires DateTime? @map("ban_expires")
+
+  // Alpha access gate — admins grant this manually before users can use the app.
+  // While false, the (protected) layout redirects to /waitlist.
+  hasPreviewAccess Boolean @default(false) @map("has_preview_access")
+
+  // Brand voice — extracted from the user's saved creatives by an LLM
+  // pass and stored as structured JSON. The Ad-Library generator and
+  // the campaign-side generator both prefer this over raw past-copy
+  // examples when it exists, since it's a more polished signal.
+  // Reusable across agents (Strategy Agent etc.) via lib/brand-voice/render.ts.
+  brandVoiceJson                Json?     @map("brand_voice_json")
+  brandVoiceUpdatedAt           DateTime? @map("brand_voice_updated_at")
+  brandVoiceCompanyNameSnapshot String?   @map("brand_voice_company_name_snapshot") // detect drift if user renames the brand
 
   // Campaign / ad profile fields (migrated from BusinessProfile)
-  objective            String?           @default("OUTCOME_LEADS")
-  ageMin               Int?              @default(18) @map("age_min")
-  ageMax               Int?              @default(65) @map("age_max")
-  placements           Json?
-  pageId               String?           @map("page_id")
-  destinationUrl       String?           @map("destination_url")
-  callToAction         String?           @default("LEARN_MORE") @map("call_to_action")
-  bidStrategy          String?           @default("LOWEST_COST_WITHOUT_CAP") @map("bid_strategy")
-  bidAmountCents       Int?              @map("bid_amount_cents")
-  roasFloor            Int?              @map("roas_floor")
-  startDate            DateTime?         @map("start_date")
-  endDate              DateTime?         @map("end_date")
-  pixelId              String?           @map("pixel_id")
-  applicationId        String?           @map("application_id")
-  objectStoreUrl       String?           @map("object_store_url")
-  destinationType      String?           @map("destination_type")
-  optimizationGoal     String?           @map("optimization_goal")
-  customEventType      String?           @map("custom_event_type")
-  productCatalogId     String?           @map("product_catalog_id")
-  productSetId         String?           @map("product_set_id")
-  leadGenFormId        String?           @map("lead_gen_form_id")
-  whatsappPhoneNumberId String?          @map("whatsapp_phone_number_id")
-  instagramActorId     String?           @map("instagram_actor_id")
-  dsaBeneficiary       String?           @map("dsa_beneficiary")
-  dsaPayor             String?           @map("dsa_payor")
-  adConstraints        Json?             @map("ad_constraints")
+  objective             String?   @default("OUTCOME_LEADS")
+  ageMin                Int?      @default(18) @map("age_min")
+  ageMax                Int?      @default(65) @map("age_max")
+  placements            Json?
+  pageId                String?   @map("page_id")
+  destinationUrl        String?   @map("destination_url")
+  callToAction          String?   @default("LEARN_MORE") @map("call_to_action")
+  bidStrategy           String?   @default("LOWEST_COST_WITHOUT_CAP") @map("bid_strategy")
+  bidAmountCents        Int?      @map("bid_amount_cents")
+  roasFloor             Int?      @map("roas_floor")
+  startDate             DateTime? @map("start_date")
+  endDate               DateTime? @map("end_date")
+  pixelId               String?   @map("pixel_id")
+  applicationId         String?   @map("application_id")
+  objectStoreUrl        String?   @map("object_store_url")
+  destinationType       String?   @map("destination_type")
+  optimizationGoal      String?   @map("optimization_goal")
+  customEventType       String?   @map("custom_event_type")
+  productCatalogId      String?   @map("product_catalog_id")
+  productSetId          String?   @map("product_set_id")
+  leadGenFormId         String?   @map("lead_gen_form_id")
+  whatsappPhoneNumberId String?   @map("whatsapp_phone_number_id")
+  instagramActorId      String?   @map("instagram_actor_id")
+  dsaBeneficiary        String?   @map("dsa_beneficiary")
+  dsaPayor              String?   @map("dsa_payor")
+  adConstraints         Json?     @map("ad_constraints")
 
   creativeAssets       CreativeAsset[]
   adAccountConnections AdAccountConnection[]
   tokenVaults          TokenVault[]
   strategyBlueprints   StrategyBlueprint[]
+  strategyRuns         StrategyRun[]
   campaignDeployments  CampaignDeployment[]
   researchReports      ResearchReport[]
   optimisationPlans    OptimisationPlan[]
@@ -85,90 +100,149 @@ model User {
   adSnapshots          AdSnapshot[]
   agentDrafts          AgentDraft[]
   creativeAnalyses     CreativeAnalysis[]
+  chatThreads          ChatThread[]
 
   @@map("users")
 }
 
 model CreativeAsset {
-  id           String    @id @default(uuid())
-  userId       String    @map("user_id")
-  type         String
-  filename     String
-  filepath     String
-  originalName String?   @map("original_name")
+  id            String   @id @default(uuid())
+  userId        String   @map("user_id")
+  type          String
+  filename      String
+  filepath      String
+  originalName  String?  @map("original_name")
   headline      String?
-  primaryText   String?   @map("primary_text")
+  primaryText   String?  @map("primary_text")
   description   String?
-  copyVariants  Json?     @map("copy_variants")
-  format        String    @default("single_image")
-  carouselOrder Int?      @map("carousel_order")
-  linkUrl       String?   @map("link_url")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  user         User      @relation(fields: [userId], references: [id])
+  copyVariants  Json?    @map("copy_variants")
+  format        String   @default("single_image")
+  carouselOrder Int?     @map("carousel_order")
+  linkUrl       String?  @map("link_url")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Cached creative-intelligence analysis (vision pass)
+  intelligenceJson       Json?     @map("intelligence_json")
+  intelligenceAnalyzedAt DateTime? @map("intelligence_analyzed_at")
+  intelligenceModel      String?   @map("intelligence_model")
+
+  // Pending LLM-generated copy waiting for user review. Persisted by the
+  // generate-copy route so the work isn't lost when the user navigates
+  // away mid-generation. Cleared when the user Saves the draft (which
+  // promotes it to headline/primaryText/description) or explicitly
+  // Discards it.
+  draftCopyJson Json?     @map("draft_copy_json")
+  draftCopyAt   DateTime? @map("draft_copy_at")
+
+  user          User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([createdAt])
   @@map("creative_assets")
 }
 
+model ScrapedProduct {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  name        String
+  description String?
+  imageUrl    String?  @map("image_url")
+  sourceUrl   String   @map("source_url")
+  priceCents  Int?     @map("price_cents")
+  currency    String?
+  scrapedAt   DateTime @default(now()) @map("scraped_at")
+
+  @@index([userId])
+  @@index([userId, scrapedAt])
+  @@map("scraped_products")
+}
+
 model AdAccountConnection {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  platform    String    @default("meta")
-  accountId   String?   @map("account_id")
-  accountName String?   @map("account_name")
-  status      String    @default("pending")
-  selected    Boolean   @default(false)
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-  user        User      @relation(fields: [userId], references: [id])
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  platform    String   @default("meta")
+  accountId   String?  @map("account_id")
+  accountName String?  @map("account_name")
+  status      String   @default("pending")
+  selected    Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  user        User     @relation(fields: [userId], references: [id])
 
   @@index([userId, platform])
   @@map("ad_account_connections")
 }
 
 model TokenVault {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  platform    String    @default("meta")
-  iv          String
-  authTag     String    @map("auth_tag")
-  ciphertext  String
-  keyVersion  Int       @default(1) @map("key_version")
-  expiresAt   DateTime? @map("expires_at")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-  user        User      @relation(fields: [userId], references: [id])
+  id         String    @id @default(uuid())
+  userId     String    @map("user_id")
+  platform   String    @default("meta")
+  iv         String
+  authTag    String    @map("auth_tag")
+  ciphertext String
+  keyVersion Int       @default(1) @map("key_version")
+  expiresAt  DateTime? @map("expires_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  user       User      @relation(fields: [userId], references: [id])
 
   @@index([userId, platform])
   @@map("token_vaults")
 }
 
 model StrategyBlueprint {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  version     Int       @default(0)
-  strategy    Json
-  createdAt   DateTime  @default(now()) @map("created_at")
-  user        User      @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  version   Int      @default(0)
+  strategy  Json
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([createdAt])
   @@map("strategy_blueprints")
 }
 
+model StrategyRun {
+  id           String            @id @default(uuid())
+  userId       String            @map("user_id")
+  status       StrategyRunStatus @default(PENDING)
+  phase        Int               @default(0)
+  totalPhases  Int               @default(9)
+  phaseMessage String?           @map("phase_message")
+  blueprintId  String?           @map("blueprint_id")
+  error        String?
+  startedAt    DateTime          @default(now()) @map("started_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+  completedAt  DateTime?         @map("completed_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([userId, startedAt])
+  @@map("strategy_run")
+}
+
+enum StrategyRunStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
 model CampaignDeployment {
-  id             String    @id @default(uuid())
-  userId         String    @map("user_id")
-  blueprintId    String?   @map("blueprint_id")
-  idempotencyKey String?   @unique @map("idempotency_key")
-  status         String    @default("pending")
-  metaCampaignId String?   @map("meta_campaign_id")
-  mocked         Boolean   @default(false)
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  blueprintId    String?  @map("blueprint_id")
+  idempotencyKey String?  @unique @map("idempotency_key")
+  status         String   @default("pending")
+  metaCampaignId String?  @map("meta_campaign_id")
+  mocked         Boolean  @default(false)
   result         Json?
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
-  user           User      @relation(fields: [userId], references: [id])
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  user           User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([createdAt])
@@ -177,15 +251,15 @@ model CampaignDeployment {
 }
 
 model ResearchReport {
-  id            String                @id @default(uuid())
-  userId        String                @map("user_id")
-  status        ResearchReportStatus  @default(COMPLETED)
-  startedAt     DateTime              @default(now()) @map("started_at")
-  completedAt   DateTime?             @map("completed_at")
-  errorMessage  String?               @map("error_message")
-  report        Json?
-  createdAt     DateTime              @default(now()) @map("created_at")
-  user          User                  @relation(fields: [userId], references: [id])
+  id           String               @id @default(uuid())
+  userId       String               @map("user_id")
+  status       ResearchReportStatus @default(COMPLETED)
+  startedAt    DateTime             @default(now()) @map("started_at")
+  completedAt  DateTime?            @map("completed_at")
+  errorMessage String?              @map("error_message")
+  report       Json?
+  createdAt    DateTime             @default(now()) @map("created_at")
+  user         User                 @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([createdAt])
@@ -197,14 +271,20 @@ enum ResearchReportStatus {
   RUNNING
   COMPLETED
   FAILED
+  // STALE = a previously COMPLETED report that's been invalidated
+  // because the user changed business-info fields the research depends on
+  // (companyName, niche, businessDescription, usp, targetAudience, location,
+  // websiteUrl, sellType). The 24h cache check filters on COMPLETED, so
+  // marking stale reports as STALE forces a fresh run on the next trigger.
+  STALE
 }
 
 model OptimisationPlan {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  plan        Json
-  createdAt   DateTime  @default(now()) @map("created_at")
-  user        User      @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  plan      Json
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([createdAt])
@@ -212,13 +292,13 @@ model OptimisationPlan {
 }
 
 model ExecutionRun {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  planId      String    @map("plan_id")
-  status      String    @default("pending")
-  results     Json?
-  createdAt   DateTime  @default(now()) @map("created_at")
-  user        User      @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  planId    String   @map("plan_id")
+  status    String   @default("pending")
+  results   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([createdAt])
@@ -227,12 +307,12 @@ model ExecutionRun {
 }
 
 model MetricSnapshot {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  metrics     Json
-  source      String    @default("mock")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  user        User      @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  metrics   Json
+  source    String   @default("mock")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([createdAt])
@@ -240,15 +320,15 @@ model MetricSnapshot {
 }
 
 model AuditLog {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  actor       String
-  action      String
-  entity      String?
-  entityId    String?   @map("entity_id")
-  details     Json?
-  createdAt   DateTime  @default(now()) @map("created_at")
-  user        User      @relation(fields: [userId], references: [id])
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  actor     String
+  action    String
+  entity    String?
+  entityId  String?  @map("entity_id")
+  details   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id])
 
   @@index([userId, createdAt])
   @@map("audit_logs")
@@ -274,15 +354,15 @@ model CronJob {
 }
 
 model AdSnapshot {
-  id          String    @id @default(uuid())
-  cronJobId   String    @map("cron_job_id")
-  userId      String    @map("user_id")
-  adAccountId String    @map("ad_account_id")
-  dataHash    String    @map("data_hash")
+  id          String   @id @default(uuid())
+  cronJobId   String   @map("cron_job_id")
+  userId      String   @map("user_id")
+  adAccountId String   @map("ad_account_id")
+  dataHash    String   @map("data_hash")
   data        Json
-  capturedAt  DateTime  @default(now()) @map("captured_at")
-  cronJob     CronJob   @relation(fields: [cronJobId], references: [id], onDelete: Cascade)
-  user        User      @relation(fields: [userId], references: [id])
+  capturedAt  DateTime @default(now()) @map("captured_at")
+  cronJob     CronJob  @relation(fields: [cronJobId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id])
 
   @@index([cronJobId, capturedAt])
   @@index([userId])
@@ -312,18 +392,18 @@ model Campaign {
 }
 
 model CreativeAnalysis {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  imageUrl    String?   @map("image_url")
-  mediaType   String    @map("media_type")
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  imageUrl    String?  @map("image_url")
+  mediaType   String   @map("media_type")
   score       Int
   grade       String
-  conceptType String    @map("concept_type")
+  conceptType String   @map("concept_type")
   analysis    Json
-  campaignId  String?   @map("campaign_id")
-  adSetId     String?   @map("ad_set_id")
-  analyzedAt  DateTime  @default(now()) @map("analyzed_at")
-  user        User      @relation(fields: [userId], references: [id])
+  campaignId  String?  @map("campaign_id")
+  adSetId     String?  @map("ad_set_id")
+  analyzedAt  DateTime @default(now()) @map("analyzed_at")
+  user        User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([analyzedAt])
@@ -333,7 +413,7 @@ model CreativeAnalysis {
 model AgentDraft {
   id          String    @id @default(uuid())
   userId      String    @map("user_id")
-  type        String    // "optimization" | "campaign_launch"
+  type        String // "optimization" | "campaign_launch"
   status      String    @default("in_progress")
   name        String
   threadId    String    @map("thread_id")
@@ -349,16 +429,16 @@ model AgentDraft {
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ipAddress String?
-  userAgent String?
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  impersonatedBy  String?  @map("impersonated_by")
+  id             String   @id
+  expiresAt      DateTime
+  token          String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy String?  @map("impersonated_by")
 
   @@unique([token])
   @@index([userId])
@@ -416,14 +496,68 @@ model Passkey {
 }
 
 model WebsiteEmailList {
-  id          String    @id @default(uuid())
-  email       String    @unique
-  firstname   String?
-  lastname    String?
-  company     String?
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  email     String   @unique
+  firstname String?
+  lastname  String?
+  company   String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([email])
   @@map("website_email_list")
+}
+
+model ChatThread {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  title     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages ChatMessage[]
+  runs     ChatRun[]
+
+  @@index([userId, updatedAt])
+  @@map("chat_thread")
+}
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  threadId  String   @map("thread_id")
+  role      String
+  content   String
+  toolCalls Json?    @map("tool_calls")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  thread ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, createdAt])
+  @@map("chat_message")
+}
+
+model ChatRun {
+  id             String        @id @default(uuid())
+  threadId       String        @map("thread_id")
+  status         ChatRunStatus
+  pageContext    Json?         @map("page_context")
+  interruptState Json?         @map("interrupt_state")
+  error          String?
+  startedAt      DateTime      @default(now()) @map("started_at")
+  completedAt    DateTime?     @map("completed_at")
+
+  thread ChatThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, status])
+  @@map("chat_run")
+}
+
+enum ChatRunStatus {
+  PENDING
+  STREAMING
+  AWAITING_APPROVAL
+  COMPLETED
+  ERROR
+  CANCELLED
 }
