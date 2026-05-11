@@ -188,6 +188,238 @@ body {
   transform: scale(1.05);
 }
 
+/* ── Privacy policy page ── */
+.privacy-page {
+  background: var(--off-white);
+  color: var(--near-black);
+  min-height: 100dvh;
+  width: 100%;
+  font-family: var(--font-nunito), "Nunito Sans", sans-serif;
+  padding: clamp(24px, 6vw, 64px) clamp(16px, 5vw, 48px);
+  /* Restore native cursor on long-form content (overrides global cursor: none) */
+  cursor: auto !important;
+}
+
+.privacy-page *,
+.privacy-page *::before,
+.privacy-page *::after {
+  cursor: auto !important;
+}
+
+.privacy-page a,
+.privacy-page button,
+.privacy-page [role="button"] {
+  cursor: pointer !important;
+}
+
+.privacy-shell {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.privacy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: clamp(32px, 6vw, 56px);
+}
+
+.privacy-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--dark-teal);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 60, 70, 0.15);
+  background: rgba(255, 255, 255, 0.6);
+  transition: background var(--speed-fast) var(--ease-premium),
+              transform var(--speed-fast) var(--ease-premium);
+}
+
+.privacy-back:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateX(-2px);
+}
+
+.privacy-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.privacy-wordmark {
+  font-size: 28px;
+  color: var(--dark-teal);
+  line-height: 1;
+}
+
+.privacy-article {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: clamp(28px, 6vw, 64px);
+  box-shadow: 0 1px 0 rgba(0, 60, 70, 0.04),
+              0 24px 60px -32px rgba(0, 60, 70, 0.18);
+  border: 1px solid rgba(0, 60, 70, 0.06);
+}
+
+.privacy-eyebrow {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--coral);
+}
+
+.privacy-title {
+  margin: 0 0 12px;
+  font-size: clamp(36px, 6vw, 56px);
+  font-weight: 300;
+  color: var(--dark-teal);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+.privacy-title span {
+  font-weight: 700;
+}
+
+.privacy-effective {
+  margin: 0 0 28px;
+  font-size: 14px;
+  color: rgba(30, 30, 30, 0.7);
+}
+
+.privacy-effective strong {
+  color: var(--near-black);
+  font-weight: 600;
+}
+
+.privacy-meta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px 24px;
+  padding: 20px 24px;
+  margin: 0 0 40px;
+  background: var(--off-white);
+  border-radius: 14px;
+  border: 1px solid rgba(0, 60, 70, 0.08);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@media (min-width: 640px) {
+  .privacy-meta {
+    grid-template-columns: max-content 1fr;
+  }
+  .privacy-meta > div {
+    display: contents;
+  }
+}
+
+.privacy-meta > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.privacy-meta-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0, 60, 70, 0.55);
+}
+
+.privacy-article section {
+  margin-top: 36px;
+}
+
+.privacy-article section:first-of-type {
+  margin-top: 0;
+}
+
+.privacy-article h2 {
+  margin: 0 0 12px;
+  font-size: clamp(20px, 2.4vw, 24px);
+  font-weight: 700;
+  color: var(--dark-teal);
+  letter-spacing: -0.01em;
+}
+
+.privacy-article h3 {
+  margin: 20px 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--dark-teal);
+}
+
+.privacy-article p {
+  margin: 0 0 12px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--near-black);
+}
+
+.privacy-article ul,
+.privacy-article ol {
+  margin: 8px 0 16px;
+  padding-left: 22px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--near-black);
+}
+
+.privacy-article li {
+  margin-bottom: 6px;
+}
+
+.privacy-article li::marker {
+  color: var(--coral);
+}
+
+.privacy-article a {
+  color: var(--dark-teal);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 107, 92, 0.45);
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--speed-fast) var(--ease-premium),
+              color var(--speed-fast) var(--ease-premium);
+}
+
+.privacy-article a:hover {
+  color: var(--coral);
+  text-decoration-color: var(--coral);
+}
+
+.privacy-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(0, 60, 70, 0.1);
+  font-size: 13px;
+  color: rgba(30, 30, 30, 0.6);
+}
+
+.privacy-home-link {
+  color: var(--dark-teal);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.privacy-home-link:hover {
+  color: var(--coral);
+}
+
 /* Hide reCAPTCHA badge — attribution text added to form per Google's TOS */
 .grecaptcha-badge {
   visibility: hidden !important;
