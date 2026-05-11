@@ -1042,11 +1042,46 @@ export default function PreviewLanding() {
             }} />
             <div id="hero-alpha" style={{
               position: "absolute",
-              top: m ? MY(42) : Y(72), right: m ? undefined : X(1491 - 1164 - 229.913),
-              left: m ? MX(229) : undefined,
-              display: "flex", gap: m ? 14 : 18, alignItems: "center",
+              top: m ? MY(42) : Y(72), right: m ? MX(20) : X(1491 - 1164 - 229.913),
+              display: "flex", gap: m ? 12 : 18, alignItems: "center",
               zIndex: 2,
             }}>
+              {/* Log in */}
+              <a
+                href="https://app.mentic.io/login"
+                onClick={() => { sfxPress(); }}
+                onMouseEnter={(e) => {
+                  sfxHover();
+                  const el = e.currentTarget;
+                  el.style.background = "#ffffff";
+                  el.style.color = "#003c46";
+                  el.style.letterSpacing = "1.6px";
+                  el.style.boxShadow = "0 4px 16px rgba(255,255,255,0.35)";
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget;
+                  el.style.background = "transparent";
+                  el.style.color = "#ffffff";
+                  el.style.letterSpacing = "1.2px";
+                  el.style.boxShadow = "none";
+                }}
+                style={{
+                  padding: m ? "7px 14px" : "9px 20px",
+                  border: "1.5px solid #ffffff",
+                  borderRadius: 999,
+                  background: "transparent",
+                  fontSize: m ? 12 : 14, fontWeight: 700,
+                  color: "#ffffff", letterSpacing: "1.2px",
+                  textTransform: "uppercase",
+                  textDecoration: "none",
+                  fontFamily: "'Nunito Sans', sans-serif",
+                  transition: "all 250ms cubic-bezier(0.165, 0.84, 0.44, 1)",
+                }}
+              >
+                Log in
+              </a>
+              {/* Divider */}
+              <span style={{ width: 1, height: m ? 18 : 22, background: "rgba(255,255,255,0.4)" }} />
               {/* Instagram */}
               <a href="https://www.instagram.com/mentic.io/" target="_blank" rel="noopener noreferrer" style={{ display: "flex", opacity: 0.7, transition: "opacity 200ms, transform 200ms" }}
                 onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.15)"; }}
