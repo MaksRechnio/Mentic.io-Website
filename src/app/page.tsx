@@ -1525,6 +1525,30 @@ export default function PreviewLanding() {
             >
               Sign up!
             </button>
+            <a
+              id="cta-privacy"
+              href="/privacy"
+              onMouseEnter={() => sfxHover()}
+              onClick={() => sfxPress()}
+              style={{
+                position: "absolute",
+                bottom: m ? 24 : 32,
+                left: "50%",
+                transform: "translateX(-50%)",
+                fontSize: m ? 11 : 13,
+                color: "rgba(0,60,70,0.55)",
+                fontFamily: "'Nunito Sans', sans-serif",
+                fontWeight: 500,
+                textDecoration: "none",
+                letterSpacing: "0.02em",
+                zIndex: 2,
+                transition: "color 200ms ease, opacity 200ms ease",
+              }}
+              onMouseOver={(e) => { e.currentTarget.style.color = "#003c46"; }}
+              onMouseOut={(e) => { e.currentTarget.style.color = "rgba(0,60,70,0.55)"; }}
+            >
+              Privacy Policy
+            </a>
           </div>
           </section>
 
