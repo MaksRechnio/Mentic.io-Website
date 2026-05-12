@@ -343,6 +343,7 @@ export default function PreviewLanding() {
       const layerMap: Record<string, string> = {
         "section-hero": "#hero-layer",
         "section-video": "#video-layer",
+        "section-product": "#product-layer",
         "section-pain": "#pain-layer",
         "section-calc": "#calc-layer",
         "section-sol": "#sol-layer",
@@ -356,6 +357,7 @@ export default function PreviewLanding() {
       const bgColors: Record<string, string> = {
         "section-hero": "#ffe5e5",
         "section-video": "#ffe5e5",
+        "section-product": "#ffe5e5",
         "section-pain": "#ffe5e5",
         "section-calc": "#ff6b5c",
         "section-sol": "#ffffff",
@@ -400,6 +402,20 @@ export default function PreviewLanding() {
             gsap.fromTo("#video-corner-bl", { opacity: 0, x: -10, y: 10 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power3.out", delay: 0.95 });
             gsap.fromTo("#video-corner-br", { opacity: 0, x: 10, y: 10 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power3.out", delay: 0.95 });
             setTimeout(() => sfxClick(), 350);
+            break;
+          }
+
+          case "section-product": {
+            gsap.to("#icon-teal", { opacity: 1, duration: 0.4, ease: "power2.out" });
+            gsap.fromTo("#product-glow-a", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.0, ease: "power3.out" });
+            gsap.fromTo("#product-glow-b", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.2, ease: "power3.out", delay: 0.1 });
+            gsap.fromTo("#product-eyebrow", { opacity: 0, y: 14, letterSpacing: "0.6em" }, { opacity: 1, y: 0, letterSpacing: "0.4em", duration: 0.7, ease: "power3.out", delay: 0.1 });
+            gsap.fromTo("#product-line-1", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.2 });
+            gsap.fromTo("#product-line-2", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.35 });
+            gsap.fromTo("#product-line-3", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.5 });
+            gsap.fromTo("#product-shot", { opacity: 0, y: 40, scale: 0.94, clipPath: "inset(0 0 100% 0 round 16px)" }, { opacity: 1, y: 0, scale: 1, clipPath: "inset(0 0 0% 0 round 16px)", duration: 1.0, ease: "power4.out", delay: 0.45 });
+            setTimeout(() => sfxClick(), 300);
+            setTimeout(() => sfxClick(), 600);
             break;
           }
 
@@ -1299,6 +1315,137 @@ export default function PreviewLanding() {
               <span id="video-corner-bl" aria-hidden style={{ position: "absolute", bottom: 10, left: 10, width: 18, height: 18, borderBottom: "2px solid #8bf2d3", borderLeft: "2px solid #8bf2d3", borderBottomLeftRadius: 8, opacity: 0, pointerEvents: "none" }} />
               <span id="video-corner-br" aria-hidden style={{ position: "absolute", bottom: 10, right: 10, width: 18, height: 18, borderBottom: "2px solid #8bf2d3", borderRight: "2px solid #8bf2d3", borderBottomRightRadius: 8, opacity: 0, pointerEvents: "none" }} />
             </div>
+          </div>
+          </section>
+
+          {/* ═══ PRODUCT SECTION ═══ */}
+          <section id="section-product" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="product-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
+            {/* Ambient blobs */}
+            <div id="product-glow-a" aria-hidden className="gradient-blob gradient-blob-mint" style={{
+              position: "absolute", zIndex: 1, opacity: 0,
+              width: m ? "85vw" : "55vw", height: m ? "85vw" : "55vw",
+              top: "20%", right: m ? "-25%" : "-10%",
+              pointerEvents: "none",
+            }} />
+            <div id="product-glow-b" aria-hidden className="gradient-blob gradient-blob-coral" style={{
+              position: "absolute", zIndex: 1, opacity: 0,
+              width: m ? "70vw" : "40vw", height: m ? "70vw" : "40vw",
+              bottom: "-10%", left: m ? "-20%" : "-5%",
+              pointerEvents: "none",
+            }} />
+
+            {/* Headline + screenshot stack */}
+            {m ? (
+              <>
+                {/* Mobile: headline top, screenshot bottom */}
+                <div id="product-eyebrow" style={{
+                  position: "absolute",
+                  top: "7%", left: "50%", transform: "translateX(-50%)",
+                  fontFamily: "'Nunito Sans', sans-serif",
+                  fontSize: 11, fontWeight: 700,
+                  color: "#003c46", letterSpacing: "0.4em",
+                  textTransform: "uppercase", zIndex: 3, opacity: 0,
+                  whiteSpace: "nowrap",
+                }}>
+                  ◆ Meet the product
+                </div>
+                <h2 style={{
+                  position: "absolute",
+                  top: "11%", left: "5%", right: "5%",
+                  fontFamily: "'Nunito Sans', sans-serif",
+                  fontSize: 30, fontWeight: 300,
+                  color: "#003c46", lineHeight: 1.12,
+                  margin: 0, zIndex: 3,
+                  textAlign: "center",
+                }}>
+                  <span id="product-line-1" style={{ display: "block", opacity: 0 }}>
+                    Your <span style={{ fontWeight: 700 }}>autonomous</span>
+                  </span>
+                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 700 }}>
+                    AI CMO
+                  </span>
+                  <span id="product-line-3" style={{ display: "block", opacity: 0, fontSize: 22, marginTop: 4 }}>
+                    running your ads.
+                  </span>
+                </h2>
+                <div id="product-shot" style={{
+                  position: "absolute",
+                  top: "38%", left: "50%", transform: "translateX(-50%)",
+                  width: "94vw",
+                  aspectRatio: "3024 / 1718",
+                  borderRadius: 14, overflow: "hidden",
+                  zIndex: 3, opacity: 0,
+                  border: "1px solid rgba(0,60,70,0.18)",
+                  boxShadow:
+                    "0 24px 60px rgba(0,60,70,0.22), 0 0 0 1px rgba(255,255,255,0.5), 0 0 80px rgba(139,242,211,0.2)",
+                  background: "#003c46",
+                }}>
+                  <Image
+                    src="/mentic-software-screenshot.png"
+                    alt="Mentic application — autonomous AI CMO dashboard"
+                    fill
+                    sizes="100vw"
+                    style={{ objectFit: "cover" }}
+                    priority={false}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Desktop: headline left, screenshot right */}
+                <div id="product-eyebrow" style={{
+                  position: "absolute",
+                  top: "14%", left: "6%",
+                  fontFamily: "'Nunito Sans', sans-serif",
+                  fontSize: 14, fontWeight: 700,
+                  color: "#003c46", letterSpacing: "0.4em",
+                  textTransform: "uppercase", zIndex: 3, opacity: 0,
+                  whiteSpace: "nowrap",
+                }}>
+                  ◆ Meet the product
+                </div>
+                <h2 style={{
+                  position: "absolute",
+                  top: "20%", left: "6%", width: "44%",
+                  fontFamily: "'Nunito Sans', sans-serif",
+                  fontSize: "clamp(48px, 5.6vw, 96px)", fontWeight: 300,
+                  color: "#003c46", lineHeight: 1.04,
+                  margin: 0, zIndex: 3,
+                }}>
+                  <span id="product-line-1" style={{ display: "block", opacity: 0 }}>
+                    Your <span style={{ fontWeight: 700 }}>autonomous</span>
+                  </span>
+                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 800, fontSize: "clamp(64px, 7.4vw, 128px)", lineHeight: 0.96, margin: "0.05em 0" }}>
+                    AI CMO
+                  </span>
+                  <span id="product-line-3" style={{ display: "block", opacity: 0, fontWeight: 400 }}>
+                    running your ads.
+                  </span>
+                </h2>
+                <div id="product-shot" style={{
+                  position: "absolute",
+                  top: "50%", right: "4%", transform: "translateY(-50%)",
+                  width: "min(54vw, 1100px)",
+                  aspectRatio: "3024 / 1718",
+                  borderRadius: 16, overflow: "hidden",
+                  zIndex: 3, opacity: 0,
+                  border: "1px solid rgba(0,60,70,0.2)",
+                  boxShadow:
+                    "0 40px 100px rgba(0,60,70,0.28), 0 0 0 1px rgba(255,255,255,0.5), 0 0 140px rgba(139,242,211,0.25)",
+                  background: "#003c46",
+                }}>
+                  <Image
+                    src="/mentic-software-screenshot.png"
+                    alt="Mentic application — autonomous AI CMO dashboard"
+                    fill
+                    sizes="60vw"
+                    style={{ objectFit: "cover" }}
+                    priority={false}
+                  />
+                </div>
+              </>
+            )}
           </div>
           </section>
 
