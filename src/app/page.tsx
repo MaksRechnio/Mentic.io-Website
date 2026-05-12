@@ -342,7 +342,6 @@ export default function PreviewLanding() {
       /* ── Layer IDs inside each section (content to show/hide) ── */
       const layerMap: Record<string, string> = {
         "section-hero": "#hero-layer",
-        "section-video": "#video-layer",
         "section-product": "#product-layer",
         "section-pain": "#pain-layer",
         "section-calc": "#calc-layer",
@@ -372,17 +371,17 @@ export default function PreviewLanding() {
       const darkBtnSections = new Set(["section-sol", "section-no", "section-how", "section-val", "section-cta"]);
 
       function enterSection(id: string) {
-        const layer = layerMap[id];
-        if (!layer) return;
-
-        // Fade in the layer
-        gsap.to(layer, { opacity: 1, duration: 0.4, ease: "power2.out" });
-
         // Background color transition
         gsap.to("#bg", { backgroundColor: bgColors[id] || "#ffffff", duration: 0.6, ease: "power2.out" });
 
         // Update sound button color scheme
         setSoundBtnDark(darkBtnSections.has(id));
+
+        // Fade in the layer (if mapped)
+        const layer = layerMap[id];
+        if (layer) {
+          gsap.to(layer, { opacity: 1, duration: 0.4, ease: "power2.out" });
+        }
 
         // Section-specific enter animations
         switch (id) {
@@ -392,16 +391,7 @@ export default function PreviewLanding() {
 
           case "section-video": {
             gsap.to("#icon-teal", { opacity: 1, duration: 0.4, ease: "power2.out" });
-            gsap.fromTo("#video-glow-a", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.0, ease: "power3.out" });
-            gsap.fromTo("#video-glow-b", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.2, ease: "power3.out", delay: 0.1 });
-            gsap.fromTo("#video-eyebrow", { opacity: 0, y: 14, letterSpacing: "0.6em" }, { opacity: 1, y: 0, letterSpacing: "0.4em", duration: 0.7, ease: "power3.out", delay: 0.15 });
-            gsap.fromTo("#video-title", { opacity: 0, y: 20, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.8, ease: "power4.out", delay: 0.25 });
-            gsap.fromTo("#video-frame", { opacity: 0, scale: 0.92, clipPath: "inset(50% 50% 50% 50% round 24px)" }, { opacity: 1, scale: 1, clipPath: "inset(0% 0% 0% 0% round 24px)", duration: 1.0, ease: "power4.out", delay: 0.35 });
-            gsap.fromTo("#video-corner-tl", { opacity: 0, x: -10, y: -10 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power3.out", delay: 0.95 });
-            gsap.fromTo("#video-corner-tr", { opacity: 0, x: 10, y: -10 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power3.out", delay: 0.95 });
-            gsap.fromTo("#video-corner-bl", { opacity: 0, x: -10, y: 10 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power3.out", delay: 0.95 });
-            gsap.fromTo("#video-corner-br", { opacity: 0, x: 10, y: 10 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power3.out", delay: 0.95 });
-            setTimeout(() => sfxClick(), 350);
+            setTimeout(() => sfxClick(), 200);
             break;
           }
 
@@ -409,13 +399,12 @@ export default function PreviewLanding() {
             gsap.to("#icon-teal", { opacity: 1, duration: 0.4, ease: "power2.out" });
             gsap.fromTo("#product-glow-a", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.0, ease: "power3.out" });
             gsap.fromTo("#product-glow-b", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.2, ease: "power3.out", delay: 0.1 });
-            gsap.fromTo("#product-eyebrow", { opacity: 0, y: 14, letterSpacing: "0.6em" }, { opacity: 1, y: 0, letterSpacing: "0.4em", duration: 0.7, ease: "power3.out", delay: 0.1 });
-            gsap.fromTo("#product-line-1", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.2 });
-            gsap.fromTo("#product-line-2", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.35 });
-            gsap.fromTo("#product-line-3", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.5 });
+            gsap.fromTo("#product-line-1", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.1 });
+            gsap.fromTo("#product-line-2", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.25 });
+            gsap.fromTo("#product-line-3", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.4 });
             gsap.fromTo("#product-shot",
               { opacity: 0, y: 60, scale: 0.9, rotationY: -28, rotationX: 12 },
-              { opacity: 1, y: 0, scale: 1, rotationY: m ? -8 : -14, rotationX: m ? 4 : 6, duration: 1.1, ease: "power4.out", delay: 0.45, transformOrigin: "50% 50%" }
+              { opacity: 1, y: 0, scale: 1, rotationY: m ? -8 : -14, rotationX: m ? 4 : 6, duration: 1.1, ease: "power4.out", delay: 0.35, transformOrigin: "50% 50%" }
             );
             setTimeout(() => sfxClick(), 300);
             setTimeout(() => sfxClick(), 600);
@@ -531,6 +520,19 @@ export default function PreviewLanding() {
           onLeave: () => exitSection(id),
           onLeaveBack: () => exitSection(id),
         });
+      });
+
+      /* ── Video: scroll-linked scale grows the frame as the section enters ── */
+      gsap.set("#video-frame", { xPercent: -50, yPercent: -50, scale: 0.32 });
+      gsap.to("#video-frame", {
+        scale: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#section-video",
+          start: "top bottom",
+          end: "top 15%",
+          scrub: 0.6,
+        },
       });
 
       /* ── Blobs: show when entering white sections, hide when leaving ── */
@@ -1247,7 +1249,7 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ PRODUCT SECTION ═══ */}
-          <section id="section-product" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-product" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#ffe5e5" }}>
           <div id="product-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0, perspective: "2400px" }}>
             {/* Ambient blobs */}
             <div id="product-glow-a" aria-hidden className="gradient-blob gradient-blob-mint" style={{
@@ -1267,22 +1269,11 @@ export default function PreviewLanding() {
             {m ? (
               <>
                 {/* Mobile: headline top, screenshot bottom */}
-                <div id="product-eyebrow" style={{
-                  position: "absolute",
-                  top: "6%", left: "50%", transform: "translateX(-50%)",
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: 11, fontWeight: 700,
-                  color: "#003c46", letterSpacing: "0.4em",
-                  textTransform: "uppercase", zIndex: 3, opacity: 0,
-                  whiteSpace: "nowrap",
-                }}>
-                  ◆ Meet the product
-                </div>
                 <h2 style={{
                   position: "absolute",
-                  top: "10%", left: "5%", right: "5%",
+                  top: "8%", left: "5%", right: "5%",
                   fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: 28, fontWeight: 300,
+                  fontSize: 24, fontWeight: 300,
                   color: "#003c46", lineHeight: 1.12,
                   margin: 0, zIndex: 3,
                   textAlign: "center",
@@ -1290,11 +1281,11 @@ export default function PreviewLanding() {
                   <span id="product-line-1" style={{ display: "block", opacity: 0 }}>
                     Your <span style={{ fontWeight: 700 }}>autonomous</span>
                   </span>
-                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 800, fontSize: 44, lineHeight: 0.98, margin: "0.05em 0" }}>
+                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 800, fontSize: 38, lineHeight: 0.98, margin: "0.05em 0" }}>
                     AI CMO
                   </span>
-                  <span id="product-line-3" style={{ display: "block", opacity: 0, fontSize: 22 }}>
-                    running your ads.
+                  <span id="product-line-3" style={{ display: "block", opacity: 0, fontSize: 18 }}>
+                    running and optimising your ads.
                   </span>
                 </h2>
                 <div id="product-shot-wrap" style={{
@@ -1309,10 +1300,8 @@ export default function PreviewLanding() {
                     aspectRatio: "3024 / 1718",
                     borderRadius: 14, overflow: "hidden",
                     opacity: 0,
-                    border: "1px solid rgba(0,60,70,0.18)",
                     boxShadow:
-                      "0 30px 60px -10px rgba(0,60,70,0.45), 0 12px 24px rgba(0,60,70,0.18), 0 0 0 1px rgba(255,255,255,0.55), 0 0 80px rgba(139,242,211,0.22)",
-                    background: "#003c46",
+                      "0 30px 60px -10px rgba(0,60,70,0.4), 0 12px 24px rgba(0,60,70,0.16), 0 0 80px rgba(139,242,211,0.2)",
                     transformStyle: "preserve-3d",
                     position: "relative",
                   }}>
@@ -1327,7 +1316,7 @@ export default function PreviewLanding() {
                     {/* Subtle shading overlay to enhance the 3D feel */}
                     <div aria-hidden style={{
                       position: "absolute", inset: 0, pointerEvents: "none",
-                      background: "linear-gradient(115deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0) 65%, rgba(0,0,0,0.10) 100%)",
+                      background: "linear-gradient(115deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0) 65%, rgba(0,0,0,0.08) 100%)",
                     }} />
                   </div>
                 </div>
@@ -1335,33 +1324,22 @@ export default function PreviewLanding() {
             ) : (
               <>
                 {/* Desktop: headline left, screenshot right at an angle */}
-                <div id="product-eyebrow" style={{
-                  position: "absolute",
-                  top: "14%", left: "6%",
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: 14, fontWeight: 700,
-                  color: "#003c46", letterSpacing: "0.4em",
-                  textTransform: "uppercase", zIndex: 3, opacity: 0,
-                  whiteSpace: "nowrap",
-                }}>
-                  ◆ Meet the product
-                </div>
                 <h2 style={{
                   position: "absolute",
-                  top: "22%", left: "6%", width: "38%",
+                  top: "26%", left: "6%", width: "38%",
                   fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: "clamp(40px, 4.8vw, 80px)", fontWeight: 300,
-                  color: "#003c46", lineHeight: 1.04,
+                  fontSize: "clamp(32px, 3.6vw, 60px)", fontWeight: 300,
+                  color: "#003c46", lineHeight: 1.05,
                   margin: 0, zIndex: 3,
                 }}>
                   <span id="product-line-1" style={{ display: "block", opacity: 0 }}>
                     Your <span style={{ fontWeight: 700 }}>autonomous</span>
                   </span>
-                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 800, fontSize: "clamp(56px, 6.4vw, 112px)", lineHeight: 0.96, margin: "0.05em 0" }}>
+                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 800, fontSize: "clamp(48px, 5.2vw, 88px)", lineHeight: 0.96, margin: "0.05em 0" }}>
                     AI CMO
                   </span>
                   <span id="product-line-3" style={{ display: "block", opacity: 0, fontWeight: 400 }}>
-                    running your ads.
+                    running and optimising your ads.
                   </span>
                 </h2>
                 <div id="product-shot-wrap" style={{
@@ -1376,10 +1354,8 @@ export default function PreviewLanding() {
                     aspectRatio: "3024 / 1718",
                     borderRadius: 18, overflow: "hidden",
                     opacity: 0,
-                    border: "1px solid rgba(0,60,70,0.22)",
                     boxShadow:
-                      "0 50px 100px -20px rgba(0,60,70,0.55), 0 30px 60px -10px rgba(0,60,70,0.35), 0 0 0 1px rgba(255,255,255,0.6), 0 0 140px rgba(139,242,211,0.28)",
-                    background: "#003c46",
+                      "0 50px 100px -20px rgba(0,60,70,0.5), 0 30px 60px -10px rgba(0,60,70,0.3), 0 0 140px rgba(139,242,211,0.25)",
                     transformStyle: "preserve-3d",
                     position: "relative",
                   }}>
@@ -1394,7 +1370,7 @@ export default function PreviewLanding() {
                     {/* Subtle shading overlay to enhance the 3D feel */}
                     <div aria-hidden style={{
                       position: "absolute", inset: 0, pointerEvents: "none",
-                      background: "linear-gradient(115deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.12) 100%)",
+                      background: "linear-gradient(115deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.1) 100%)",
                     }} />
                   </div>
                 </div>
@@ -1404,61 +1380,19 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ VIDEO SECTION ═══ */}
-          <section id="section-video" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
-          <div id="video-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
-            {/* Soft ambient blobs in page palette */}
-            <div id="video-glow-a" aria-hidden className="gradient-blob gradient-blob-mint" style={{
-              position: "absolute", zIndex: 1, opacity: 0,
-              width: m ? "90vw" : "55vw", height: m ? "90vw" : "55vw",
-              top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-              pointerEvents: "none",
-            }} />
-            <div id="video-glow-b" aria-hidden className="gradient-blob gradient-blob-coral" style={{
-              position: "absolute", zIndex: 1, opacity: 0,
-              width: m ? "70vw" : "40vw", height: m ? "70vw" : "40vw",
-              top: "70%", left: "15%", transform: "translate(-50%, -50%)",
-              pointerEvents: "none",
-            }} />
-
-            {/* Eyebrow label */}
-            <div id="video-eyebrow" style={{
-              position: "absolute",
-              top: m ? "9%" : "10%", left: "50%", transform: "translateX(-50%)",
-              fontFamily: "'Nunito Sans', sans-serif",
-              fontSize: m ? 11 : 13, fontWeight: 700,
-              color: "#003c46", letterSpacing: "0.4em",
-              textTransform: "uppercase", zIndex: 3, opacity: 0,
-              whiteSpace: "nowrap",
-            }}>
-              ◆ See it in motion
-            </div>
-
-            {/* Title */}
-            <h2 id="video-title" style={{
-              position: "absolute",
-              top: m ? "13%" : "15%", left: "50%", transform: "translateX(-50%)",
-              fontFamily: "'Nunito Sans', sans-serif",
-              fontSize: m ? 26 : 48, fontWeight: 700,
-              color: "#003c46", lineHeight: 1.1,
-              margin: 0, padding: "0 16px",
-              textAlign: "center", zIndex: 3, opacity: 0,
-              whiteSpace: m ? "normal" : "nowrap",
-            }}>
-              Mentic, <span style={{ color: "#ff6b5c" }}>in action</span>.
-            </h2>
-
-            {/* Video frame */}
+          <section id="section-video" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#ffe5e5" }}>
+          <div id="video-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 1 }}>
+            {/* Video — scaled up by scroll progress */}
             <div id="video-frame" style={{
               position: "absolute",
-              top: "50%", left: "50%", transform: "translate(-50%, -50%)",
+              top: "50%", left: "50%",
               width: m ? "92vw" : "min(76vw, 1200px)",
               aspectRatio: "16 / 9",
               borderRadius: 24, overflow: "hidden",
-              zIndex: 3, opacity: 0,
-              background: "#003c46",
-              border: "1px solid rgba(0,60,70,0.18)",
+              zIndex: 3,
+              transformOrigin: "50% 50%",
               boxShadow:
-                "0 30px 80px rgba(0,60,70,0.22), 0 0 0 1px rgba(255,255,255,0.5), 0 0 120px rgba(139,242,211,0.25)",
+                "0 30px 80px rgba(0,60,70,0.22), 0 0 120px rgba(139,242,211,0.22)",
             }}>
               <video
                 id="mentic-video"
@@ -1469,11 +1403,6 @@ export default function PreviewLanding() {
                 controlsList="nodownload"
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", cursor: "pointer" }}
               />
-              {/* Corner accents */}
-              <span id="video-corner-tl" aria-hidden style={{ position: "absolute", top: 10, left: 10, width: 18, height: 18, borderTop: "2px solid #8bf2d3", borderLeft: "2px solid #8bf2d3", borderTopLeftRadius: 8, opacity: 0, pointerEvents: "none" }} />
-              <span id="video-corner-tr" aria-hidden style={{ position: "absolute", top: 10, right: 10, width: 18, height: 18, borderTop: "2px solid #8bf2d3", borderRight: "2px solid #8bf2d3", borderTopRightRadius: 8, opacity: 0, pointerEvents: "none" }} />
-              <span id="video-corner-bl" aria-hidden style={{ position: "absolute", bottom: 10, left: 10, width: 18, height: 18, borderBottom: "2px solid #8bf2d3", borderLeft: "2px solid #8bf2d3", borderBottomLeftRadius: 8, opacity: 0, pointerEvents: "none" }} />
-              <span id="video-corner-br" aria-hidden style={{ position: "absolute", bottom: 10, right: 10, width: 18, height: 18, borderBottom: "2px solid #8bf2d3", borderRight: "2px solid #8bf2d3", borderBottomRightRadius: 8, opacity: 0, pointerEvents: "none" }} />
             </div>
           </div>
           </section>
