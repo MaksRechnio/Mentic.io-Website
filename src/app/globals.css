@@ -52,7 +52,7 @@
 }
 
 html {
-  scroll-behavior: auto;
+  scroll-behavior: smooth;
   scrollbar-width: none;
   cursor: none !important;
   overscroll-behavior: none;
@@ -76,6 +76,11 @@ body {
 /* ── Hide native cursor everywhere ── */
 *, *::before, *::after {
   cursor: none !important;
+}
+
+/* ── Restore native cursor for video element + its controls ── */
+video, video *, video::-webkit-media-controls, video::-webkit-media-controls * {
+  cursor: auto !important;
 }
 
 /* ── Qurova utility class ── */

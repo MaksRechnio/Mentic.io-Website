@@ -355,7 +355,7 @@ export default function PreviewLanding() {
       /* ── Background colors per section ── */
       const bgColors: Record<string, string> = {
         "section-hero": "#ffe5e5",
-        "section-video": "#001a1f",
+        "section-video": "#ffe5e5",
         "section-pain": "#ffe5e5",
         "section-calc": "#ff6b5c",
         "section-sol": "#ffffff",
@@ -389,10 +389,9 @@ export default function PreviewLanding() {
             break;
 
           case "section-video": {
-            gsap.to("#icon-teal", { opacity: 0, duration: 0.3, ease: "power2.in" });
-            gsap.fromTo("#video-glow-a", { opacity: 0, scale: 0.4 }, { opacity: 0.85, scale: 1, duration: 1.2, ease: "power3.out" });
-            gsap.fromTo("#video-glow-b", { opacity: 0, scale: 0.4 }, { opacity: 0.7, scale: 1, duration: 1.4, ease: "power3.out", delay: 0.1 });
-            gsap.fromTo("#video-grid", { opacity: 0 }, { opacity: 0.18, duration: 1.0, ease: "power2.out", delay: 0.05 });
+            gsap.to("#icon-teal", { opacity: 1, duration: 0.4, ease: "power2.out" });
+            gsap.fromTo("#video-glow-a", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.0, ease: "power3.out" });
+            gsap.fromTo("#video-glow-b", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.2, ease: "power3.out", delay: 0.1 });
             gsap.fromTo("#video-eyebrow", { opacity: 0, y: 14, letterSpacing: "0.6em" }, { opacity: 1, y: 0, letterSpacing: "0.4em", duration: 0.7, ease: "power3.out", delay: 0.15 });
             gsap.fromTo("#video-title", { opacity: 0, y: 20, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)", duration: 0.8, ease: "power4.out", delay: 0.25 });
             gsap.fromTo("#video-frame", { opacity: 0, scale: 0.92, clipPath: "inset(50% 50% 50% 50% round 24px)" }, { opacity: 1, scale: 1, clipPath: "inset(0% 0% 0% 0% round 24px)", duration: 1.0, ease: "power4.out", delay: 0.35 });
@@ -400,8 +399,6 @@ export default function PreviewLanding() {
             gsap.fromTo("#video-corner-tr", { opacity: 0, x: 10, y: -10 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power3.out", delay: 0.95 });
             gsap.fromTo("#video-corner-bl", { opacity: 0, x: -10, y: 10 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power3.out", delay: 0.95 });
             gsap.fromTo("#video-corner-br", { opacity: 0, x: 10, y: 10 }, { opacity: 1, x: 0, y: 0, duration: 0.5, ease: "power3.out", delay: 0.95 });
-            const v = document.getElementById("mentic-video") as HTMLVideoElement | null;
-            if (v) { try { v.currentTime = 0; v.play().catch(() => {}); } catch { /* noop */ } }
             setTimeout(() => sfxClick(), 350);
             break;
           }
@@ -1231,40 +1228,29 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ VIDEO SECTION ═══ */}
-          <section id="section-video" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#001a1f" }}>
+          <section id="section-video" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="video-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
-            {/* Futuristic grid backdrop */}
-            <div id="video-grid" aria-hidden style={{
-              position: "absolute", inset: 0, opacity: 0, zIndex: 1,
-              backgroundImage:
-                "linear-gradient(rgba(139,242,211,0.18) 1px, transparent 1px), linear-gradient(90deg, rgba(139,242,211,0.18) 1px, transparent 1px)",
-              backgroundSize: m ? "32px 32px" : "56px 56px",
-              maskImage: "radial-gradient(circle at center, black 0%, transparent 75%)",
-              WebkitMaskImage: "radial-gradient(circle at center, black 0%, transparent 75%)",
-            }} />
-            {/* Ambient glows */}
-            <div id="video-glow-a" aria-hidden style={{
+            {/* Soft ambient blobs in page palette */}
+            <div id="video-glow-a" aria-hidden className="gradient-blob gradient-blob-mint" style={{
               position: "absolute", zIndex: 1, opacity: 0,
-              width: m ? "120vw" : "80vw", height: m ? "120vw" : "80vw",
+              width: m ? "90vw" : "55vw", height: m ? "90vw" : "55vw",
               top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-              background: "radial-gradient(circle, rgba(139,242,211,0.32) 0%, rgba(139,242,211,0) 60%)",
-              filter: "blur(60px)", pointerEvents: "none",
+              pointerEvents: "none",
             }} />
-            <div id="video-glow-b" aria-hidden style={{
+            <div id="video-glow-b" aria-hidden className="gradient-blob gradient-blob-coral" style={{
               position: "absolute", zIndex: 1, opacity: 0,
-              width: m ? "90vw" : "50vw", height: m ? "90vw" : "50vw",
-              top: "60%", left: "20%", transform: "translate(-50%, -50%)",
-              background: "radial-gradient(circle, rgba(255,107,92,0.22) 0%, rgba(255,107,92,0) 60%)",
-              filter: "blur(80px)", pointerEvents: "none",
+              width: m ? "70vw" : "40vw", height: m ? "70vw" : "40vw",
+              top: "70%", left: "15%", transform: "translate(-50%, -50%)",
+              pointerEvents: "none",
             }} />
 
             {/* Eyebrow label */}
             <div id="video-eyebrow" style={{
               position: "absolute",
-              top: m ? "10%" : "11%", left: "50%", transform: "translateX(-50%)",
+              top: m ? "9%" : "10%", left: "50%", transform: "translateX(-50%)",
               fontFamily: "'Nunito Sans', sans-serif",
               fontSize: m ? 11 : 13, fontWeight: 700,
-              color: "#8bf2d3", letterSpacing: "0.4em",
+              color: "#003c46", letterSpacing: "0.4em",
               textTransform: "uppercase", zIndex: 3, opacity: 0,
               whiteSpace: "nowrap",
             }}>
@@ -1274,44 +1260,44 @@ export default function PreviewLanding() {
             {/* Title */}
             <h2 id="video-title" style={{
               position: "absolute",
-              top: m ? "14%" : "16%", left: "50%", transform: "translateX(-50%)",
+              top: m ? "13%" : "15%", left: "50%", transform: "translateX(-50%)",
               fontFamily: "'Nunito Sans', sans-serif",
               fontSize: m ? 26 : 48, fontWeight: 700,
-              color: "#faf9f6", lineHeight: 1.1,
+              color: "#003c46", lineHeight: 1.1,
               margin: 0, padding: "0 16px",
               textAlign: "center", zIndex: 3, opacity: 0,
               whiteSpace: m ? "normal" : "nowrap",
             }}>
-              Mentic, <span style={{ color: "#8bf2d3" }}>in action</span>.
+              Mentic, <span style={{ color: "#ff6b5c" }}>in action</span>.
             </h2>
 
             {/* Video frame */}
             <div id="video-frame" style={{
               position: "absolute",
               top: "50%", left: "50%", transform: "translate(-50%, -50%)",
-              width: m ? "92vw" : "min(78vw, 1280px)",
+              width: m ? "92vw" : "min(76vw, 1200px)",
               aspectRatio: "16 / 9",
               borderRadius: 24, overflow: "hidden",
               zIndex: 3, opacity: 0,
-              background: "#000",
-              border: "1px solid rgba(139,242,211,0.35)",
+              background: "#003c46",
+              border: "1px solid rgba(0,60,70,0.18)",
               boxShadow:
-                "0 0 0 1px rgba(139,242,211,0.08), 0 20px 80px rgba(0,0,0,0.55), 0 0 120px rgba(139,242,211,0.18)",
+                "0 30px 80px rgba(0,60,70,0.22), 0 0 0 1px rgba(255,255,255,0.5), 0 0 120px rgba(139,242,211,0.25)",
             }}>
               <video
                 id="mentic-video"
                 src="/mentic-launch-video.mp4"
-                muted
-                loop
+                controls
                 playsInline
                 preload="metadata"
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                controlsList="nodownload"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", cursor: "pointer" }}
               />
               {/* Corner accents */}
-              <span id="video-corner-tl" aria-hidden style={{ position: "absolute", top: 10, left: 10, width: 18, height: 18, borderTop: "2px solid #8bf2d3", borderLeft: "2px solid #8bf2d3", borderTopLeftRadius: 8, opacity: 0 }} />
-              <span id="video-corner-tr" aria-hidden style={{ position: "absolute", top: 10, right: 10, width: 18, height: 18, borderTop: "2px solid #8bf2d3", borderRight: "2px solid #8bf2d3", borderTopRightRadius: 8, opacity: 0 }} />
-              <span id="video-corner-bl" aria-hidden style={{ position: "absolute", bottom: 10, left: 10, width: 18, height: 18, borderBottom: "2px solid #8bf2d3", borderLeft: "2px solid #8bf2d3", borderBottomLeftRadius: 8, opacity: 0 }} />
-              <span id="video-corner-br" aria-hidden style={{ position: "absolute", bottom: 10, right: 10, width: 18, height: 18, borderBottom: "2px solid #8bf2d3", borderRight: "2px solid #8bf2d3", borderBottomRightRadius: 8, opacity: 0 }} />
+              <span id="video-corner-tl" aria-hidden style={{ position: "absolute", top: 10, left: 10, width: 18, height: 18, borderTop: "2px solid #8bf2d3", borderLeft: "2px solid #8bf2d3", borderTopLeftRadius: 8, opacity: 0, pointerEvents: "none" }} />
+              <span id="video-corner-tr" aria-hidden style={{ position: "absolute", top: 10, right: 10, width: 18, height: 18, borderTop: "2px solid #8bf2d3", borderRight: "2px solid #8bf2d3", borderTopRightRadius: 8, opacity: 0, pointerEvents: "none" }} />
+              <span id="video-corner-bl" aria-hidden style={{ position: "absolute", bottom: 10, left: 10, width: 18, height: 18, borderBottom: "2px solid #8bf2d3", borderLeft: "2px solid #8bf2d3", borderBottomLeftRadius: 8, opacity: 0, pointerEvents: "none" }} />
+              <span id="video-corner-br" aria-hidden style={{ position: "absolute", bottom: 10, right: 10, width: 18, height: 18, borderBottom: "2px solid #8bf2d3", borderRight: "2px solid #8bf2d3", borderBottomRightRadius: 8, opacity: 0, pointerEvents: "none" }} />
             </div>
           </div>
           </section>
