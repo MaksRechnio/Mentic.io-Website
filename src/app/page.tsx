@@ -455,6 +455,7 @@ export default function PreviewLanding() {
             gsap.fromTo("#cta-now", { opacity: 0, x: 20, clipPath: "inset(0 0 0 100%)" }, { opacity: 1, x: 0, clipPath: "inset(0 0 0 0%)", duration: 0.5, ease: "power4.out", delay: 0.24 });
             gsap.fromTo("#cta-alpha", { opacity: 0, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.4, ease: "power4.out", delay: 0.34 });
             gsap.fromTo("#cta-button", { opacity: 0, y: 10, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out", delay: 0.42 });
+            gsap.fromTo("#cta-demo-button", { opacity: 0, y: 10, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: "power3.out", delay: 0.48 });
             setTimeout(() => sfxClick(), 300);
             break;
         }
@@ -1167,6 +1168,38 @@ export default function PreviewLanding() {
             >
               Sign up!
             </button>
+            <button onClick={() => { sfxPress(); window.open("https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user", "_blank", "noopener,noreferrer"); }} id="hero-demo-btn" style={{
+              position: "absolute",
+              top: m ? MY(416.162) : Y(774), left: m ? MX(177) : X(910.087),
+              width: m ? MW(165.338) : W(229.913), height: m ? MH(64.838) : H(90.162),
+              background: "#003c46", border: "2px solid transparent",
+              borderRadius: m ? MFS(43.226) : "60.108px",
+              boxShadow: "4.508px 4.508px 24.795px rgba(0,0,0,0.13), inset -1.503px -1.503px 17.131px rgba(0,0,0,0.11)",
+              fontSize: m ? MFS(21.613) : FS(30.054), fontWeight: 700,
+              color: "#8bf2d3", letterSpacing: "0.9px", cursor: "pointer", zIndex: 2,
+              fontFamily: "'Nunito Sans', sans-serif",
+              transition: "all 350ms cubic-bezier(0.165, 0.84, 0.44, 1)",
+            }}
+              onMouseEnter={(e) => {
+                sfxHover();
+                const el = e.currentTarget;
+                el.style.transform = "scale(1.08) translateY(-3px)";
+                el.style.boxShadow = "0 8px 32px rgba(139,242,211,0.4), 0 0 20px rgba(139,242,211,0.25), inset -1.503px -1.503px 17.131px rgba(0,0,0,0.11)";
+                el.style.borderColor = "#8bf2d3";
+                el.style.background = "#00525f";
+                el.style.letterSpacing = "2px";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget;
+                el.style.transform = "scale(1) translateY(0)";
+                el.style.boxShadow = "4.508px 4.508px 24.795px rgba(0,0,0,0.13), inset -1.503px -1.503px 17.131px rgba(0,0,0,0.11)";
+                el.style.borderColor = "transparent";
+                el.style.background = "#003c46";
+                el.style.letterSpacing = "0.9px";
+              }}
+            >
+              Book a Demo
+            </button>
           </div>
           </section>
 
@@ -1559,6 +1592,39 @@ export default function PreviewLanding() {
               }}
             >
               Sign up!
+            </button>
+            <button onClick={() => { sfxPress(); window.open("https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user", "_blank", "noopener,noreferrer"); }} id="cta-demo-button" style={{
+              position: "absolute",
+              top: m ? MY(278) : Y(777), left: m ? MX(99) : X(975),
+              width: m ? MW(195) : W(195), height: m ? MH(78) : H(78),
+              background: m ? "#ff6b5c" : "#003c46", border: "2px solid transparent",
+              borderRadius: m ? "15px" : "20px",
+              boxShadow: "2px 2px 16.9px rgba(0,0,0,0.25)",
+              fontSize: m ? MFS(22) : FS(24), fontWeight: 700,
+              color: m ? "#003c46" : "#8bf2d3",
+              fontFamily: "'Nunito Sans', sans-serif",
+              cursor: "pointer", zIndex: 2, opacity: 0,
+              transition: "all 350ms cubic-bezier(0.165, 0.84, 0.44, 1)",
+            }}
+              onMouseEnter={(e) => {
+                sfxHover();
+                const el = e.currentTarget;
+                el.style.transform = "scale(1.08) translateY(-3px)";
+                el.style.boxShadow = m
+                  ? "0 8px 32px rgba(0,60,70,0.4), 0 0 20px rgba(0,60,70,0.25)"
+                  : "0 8px 32px rgba(139,242,211,0.5), 0 0 24px rgba(139,242,211,0.3)";
+                el.style.borderColor = m ? "#003c46" : "#8bf2d3";
+                el.style.letterSpacing = "2px";
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget;
+                el.style.transform = "scale(1) translateY(0)";
+                el.style.boxShadow = "2px 2px 16.9px rgba(0,0,0,0.25)";
+                el.style.borderColor = "transparent";
+                el.style.letterSpacing = "normal";
+              }}
+            >
+              Book a Demo
             </button>
             <a
               id="cta-privacy"
