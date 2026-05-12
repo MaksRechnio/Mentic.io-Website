@@ -413,7 +413,10 @@ export default function PreviewLanding() {
             gsap.fromTo("#product-line-1", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.2 });
             gsap.fromTo("#product-line-2", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.35 });
             gsap.fromTo("#product-line-3", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.5 });
-            gsap.fromTo("#product-shot", { opacity: 0, y: 40, scale: 0.94, clipPath: "inset(0 0 100% 0 round 16px)" }, { opacity: 1, y: 0, scale: 1, clipPath: "inset(0 0 0% 0 round 16px)", duration: 1.0, ease: "power4.out", delay: 0.45 });
+            gsap.fromTo("#product-shot",
+              { opacity: 0, y: 60, scale: 0.9, rotationY: -28, rotationX: 12 },
+              { opacity: 1, y: 0, scale: 1, rotationY: m ? -8 : -14, rotationX: m ? 4 : 6, duration: 1.1, ease: "power4.out", delay: 0.45, transformOrigin: "50% 50%" }
+            );
             setTimeout(() => sfxClick(), 300);
             setTimeout(() => sfxClick(), 600);
             break;
@@ -1243,6 +1246,163 @@ export default function PreviewLanding() {
           </div>
           </section>
 
+          {/* ═══ PRODUCT SECTION ═══ */}
+          <section id="section-product" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <div id="product-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0, perspective: "2400px" }}>
+            {/* Ambient blobs */}
+            <div id="product-glow-a" aria-hidden className="gradient-blob gradient-blob-mint" style={{
+              position: "absolute", zIndex: 1, opacity: 0,
+              width: m ? "85vw" : "55vw", height: m ? "85vw" : "55vw",
+              top: "20%", right: m ? "-25%" : "-10%",
+              pointerEvents: "none",
+            }} />
+            <div id="product-glow-b" aria-hidden className="gradient-blob gradient-blob-coral" style={{
+              position: "absolute", zIndex: 1, opacity: 0,
+              width: m ? "70vw" : "40vw", height: m ? "70vw" : "40vw",
+              bottom: "-10%", left: m ? "-20%" : "-5%",
+              pointerEvents: "none",
+            }} />
+
+            {/* Headline + screenshot stack */}
+            {m ? (
+              <>
+                {/* Mobile: headline top, screenshot bottom */}
+                <div id="product-eyebrow" style={{
+                  position: "absolute",
+                  top: "6%", left: "50%", transform: "translateX(-50%)",
+                  fontFamily: "'Nunito Sans', sans-serif",
+                  fontSize: 11, fontWeight: 700,
+                  color: "#003c46", letterSpacing: "0.4em",
+                  textTransform: "uppercase", zIndex: 3, opacity: 0,
+                  whiteSpace: "nowrap",
+                }}>
+                  ◆ Meet the product
+                </div>
+                <h2 style={{
+                  position: "absolute",
+                  top: "10%", left: "5%", right: "5%",
+                  fontFamily: "'Nunito Sans', sans-serif",
+                  fontSize: 28, fontWeight: 300,
+                  color: "#003c46", lineHeight: 1.12,
+                  margin: 0, zIndex: 3,
+                  textAlign: "center",
+                }}>
+                  <span id="product-line-1" style={{ display: "block", opacity: 0 }}>
+                    Your <span style={{ fontWeight: 700 }}>autonomous</span>
+                  </span>
+                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 800, fontSize: 44, lineHeight: 0.98, margin: "0.05em 0" }}>
+                    AI CMO
+                  </span>
+                  <span id="product-line-3" style={{ display: "block", opacity: 0, fontSize: 22 }}>
+                    running your ads.
+                  </span>
+                </h2>
+                <div id="product-shot-wrap" style={{
+                  position: "absolute",
+                  top: "55%", left: "50%", transform: "translate(-50%, -50%)",
+                  width: "92vw",
+                  zIndex: 3,
+                  perspective: "1800px",
+                }}>
+                  <div id="product-shot" style={{
+                    width: "100%",
+                    aspectRatio: "3024 / 1718",
+                    borderRadius: 14, overflow: "hidden",
+                    opacity: 0,
+                    border: "1px solid rgba(0,60,70,0.18)",
+                    boxShadow:
+                      "0 30px 60px -10px rgba(0,60,70,0.45), 0 12px 24px rgba(0,60,70,0.18), 0 0 0 1px rgba(255,255,255,0.55), 0 0 80px rgba(139,242,211,0.22)",
+                    background: "#003c46",
+                    transformStyle: "preserve-3d",
+                    position: "relative",
+                  }}>
+                    <Image
+                      src="/mentic-software-screenshot.png"
+                      alt="Mentic application — autonomous AI CMO dashboard"
+                      fill
+                      sizes="100vw"
+                      style={{ objectFit: "cover" }}
+                      priority={false}
+                    />
+                    {/* Subtle shading overlay to enhance the 3D feel */}
+                    <div aria-hidden style={{
+                      position: "absolute", inset: 0, pointerEvents: "none",
+                      background: "linear-gradient(115deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0) 65%, rgba(0,0,0,0.10) 100%)",
+                    }} />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Desktop: headline left, screenshot right at an angle */}
+                <div id="product-eyebrow" style={{
+                  position: "absolute",
+                  top: "14%", left: "6%",
+                  fontFamily: "'Nunito Sans', sans-serif",
+                  fontSize: 14, fontWeight: 700,
+                  color: "#003c46", letterSpacing: "0.4em",
+                  textTransform: "uppercase", zIndex: 3, opacity: 0,
+                  whiteSpace: "nowrap",
+                }}>
+                  ◆ Meet the product
+                </div>
+                <h2 style={{
+                  position: "absolute",
+                  top: "22%", left: "6%", width: "38%",
+                  fontFamily: "'Nunito Sans', sans-serif",
+                  fontSize: "clamp(40px, 4.8vw, 80px)", fontWeight: 300,
+                  color: "#003c46", lineHeight: 1.04,
+                  margin: 0, zIndex: 3,
+                }}>
+                  <span id="product-line-1" style={{ display: "block", opacity: 0 }}>
+                    Your <span style={{ fontWeight: 700 }}>autonomous</span>
+                  </span>
+                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 800, fontSize: "clamp(56px, 6.4vw, 112px)", lineHeight: 0.96, margin: "0.05em 0" }}>
+                    AI CMO
+                  </span>
+                  <span id="product-line-3" style={{ display: "block", opacity: 0, fontWeight: 400 }}>
+                    running your ads.
+                  </span>
+                </h2>
+                <div id="product-shot-wrap" style={{
+                  position: "absolute",
+                  top: "50%", right: "5%", transform: "translateY(-50%)",
+                  width: "min(48vw, 960px)",
+                  zIndex: 3,
+                  perspective: "2400px",
+                }}>
+                  <div id="product-shot" style={{
+                    width: "100%",
+                    aspectRatio: "3024 / 1718",
+                    borderRadius: 18, overflow: "hidden",
+                    opacity: 0,
+                    border: "1px solid rgba(0,60,70,0.22)",
+                    boxShadow:
+                      "0 50px 100px -20px rgba(0,60,70,0.55), 0 30px 60px -10px rgba(0,60,70,0.35), 0 0 0 1px rgba(255,255,255,0.6), 0 0 140px rgba(139,242,211,0.28)",
+                    background: "#003c46",
+                    transformStyle: "preserve-3d",
+                    position: "relative",
+                  }}>
+                    <Image
+                      src="/mentic-software-screenshot.png"
+                      alt="Mentic application — autonomous AI CMO dashboard"
+                      fill
+                      sizes="55vw"
+                      style={{ objectFit: "cover" }}
+                      priority={false}
+                    />
+                    {/* Subtle shading overlay to enhance the 3D feel */}
+                    <div aria-hidden style={{
+                      position: "absolute", inset: 0, pointerEvents: "none",
+                      background: "linear-gradient(115deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.12) 100%)",
+                    }} />
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+          </section>
+
           {/* ═══ VIDEO SECTION ═══ */}
           <section id="section-video" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="video-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
@@ -1315,137 +1475,6 @@ export default function PreviewLanding() {
               <span id="video-corner-bl" aria-hidden style={{ position: "absolute", bottom: 10, left: 10, width: 18, height: 18, borderBottom: "2px solid #8bf2d3", borderLeft: "2px solid #8bf2d3", borderBottomLeftRadius: 8, opacity: 0, pointerEvents: "none" }} />
               <span id="video-corner-br" aria-hidden style={{ position: "absolute", bottom: 10, right: 10, width: 18, height: 18, borderBottom: "2px solid #8bf2d3", borderRight: "2px solid #8bf2d3", borderBottomRightRadius: 8, opacity: 0, pointerEvents: "none" }} />
             </div>
-          </div>
-          </section>
-
-          {/* ═══ PRODUCT SECTION ═══ */}
-          <section id="section-product" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
-          <div id="product-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
-            {/* Ambient blobs */}
-            <div id="product-glow-a" aria-hidden className="gradient-blob gradient-blob-mint" style={{
-              position: "absolute", zIndex: 1, opacity: 0,
-              width: m ? "85vw" : "55vw", height: m ? "85vw" : "55vw",
-              top: "20%", right: m ? "-25%" : "-10%",
-              pointerEvents: "none",
-            }} />
-            <div id="product-glow-b" aria-hidden className="gradient-blob gradient-blob-coral" style={{
-              position: "absolute", zIndex: 1, opacity: 0,
-              width: m ? "70vw" : "40vw", height: m ? "70vw" : "40vw",
-              bottom: "-10%", left: m ? "-20%" : "-5%",
-              pointerEvents: "none",
-            }} />
-
-            {/* Headline + screenshot stack */}
-            {m ? (
-              <>
-                {/* Mobile: headline top, screenshot bottom */}
-                <div id="product-eyebrow" style={{
-                  position: "absolute",
-                  top: "7%", left: "50%", transform: "translateX(-50%)",
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: 11, fontWeight: 700,
-                  color: "#003c46", letterSpacing: "0.4em",
-                  textTransform: "uppercase", zIndex: 3, opacity: 0,
-                  whiteSpace: "nowrap",
-                }}>
-                  ◆ Meet the product
-                </div>
-                <h2 style={{
-                  position: "absolute",
-                  top: "11%", left: "5%", right: "5%",
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: 30, fontWeight: 300,
-                  color: "#003c46", lineHeight: 1.12,
-                  margin: 0, zIndex: 3,
-                  textAlign: "center",
-                }}>
-                  <span id="product-line-1" style={{ display: "block", opacity: 0 }}>
-                    Your <span style={{ fontWeight: 700 }}>autonomous</span>
-                  </span>
-                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 700 }}>
-                    AI CMO
-                  </span>
-                  <span id="product-line-3" style={{ display: "block", opacity: 0, fontSize: 22, marginTop: 4 }}>
-                    running your ads.
-                  </span>
-                </h2>
-                <div id="product-shot" style={{
-                  position: "absolute",
-                  top: "38%", left: "50%", transform: "translateX(-50%)",
-                  width: "94vw",
-                  aspectRatio: "3024 / 1718",
-                  borderRadius: 14, overflow: "hidden",
-                  zIndex: 3, opacity: 0,
-                  border: "1px solid rgba(0,60,70,0.18)",
-                  boxShadow:
-                    "0 24px 60px rgba(0,60,70,0.22), 0 0 0 1px rgba(255,255,255,0.5), 0 0 80px rgba(139,242,211,0.2)",
-                  background: "#003c46",
-                }}>
-                  <Image
-                    src="/mentic-software-screenshot.png"
-                    alt="Mentic application — autonomous AI CMO dashboard"
-                    fill
-                    sizes="100vw"
-                    style={{ objectFit: "cover" }}
-                    priority={false}
-                  />
-                </div>
-              </>
-            ) : (
-              <>
-                {/* Desktop: headline left, screenshot right */}
-                <div id="product-eyebrow" style={{
-                  position: "absolute",
-                  top: "14%", left: "6%",
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: 14, fontWeight: 700,
-                  color: "#003c46", letterSpacing: "0.4em",
-                  textTransform: "uppercase", zIndex: 3, opacity: 0,
-                  whiteSpace: "nowrap",
-                }}>
-                  ◆ Meet the product
-                </div>
-                <h2 style={{
-                  position: "absolute",
-                  top: "20%", left: "6%", width: "44%",
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: "clamp(48px, 5.6vw, 96px)", fontWeight: 300,
-                  color: "#003c46", lineHeight: 1.04,
-                  margin: 0, zIndex: 3,
-                }}>
-                  <span id="product-line-1" style={{ display: "block", opacity: 0 }}>
-                    Your <span style={{ fontWeight: 700 }}>autonomous</span>
-                  </span>
-                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 800, fontSize: "clamp(64px, 7.4vw, 128px)", lineHeight: 0.96, margin: "0.05em 0" }}>
-                    AI CMO
-                  </span>
-                  <span id="product-line-3" style={{ display: "block", opacity: 0, fontWeight: 400 }}>
-                    running your ads.
-                  </span>
-                </h2>
-                <div id="product-shot" style={{
-                  position: "absolute",
-                  top: "50%", right: "4%", transform: "translateY(-50%)",
-                  width: "min(54vw, 1100px)",
-                  aspectRatio: "3024 / 1718",
-                  borderRadius: 16, overflow: "hidden",
-                  zIndex: 3, opacity: 0,
-                  border: "1px solid rgba(0,60,70,0.2)",
-                  boxShadow:
-                    "0 40px 100px rgba(0,60,70,0.28), 0 0 0 1px rgba(255,255,255,0.5), 0 0 140px rgba(139,242,211,0.25)",
-                  background: "#003c46",
-                }}>
-                  <Image
-                    src="/mentic-software-screenshot.png"
-                    alt="Mentic application — autonomous AI CMO dashboard"
-                    fill
-                    sizes="60vw"
-                    style={{ objectFit: "cover" }}
-                    priority={false}
-                  />
-                </div>
-              </>
-            )}
           </div>
           </section>
 
