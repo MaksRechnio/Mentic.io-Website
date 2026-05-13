@@ -83,6 +83,13 @@ video, video *, video::-webkit-media-controls, video::-webkit-media-controls * {
   cursor: auto !important;
 }
 
+/* ── Product headline: per-word / per-letter animated spans ── */
+.product-line .pw,
+.product-line .pl {
+  display: inline-block;
+  will-change: transform, opacity, filter;
+}
+
 /* ── Qurova utility class ── */
 .font-qurova {
   font-family: "Qurova DEMO", serif;

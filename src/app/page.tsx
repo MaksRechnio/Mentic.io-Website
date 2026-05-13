@@ -337,6 +337,9 @@ export default function PreviewLanding() {
 
     const ctx = gsap.context(() => {
 
+      /* ── Initial hidden state for product headline words/letters ── */
+      gsap.set(".product-line .pw, .product-line .pl", { opacity: 0 });
+
       /* ── Snap is handled natively by CSS scroll-snap-type: y proximity ── */
 
       /* ── Layer IDs inside each section (content to show/hide) ── */
@@ -399,15 +402,28 @@ export default function PreviewLanding() {
             gsap.to("#icon-teal", { opacity: 1, duration: 0.4, ease: "power2.out" });
             gsap.fromTo("#product-glow-a", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.0, ease: "power3.out" });
             gsap.fromTo("#product-glow-b", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.2, ease: "power3.out", delay: 0.1 });
-            gsap.fromTo("#product-line-1", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.1 });
-            gsap.fromTo("#product-line-2", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.25 });
-            gsap.fromTo("#product-line-3", { opacity: 0, x: -30, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, x: 0, clipPath: "inset(0 0% 0 0)", duration: 0.8, ease: "power4.out", delay: 0.4 });
+            gsap.fromTo("#product-line-1 .pw",
+              { opacity: 0, y: 28, filter: "blur(8px)" },
+              { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "power3.out", stagger: 0.07, delay: 0.1 }
+            );
+            gsap.fromTo("#product-line-2 .pl",
+              { opacity: 0, y: 36, scale: 0.7, filter: "blur(10px)" },
+              { opacity: 1, y: 0, scale: 1, filter: "blur(0px)", duration: 0.8, ease: "back.out(1.4)", stagger: 0.06, delay: 0.35 }
+            );
+            gsap.fromTo("#product-line-3 .pw",
+              { opacity: 0, y: 22, filter: "blur(6px)" },
+              { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "power3.out", stagger: 0.05, delay: 0.75 }
+            );
+            gsap.fromTo("#product-sub .pw",
+              { opacity: 0, y: 14, filter: "blur(5px)" },
+              { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power3.out", stagger: 0.04, delay: 1.05 }
+            );
             gsap.fromTo("#product-shot",
               { opacity: 0, y: 60, scale: 0.9, rotationY: -28, rotationX: 12 },
               { opacity: 1, y: 0, scale: 1, rotationY: m ? -8 : -14, rotationX: m ? 4 : 6, duration: 1.1, ease: "power4.out", delay: 0.35, transformOrigin: "50% 50%" }
             );
             setTimeout(() => sfxClick(), 300);
-            setTimeout(() => sfxClick(), 600);
+            setTimeout(() => sfxClick(), 700);
             break;
           }
 
@@ -1271,21 +1287,48 @@ export default function PreviewLanding() {
                 {/* Mobile: headline top, screenshot bottom */}
                 <h2 style={{
                   position: "absolute",
-                  top: "8%", left: "5%", right: "5%",
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: 24, fontWeight: 300,
-                  color: "#003c46", lineHeight: 1.12,
+                  top: "7%", left: "5%", right: "5%",
+                  fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
+                  fontSize: 24, fontWeight: 200,
+                  color: "#003c46", lineHeight: 1.15,
+                  letterSpacing: "-0.01em",
                   margin: 0, zIndex: 3,
                   textAlign: "center",
                 }}>
-                  <span id="product-line-1" style={{ display: "block", opacity: 0 }}>
-                    Your <span style={{ fontWeight: 700 }}>autonomous</span>
+                  <span id="product-line-1" className="product-line" style={{ display: "block" }}>
+                    <span className="pw">Your</span>{" "}
+                    <span className="pw" style={{ fontWeight: 600 }}>autonomous</span>
                   </span>
-                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 800, fontSize: 38, lineHeight: 0.98, margin: "0.05em 0" }}>
-                    AI CMO
+                  <span id="product-line-2" className="product-line" style={{ display: "block", color: "#ff6b5c", fontWeight: 800, fontSize: 44, lineHeight: 0.98, margin: "0.08em 0", letterSpacing: "-0.02em" }}>
+                    {Array.from("AI CMO").map((c, i) => (
+                      <span key={i} className="pl" style={{ display: "inline-block", whiteSpace: "pre" }}>{c}</span>
+                    ))}
                   </span>
-                  <span id="product-line-3" style={{ display: "block", opacity: 0, fontSize: 18 }}>
-                    running and optimising your ads.
+                  <span id="product-line-3" className="product-line" style={{ display: "block", fontSize: 17, fontWeight: 200, letterSpacing: "0.01em" }}>
+                    <span className="pw">running</span>{" "}
+                    <span className="pw">and</span>{" "}
+                    <span className="pw">optimising</span>{" "}
+                    <span className="pw">your</span>{" "}
+                    <span className="pw" style={{ fontWeight: 400 }}>ads.</span>
+                  </span>
+                  <span id="product-sub" className="product-line" style={{
+                    display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: 6,
+                    marginTop: "1.4em", fontSize: 13, fontWeight: 300,
+                    color: "rgba(0,60,70,0.7)", letterSpacing: "0.02em",
+                  }}>
+                    <span className="pw">Lives</span>
+                    <span className="pw">in</span>
+                    <span className="pw">your</span>
+                    <span className="pw">tools</span>
+                    <span className="pw" aria-hidden style={{ opacity: 0.5 }}>—</span>
+                    <span className="pw" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontWeight: 500, color: "#003c46" }}>
+                      <svg width={13} height={13} viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M5.042 15.165a2.528 2.528 0 1 1-2.52-2.528h2.52v2.528zm1.27 0a2.528 2.528 0 1 1 5.055 0v6.307A2.528 2.528 0 1 1 6.31 21.472v-6.307zM8.835 5.042a2.528 2.528 0 1 1 2.528-2.52v2.52H8.836zm0 1.27a2.528 2.528 0 1 1 0 5.055H2.523a2.528 2.528 0 1 1 0-5.056h6.312zm10.122 2.523a2.528 2.528 0 1 1 2.52 2.528h-2.52V8.835zm-1.27 0a2.528 2.528 0 1 1-5.055 0V2.528a2.528 2.528 0 1 1 5.055 0v6.307zm-2.527 10.122a2.528 2.528 0 1 1-2.528 2.52v-2.52h2.528zm0-1.27a2.528 2.528 0 1 1 0-5.055h6.31a2.528 2.528 0 1 1 0 5.056h-6.31z" /></svg>
+                      Slack
+                    </span>
+                    <span className="pw" style={{ display: "inline-flex", alignItems: "center", gap: 5, fontWeight: 500, color: "#003c46" }}>
+                      <svg width={13} height={13} viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.643.135-.953l11.566-4.458c.538-.196 1.006.128.832.94z" /></svg>
+                      Telegram
+                    </span>
                   </span>
                 </h2>
                 <div id="product-shot-wrap" style={{
@@ -1326,20 +1369,47 @@ export default function PreviewLanding() {
                 {/* Desktop: headline left, screenshot right at an angle */}
                 <h2 style={{
                   position: "absolute",
-                  top: "26%", left: "6%", width: "38%",
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: "clamp(32px, 3.6vw, 60px)", fontWeight: 300,
-                  color: "#003c46", lineHeight: 1.05,
+                  top: "26%", left: "6%", width: "40%",
+                  fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
+                  fontSize: "clamp(30px, 3.2vw, 56px)", fontWeight: 200,
+                  color: "#003c46", lineHeight: 1.08,
+                  letterSpacing: "-0.01em",
                   margin: 0, zIndex: 3,
                 }}>
-                  <span id="product-line-1" style={{ display: "block", opacity: 0 }}>
-                    Your <span style={{ fontWeight: 700 }}>autonomous</span>
+                  <span id="product-line-1" className="product-line" style={{ display: "block" }}>
+                    <span className="pw">Your</span>{" "}
+                    <span className="pw" style={{ fontWeight: 600 }}>autonomous</span>
                   </span>
-                  <span id="product-line-2" style={{ display: "block", opacity: 0, color: "#ff6b5c", fontWeight: 800, fontSize: "clamp(48px, 5.2vw, 88px)", lineHeight: 0.96, margin: "0.05em 0" }}>
-                    AI CMO
+                  <span id="product-line-2" className="product-line" style={{ display: "block", color: "#ff6b5c", fontWeight: 800, fontSize: "clamp(48px, 5.4vw, 96px)", lineHeight: 0.96, margin: "0.08em 0", letterSpacing: "-0.025em" }}>
+                    {Array.from("AI CMO").map((c, i) => (
+                      <span key={i} className="pl" style={{ display: "inline-block", whiteSpace: "pre" }}>{c}</span>
+                    ))}
                   </span>
-                  <span id="product-line-3" style={{ display: "block", opacity: 0, fontWeight: 400 }}>
-                    running and optimising your ads.
+                  <span id="product-line-3" className="product-line" style={{ display: "block", fontWeight: 200, fontSize: "clamp(22px, 2.2vw, 38px)", letterSpacing: "0.01em" }}>
+                    <span className="pw">running</span>{" "}
+                    <span className="pw">and</span>{" "}
+                    <span className="pw">optimising</span>{" "}
+                    <span className="pw">your</span>{" "}
+                    <span className="pw" style={{ fontWeight: 400 }}>ads.</span>
+                  </span>
+                  <span id="product-sub" className="product-line" style={{
+                    display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8,
+                    marginTop: "1.4em", fontSize: "clamp(13px, 1vw, 17px)", fontWeight: 300,
+                    color: "rgba(0,60,70,0.72)", letterSpacing: "0.02em",
+                  }}>
+                    <span className="pw">Lives</span>
+                    <span className="pw">in</span>
+                    <span className="pw">your</span>
+                    <span className="pw">tools</span>
+                    <span className="pw" aria-hidden style={{ opacity: 0.5 }}>—</span>
+                    <span className="pw" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontWeight: 500, color: "#003c46" }}>
+                      <svg width={16} height={16} viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M5.042 15.165a2.528 2.528 0 1 1-2.52-2.528h2.52v2.528zm1.27 0a2.528 2.528 0 1 1 5.055 0v6.307A2.528 2.528 0 1 1 6.31 21.472v-6.307zM8.835 5.042a2.528 2.528 0 1 1 2.528-2.52v2.52H8.836zm0 1.27a2.528 2.528 0 1 1 0 5.055H2.523a2.528 2.528 0 1 1 0-5.056h6.312zm10.122 2.523a2.528 2.528 0 1 1 2.52 2.528h-2.52V8.835zm-1.27 0a2.528 2.528 0 1 1-5.055 0V2.528a2.528 2.528 0 1 1 5.055 0v6.307zm-2.527 10.122a2.528 2.528 0 1 1-2.528 2.52v-2.52h2.528zm0-1.27a2.528 2.528 0 1 1 0-5.055h6.31a2.528 2.528 0 1 1 0 5.056h-6.31z" /></svg>
+                      Slack
+                    </span>
+                    <span className="pw" style={{ display: "inline-flex", alignItems: "center", gap: 6, fontWeight: 500, color: "#003c46" }}>
+                      <svg width={16} height={16} viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.643.135-.953l11.566-4.458c.538-.196 1.006.128.832.94z" /></svg>
+                      Telegram
+                    </span>
                   </span>
                 </h2>
                 <div id="product-shot-wrap" style={{
