@@ -419,8 +419,8 @@ export default function PreviewLanding() {
               { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.6, ease: "power3.out", stagger: 0.04, delay: 1.05 }
             );
             gsap.fromTo("#product-shot",
-              { opacity: 0, y: 60, scale: 0.9, rotationY: -28, rotationX: 12 },
-              { opacity: 1, y: 0, scale: 1, rotationY: m ? -8 : -14, rotationX: m ? 4 : 6, duration: 1.1, ease: "power4.out", delay: 0.35, transformOrigin: "50% 50%" }
+              { opacity: 0, y: 60, scale: 0.96 },
+              { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: "power4.out", delay: 0.35 }
             );
             setTimeout(() => sfxClick(), 300);
             setTimeout(() => sfxClick(), 700);
@@ -1266,7 +1266,7 @@ export default function PreviewLanding() {
 
           {/* ═══ PRODUCT SECTION ═══ */}
           <section id="section-product" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#ffe5e5" }}>
-          <div id="product-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0, perspective: "2400px" }}>
+          <div id="product-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
             {/* Ambient blobs */}
             <div id="product-glow-a" aria-hidden className="gradient-blob gradient-blob-mint" style={{
               position: "absolute", zIndex: 1, opacity: 0,
@@ -1284,10 +1284,11 @@ export default function PreviewLanding() {
             {/* Headline + screenshot stack */}
             {m ? (
               <>
-                {/* Mobile: headline top, screenshot bottom */}
+                {/* Mobile: headline top (centered), screenshot bottom */}
                 <h2 style={{
                   position: "absolute",
-                  top: "7%", left: "5%", right: "5%",
+                  top: "22%", left: "5%", right: "5%",
+                  transform: "translateY(-50%)",
                   fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
                   fontSize: 24, fontWeight: 200,
                   color: "#003c46", lineHeight: 1.15,
@@ -1333,10 +1334,9 @@ export default function PreviewLanding() {
                 </h2>
                 <div id="product-shot-wrap" style={{
                   position: "absolute",
-                  top: "55%", left: "50%", transform: "translate(-50%, -50%)",
+                  top: "72%", left: "50%", transform: "translate(-50%, -50%)",
                   width: "92vw",
                   zIndex: 3,
-                  perspective: "1800px",
                 }}>
                   <div id="product-shot" style={{
                     width: "100%",
@@ -1344,8 +1344,8 @@ export default function PreviewLanding() {
                     borderRadius: 14, overflow: "hidden",
                     opacity: 0,
                     boxShadow:
-                      "0 30px 60px -10px rgba(0,60,70,0.4), 0 12px 24px rgba(0,60,70,0.16), 0 0 80px rgba(139,242,211,0.2)",
-                    transformStyle: "preserve-3d",
+                      "0 1px 2px rgba(0,0,0,0.04), 0 8px 20px rgba(0,0,0,0.08), 0 30px 60px -10px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.04)",
+                    background: "#fff",
                     position: "relative",
                   }}>
                     <Image
@@ -1356,20 +1356,21 @@ export default function PreviewLanding() {
                       style={{ objectFit: "cover" }}
                       priority={false}
                     />
-                    {/* Subtle shading overlay to enhance the 3D feel */}
+                    {/* Crisp top highlight for the screen-glass feel */}
                     <div aria-hidden style={{
                       position: "absolute", inset: 0, pointerEvents: "none",
-                      background: "linear-gradient(115deg, rgba(0,0,0,0.16) 0%, rgba(0,0,0,0) 35%, rgba(0,0,0,0) 65%, rgba(0,0,0,0.08) 100%)",
+                      background: "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 14%)",
                     }} />
                   </div>
                 </div>
               </>
             ) : (
               <>
-                {/* Desktop: headline left, screenshot right at an angle */}
+                {/* Desktop: headline left (vertically centered), screenshot right */}
                 <h2 style={{
                   position: "absolute",
-                  top: "26%", left: "6%", width: "40%",
+                  top: "50%", left: "6%", width: "40%",
+                  transform: "translateY(-50%)",
                   fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
                   fontSize: "clamp(30px, 3.2vw, 56px)", fontWeight: 200,
                   color: "#003c46", lineHeight: 1.08,
@@ -1417,7 +1418,6 @@ export default function PreviewLanding() {
                   top: "50%", right: "5%", transform: "translateY(-50%)",
                   width: "min(48vw, 960px)",
                   zIndex: 3,
-                  perspective: "2400px",
                 }}>
                   <div id="product-shot" style={{
                     width: "100%",
@@ -1425,8 +1425,8 @@ export default function PreviewLanding() {
                     borderRadius: 18, overflow: "hidden",
                     opacity: 0,
                     boxShadow:
-                      "0 50px 100px -20px rgba(0,60,70,0.5), 0 30px 60px -10px rgba(0,60,70,0.3), 0 0 140px rgba(139,242,211,0.25)",
-                    transformStyle: "preserve-3d",
+                      "0 1px 2px rgba(0,0,0,0.04), 0 10px 28px rgba(0,0,0,0.08), 0 40px 80px -20px rgba(0,0,0,0.25), 0 80px 140px -40px rgba(0,0,0,0.22), 0 0 0 1px rgba(0,0,0,0.04)",
+                    background: "#fff",
                     position: "relative",
                   }}>
                     <Image
@@ -1437,10 +1437,10 @@ export default function PreviewLanding() {
                       style={{ objectFit: "cover" }}
                       priority={false}
                     />
-                    {/* Subtle shading overlay to enhance the 3D feel */}
+                    {/* Crisp top highlight for the screen-glass feel */}
                     <div aria-hidden style={{
                       position: "absolute", inset: 0, pointerEvents: "none",
-                      background: "linear-gradient(115deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.1) 100%)",
+                      background: "linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 12%)",
                     }} />
                   </div>
                 </div>
