@@ -1064,36 +1064,6 @@ export default function PreviewLanding() {
           }} />
         </div>
       )}
-      {/* ── Announcement marquee — fixed top, continuously scrolling ── */}
-      <div aria-label="Announcements" style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 150,
-        background: "#003c46", color: "#f2f2f0",
-        overflow: "hidden",
-        borderBottom: "1px solid rgba(139,242,211,0.18)",
-      }}>
-        <div className="marquee-track" aria-hidden="true" style={{
-          fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-          fontSize: m ? 10 : 11, fontWeight: 700,
-          letterSpacing: "0.28em", textTransform: "uppercase",
-          padding: m ? "7px 0" : "8px 0",
-        }}>
-          {Array.from({ length: 2 }).map((_, copy) => (
-            <div key={copy} style={{ display: "flex", alignItems: "center", gap: m ? 24 : 38, paddingRight: m ? 24 : 38, whiteSpace: "nowrap" }}>
-              <span>Launching 14 May 2026</span>
-              <span style={{ color: "#8bf2d3", fontSize: 10 }} aria-hidden>◆</span>
-              <span>The Autonomous AI Advertising Agent</span>
-              <span style={{ color: "#ff6b5c", fontSize: 10 }} aria-hidden>◆</span>
-              <span>Alpha — onboarding pilot users</span>
-              <span style={{ color: "#8bf2d3", fontSize: 10 }} aria-hidden>◆</span>
-              <span>Built for founders, not media buyers</span>
-              <span style={{ color: "#ff6b5c", fontSize: 10 }} aria-hidden>◆</span>
-              <span>Sign up at mentic.io</span>
-              <span style={{ color: "#8bf2d3", fontSize: 10 }} aria-hidden>◆</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* ── Mobile: extra background layer OUTSIDE viewport to cover iOS safe areas ── */}
       {m && <div ref={mobileBgRef} style={{ position: "fixed", inset: "-100vh -100vw", zIndex: -1, backgroundColor: "#ffe5e5", pointerEvents: "none" }} />}
 
@@ -1963,6 +1933,66 @@ export default function PreviewLanding() {
             </a>
           </div>
           </section>
+
+          {/* ═══ ANNOUNCEMENT MARQUEE — thick stripe just above the footer ═══ */}
+          <div aria-label="Announcements" style={{
+            position: "relative",
+            width: "100%",
+            background: "#f2f2f0",
+            color: "#003c46",
+            overflow: "hidden",
+            padding: m ? "26px 0" : "38px 0",
+            borderTop: "1px solid rgba(0,60,70,0.08)",
+            borderBottom: "1px solid rgba(0,60,70,0.08)",
+            zIndex: 5,
+          }}>
+            <div className="marquee-track" aria-hidden="true" style={{
+              fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
+              fontSize: m ? 26 : 48,
+              lineHeight: 1,
+              letterSpacing: "-0.005em",
+              textTransform: "uppercase",
+            }}>
+              {Array.from({ length: 2 }).map((_, copy) => (
+                <div key={copy} style={{ display: "flex", alignItems: "center", gap: m ? 28 : 56, paddingRight: m ? 28 : 56, whiteSpace: "nowrap" }}>
+                  <span>
+                    <span style={{ fontWeight: 200 }}>Launching </span>
+                    <span style={{ fontWeight: 800, color: "#ff6b5c" }}>14 May 2026</span>
+                  </span>
+                  <span style={{ color: "#8bf2d3", fontWeight: 800 }} aria-hidden>✦</span>
+                  <span>
+                    <span style={{ fontWeight: 300 }}>The </span>
+                    <span style={{ fontWeight: 800 }}>autonomous </span>
+                    <span style={{ fontWeight: 800, color: "#ff6b5c" }}>AI</span>
+                    <span style={{ fontWeight: 300 }}> advertising </span>
+                    <span style={{ fontWeight: 500 }}>agent</span>
+                  </span>
+                  <span style={{ color: "#ff6b5c", fontWeight: 800 }} aria-hidden>✦</span>
+                  <span>
+                    <span style={{ fontWeight: 800, color: "#003c46" }}>Alpha</span>
+                    <span style={{ fontWeight: 200 }}> — onboarding </span>
+                    <span style={{ fontWeight: 600 }}>pilot users</span>
+                  </span>
+                  <span style={{ color: "#8bf2d3", fontWeight: 800 }} aria-hidden>✦</span>
+                  <span>
+                    <span style={{ fontWeight: 200 }}>Built for </span>
+                    <span style={{ fontWeight: 800 }}>founders</span>
+                    <span style={{ fontWeight: 200, fontStyle: "italic", letterSpacing: "0" }}> not </span>
+                    <span style={{ fontWeight: 300, textDecoration: "line-through", textDecorationColor: "#ff6b5c", textDecorationThickness: m ? 2 : 3 }}>media buyers</span>
+                  </span>
+                  <span style={{ color: "#ff6b5c", fontWeight: 800 }} aria-hidden>✦</span>
+                  <span>
+                    <span style={{ fontWeight: 800 }}>50%</span>
+                    <span style={{ fontWeight: 200 }}> of every </span>
+                    <span style={{ fontWeight: 600, color: "#ff6b5c" }}>ad dollar</span>
+                    <span style={{ fontWeight: 200 }}> isn&apos;t going to </span>
+                    <span style={{ fontWeight: 800 }}>ads</span>
+                  </span>
+                  <span style={{ color: "#8bf2d3", fontWeight: 800 }} aria-hidden>✦</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {/* ═══ FOOTER ═══ */}
           <footer id="site-footer" style={{
