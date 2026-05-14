@@ -359,7 +359,7 @@ export default function PreviewLanding() {
       const bgColors: Record<string, string> = {
         "section-hero": "#ffe5e5",
         "section-video": "#ffe5e5",
-        "section-product": "#ffe5e5",
+        "section-product": "#f2f2f0",
         "section-pain": "#ffe5e5",
         "section-calc": "#ff6b5c",
         "section-sol": "#ffffff",
@@ -1265,7 +1265,7 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ PRODUCT SECTION ═══ */}
-          <section id="section-product" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#ffe5e5" }}>
+          <section id="section-product" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#f2f2f0" }}>
           <div id="product-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
             {/* Ambient blobs */}
             <div id="product-glow-b" aria-hidden className="gradient-blob gradient-blob-coral" style={{
