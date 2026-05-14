@@ -108,16 +108,20 @@ function useScrollProgress(ref: React.RefObject<HTMLElement | null>) {
 /* ─────────────────────────────────────────────────────────────
    PinnedScene — sticky canvas that stays in view while you scroll
    through the outer container; renders content based on progress.
+   Includes a "keep scrolling" indicator that fades out near the end.
    ─────────────────────────────────────────────────────────── */
 function PinnedScene({
   scrollHeight = "260vh",
   children,
+  hideHint = false,
 }: {
   scrollHeight?: string;
   children: (progress: number) => React.ReactNode;
+  hideHint?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const progress = useScrollProgress(ref);
+  const hintOpacity = 1 - easeOutCubic(range(progress, 0.72, 0.95));
   return (
     <div ref={ref} style={{ height: scrollHeight, position: "relative" }}>
       <div
@@ -132,10 +136,48 @@ function PinnedScene({
           justifyContent: "center",
         }}
       >
-        <div style={{ width: "100%", maxWidth: 1400, padding: "clamp(80px, 12vh, 140px) clamp(20px, 6vw, 96px) clamp(40px, 8vh, 80px)" }}>
+        <div style={{ width: "100%", maxWidth: 1400, padding: "clamp(80px, 12vh, 140px) clamp(20px, 6vw, 96px) clamp(60px, 10vh, 100px)" }}>
           {children(progress)}
         </div>
+        {!hideHint && <ScrollHint opacity={hintOpacity} />}
       </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ScrollHint — small "keep scrolling" indicator at scene bottom
+   ─────────────────────────────────────────────────────────── */
+function ScrollHint({ label = "Keep scrolling", opacity = 1 }: { label?: string; opacity?: number }) {
+  return (
+    <div style={{
+      position: "absolute",
+      bottom: "clamp(20px, 4vh, 36px)",
+      left: "50%",
+      transform: "translateX(-50%)",
+      display: "inline-flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: 8,
+      color: TEAL_MUTED,
+      opacity: clamp(opacity, 0, 1),
+      transition: "opacity 0.25s linear",
+      pointerEvents: "none",
+      zIndex: 2,
+    }}>
+      <span style={{
+        fontSize: 10, fontWeight: 700, letterSpacing: "0.3em",
+        textTransform: "uppercase", whiteSpace: "nowrap",
+      }}>
+        {label}
+      </span>
+      <svg width={16} height={24} viewBox="0 0 16 24" fill="none" aria-hidden>
+        <rect x="1" y="1" width="14" height="22" rx="7" stroke="currentColor" strokeWidth="1.4" />
+        <rect x="7" y="5" width="2" height="5" rx="1" fill="currentColor">
+          <animate attributeName="y" values="5;11;5" dur="1.6s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="1;0;1" dur="1.6s" repeatCount="indefinite" />
+        </rect>
+      </svg>
     </div>
   );
 }
@@ -287,21 +329,27 @@ export default function ProductDeepDive() {
 function HeroScene() {
   const ref = useRef<HTMLDivElement>(null);
   const p = useScrollProgress(ref);
+  /* Fade the hero OUT as we scroll past it instead of in from invisible —
+     so it's visible at page load and only dims as the user moves on. */
+  const fadeOut = 1 - easeOutCubic(range(p, 0.4, 0.9));
   return (
     <div ref={ref} style={{ height: "130vh", position: "relative" }}>
       <div style={{
         position: "sticky", top: 0, height: "100dvh",
         display: "flex", alignItems: "center", justifyContent: "center",
         textAlign: "center", padding: "clamp(120px, 18vh, 200px) clamp(20px, 6vw, 96px) 0",
+        opacity: 0.2 + 0.8 * fadeOut,
+        transform: `translateY(${(1 - fadeOut) * -32}px)`,
+        transition: "opacity 0.2s linear",
       }}>
         <div>
-          <div style={{
+          <div className="intro-blur-in" style={{
             display: "inline-flex", alignItems: "center", gap: 10,
             padding: "6px 14px", borderRadius: 999,
             background: "rgba(0,60,70,0.06)",
             fontSize: 11, fontWeight: 700, letterSpacing: "0.28em",
             textTransform: "uppercase", color: TEAL,
-            ...fadeBlur(p, 0, 0.15),
+            animationDelay: "0.05s",
           }}>
             ◆ The product
           </div>
@@ -314,52 +362,38 @@ function HeroScene() {
             color: TEAL,
             maxWidth: 1200,
           }}>
-            <span style={{ display: "block", fontWeight: 200, ...fadeBlur(p, 0.05, 0.25) }}>Give Mentic</span>
-            <span style={{ display: "block", fontWeight: 800, color: CORAL, ...fadeBlur(p, 0.12, 0.32) }}>your URL.</span>
-            <span style={{ display: "block", fontWeight: 200, ...fadeBlur(p, 0.2, 0.4) }}>
+            <span className="intro-blur-in" style={{ display: "block", fontWeight: 200, animationDelay: "0.15s" }}>Give Mentic</span>
+            <span className="intro-blur-in" style={{ display: "block", fontWeight: 800, color: CORAL, animationDelay: "0.3s" }}>your URL.</span>
+            <span className="intro-blur-in" style={{ display: "block", fontWeight: 200, animationDelay: "0.45s" }}>
               Get back an
               <span style={{ fontWeight: 800, color: TEAL }}> agency</span>.
             </span>
           </h1>
-          <p style={{
+          <p className="intro-fade-up" style={{
             margin: "36px auto 0",
             maxWidth: 640,
             fontSize: "clamp(15px, 1.4vw, 20px)",
             fontWeight: 300,
             lineHeight: 1.6,
             color: TEAL_INK,
-            ...fadeBlur(p, 0.3, 0.5, 18, 10),
+            animationDelay: "0.65s",
           }}>
             21 specialised agents read your business, design the strategy, launch campaigns on Meta
             and keep optimising — humans in the loop where it counts.
           </p>
-          <div style={{
+          <div className="intro-fade-up" style={{
             marginTop: 44,
             display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center",
-            ...fadeUp(p, 0.4, 0.58, 28),
+            animationDelay: "0.8s",
           }}>
             <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={ctaTeal}>Book a demo</a>
             <a href="/#signup" style={ctaMint}>Sign up</a>
           </div>
-          <div style={{
-            marginTop: 64,
-            display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 10,
-            color: TEAL_MUTED,
-            ...fadeUp(p, 0.5, 0.7, 16),
-          }}>
-            <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.3em", textTransform: "uppercase" }}>
-              Scroll for the deep dive
-            </span>
-            <svg width={18} height={28} viewBox="0 0 18 28" fill="none" aria-hidden>
-              <rect x="1" y="1" width="16" height="26" rx="8" stroke="currentColor" strokeWidth="1.5" />
-              <rect x="8" y="6" width="2" height="6" rx="1" fill="currentColor">
-                <animate attributeName="y" values="6;12;6" dur="1.6s" repeatCount="indefinite" />
-                <animate attributeName="opacity" values="1;0;1" dur="1.6s" repeatCount="indefinite" />
-              </rect>
-            </svg>
-          </div>
         </div>
       </div>
+
+      {/* Persistent scroll indicator at the bottom of the hero */}
+      <ScrollHint label="Scroll for the deep dive" opacity={fadeOut} />
     </div>
   );
 }
