@@ -1216,7 +1216,7 @@ export default function PreviewLanding() {
               onMouseLeave={(e) => { e.currentTarget.style.color = item.color; e.currentTarget.style.transform = "translateX(0)"; }}
               style={{
                 fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-                fontSize: m ? 36 : 56, lineHeight: 1,
+                fontSize: "clamp(32px, 5.6vw, 60px)", lineHeight: 1,
                 fontWeight: item.weight, letterSpacing: "-0.01em",
                 color: item.color,
                 textDecoration: "none", textTransform: "uppercase",
@@ -1247,14 +1247,28 @@ export default function PreviewLanding() {
           <a
             href="https://app.mentic.io/login"
             onClick={() => sfxPress()}
-            onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.color = "#003c46"; e.currentTarget.style.letterSpacing = "0.24em"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(0,60,70,0.6)"; e.currentTarget.style.letterSpacing = "0.18em"; }}
+            onMouseEnter={(e) => {
+              sfxHover();
+              e.currentTarget.style.background = "#003c46";
+              e.currentTarget.style.color = "#f2f2f0";
+              e.currentTarget.style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "#003c46";
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
             style={{
-              fontSize: 13, fontWeight: 700, letterSpacing: "0.18em",
-              textTransform: "uppercase", color: "rgba(0,60,70,0.6)",
-              textDecoration: "none", padding: "6px 0",
-              transition: "color 0.25s ease, letter-spacing 0.3s ease",
-              width: "fit-content",
+              background: "transparent",
+              color: "#003c46",
+              border: "1.5px solid #003c46",
+              borderRadius: 999,
+              padding: "15px 28px",
+              fontSize: 13, fontWeight: 700,
+              letterSpacing: "0.18em", textTransform: "uppercase",
+              textDecoration: "none", textAlign: "center",
+              cursor: "pointer", fontFamily: "inherit",
+              transition: "background 0.25s ease, color 0.25s ease, transform 0.25s ease",
             }}
           >Log in</a>
           <button
@@ -2213,20 +2227,20 @@ export default function PreviewLanding() {
             background: "#f2f2f0",
             color: "#003c46",
             overflow: "hidden",
-            padding: m ? "26px 0" : "38px 0",
+            padding: "clamp(22px, 3.5vw, 38px) 0",
             borderTop: "1px solid rgba(0,60,70,0.08)",
             borderBottom: "1px solid rgba(0,60,70,0.08)",
             zIndex: 5,
           }}>
             <div className="marquee-track" aria-hidden="true" style={{
               fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-              fontSize: m ? 26 : 48,
+              fontSize: "clamp(22px, 4.2vw, 48px)",
               lineHeight: 1,
               letterSpacing: "-0.005em",
               textTransform: "uppercase",
             }}>
               {Array.from({ length: 2 }).map((_, copy) => (
-                <div key={copy} style={{ display: "flex", alignItems: "center", gap: m ? 28 : 56, paddingRight: m ? 28 : 56, whiteSpace: "nowrap" }}>
+                <div key={copy} style={{ display: "flex", alignItems: "center", gap: "clamp(22px, 3.5vw, 56px)", paddingRight: "clamp(22px, 3.5vw, 56px)", whiteSpace: "nowrap" }}>
                   <span>
                     <span style={{ fontWeight: 200 }}>Launching </span>
                     <span style={{ fontWeight: 800, color: "#ff6b5c" }}>18 May 2026</span>
@@ -2273,7 +2287,7 @@ export default function PreviewLanding() {
             background: "#003c46",
             color: "#f2f2f0",
             fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-            padding: m ? "56px 24px 32px" : "88px 8% 40px",
+            padding: "clamp(48px, 6vw, 88px) clamp(24px, 8vw, 96px) clamp(28px, 3vw, 40px)",
             zIndex: 5,
           }}>
             <div style={{
@@ -2288,11 +2302,11 @@ export default function PreviewLanding() {
               {/* Left column — wordmark + tagline + email */}
               <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
                 <div className="font-qurova" style={{
-                  fontSize: m ? 42 : 56, lineHeight: 1, color: "#8bf2d3",
+                  fontSize: "clamp(38px, 5vw, 60px)", lineHeight: 1, color: "#8bf2d3",
                 }}>
                   mentic
                 </div>
-                <div style={{ fontSize: m ? 14 : 15, fontWeight: 300, color: "rgba(242,242,240,0.7)", letterSpacing: "0.01em" }}>
+                <div style={{ fontSize: "clamp(13px, 1.1vw, 16px)", fontWeight: 300, color: "rgba(242,242,240,0.7)", letterSpacing: "0.01em" }}>
                   The Autonomous AI Advertising Agent.
                 </div>
                 <button
