@@ -357,10 +357,10 @@ export default function PreviewLanding() {
 
       /* ── Background colors per section ── */
       const bgColors: Record<string, string> = {
-        "section-hero": "#ffe5e5",
-        "section-video": "#ffe5e5",
+        "section-hero": "#f2f2f0",
+        "section-video": "#f2f2f0",
         "section-product": "#f2f2f0",
-        "section-pain": "#ffe5e5",
+        "section-pain": "#f2f2f0",
         "section-calc": "#ff6b5c",
         "section-sol": "#ffffff",
         "section-no": "#ffffff",
@@ -1454,7 +1454,7 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ VIDEO SECTION ═══ */}
-          <section id="section-video" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#ffe5e5" }}>
+          <section id="section-video" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#f2f2f0" }}>
           <div id="video-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 1 }}>
             {/* Video — scaled up by scroll progress */}
             <div id="video-frame" style={{
@@ -1486,9 +1486,10 @@ export default function PreviewLanding() {
           <div id="pain-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
             <div id="pain-blob" className="gradient-blob gradient-blob-coral" style={{
               position: "absolute",
-              width: m ? MW(304) : W(836), height: m ? MH(334) : H(544),
-              left: m ? MX(45) : X(328), top: m ? MY(259) : Y(208),
+              width: m ? MW(440) : W(1180), height: m ? MH(480) : H(760),
+              left: m ? MX(-25) : X(160), top: m ? MY(185) : Y(110),
               transform: "rotate(-90deg)",
+              filter: "blur(90px)",
             }} />
             <div id="pain-text-1" style={{
               position: "absolute",
