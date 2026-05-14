@@ -164,20 +164,20 @@ export default function TeamPage() {
                   </div>
                 )}
 
-                {/* Orange mentic icon — top-right */}
+                {/* Mint mentic icon — top-right */}
                 <div style={{
                   position: "absolute",
-                  top: "clamp(12px, 1.8vw, 20px)",
-                  right: "clamp(12px, 1.8vw, 20px)",
-                  width: "clamp(36px, 4.5vw, 56px)",
-                  height: "clamp(36px, 4.5vw, 56px)",
+                  top: "clamp(10px, 1.4vw, 16px)",
+                  right: "clamp(10px, 1.4vw, 16px)",
+                  width: "clamp(22px, 2.6vw, 34px)",
+                  height: "clamp(22px, 2.6vw, 34px)",
                   filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.25))",
                 }}>
                   <Image
-                    src="/images/mentic-icon-orange.png"
+                    src="/images/mentic-icon-mint.png"
                     alt=""
                     fill
-                    sizes="56px"
+                    sizes="34px"
                     style={{ objectFit: "contain" }}
                   />
                 </div>
