@@ -1268,16 +1268,16 @@ export default function PreviewLanding() {
           <section id="section-product" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#ffe5e5" }}>
           <div id="product-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
             {/* Ambient blobs */}
+            <div id="product-glow-b" aria-hidden className="gradient-blob gradient-blob-coral" style={{
+              position: "absolute", zIndex: 1, opacity: 0,
+              width: m ? "70vw" : "45vw", height: m ? "70vw" : "45vw",
+              top: m ? "-25%" : "-15%", left: m ? "-25%" : "-10%",
+              pointerEvents: "none",
+            }} />
             <div id="product-glow-a" aria-hidden className="gradient-blob gradient-blob-mint" style={{
               position: "absolute", zIndex: 1, opacity: 0,
               width: m ? "85vw" : "55vw", height: m ? "85vw" : "55vw",
-              top: "20%", right: m ? "-25%" : "-10%",
-              pointerEvents: "none",
-            }} />
-            <div id="product-glow-b" aria-hidden className="gradient-blob gradient-blob-coral" style={{
-              position: "absolute", zIndex: 1, opacity: 0,
-              width: m ? "70vw" : "40vw", height: m ? "70vw" : "40vw",
-              bottom: "-10%", left: m ? "-20%" : "-5%",
+              bottom: m ? "-30%" : "-15%", right: m ? "-25%" : "-10%",
               pointerEvents: "none",
             }} />
 
