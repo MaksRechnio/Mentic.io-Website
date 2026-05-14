@@ -1064,6 +1064,36 @@ export default function PreviewLanding() {
           }} />
         </div>
       )}
+      {/* ── Announcement marquee — fixed top, continuously scrolling ── */}
+      <div aria-label="Announcements" style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 150,
+        background: "#003c46", color: "#f2f2f0",
+        overflow: "hidden",
+        borderBottom: "1px solid rgba(139,242,211,0.18)",
+      }}>
+        <div className="marquee-track" aria-hidden="true" style={{
+          fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
+          fontSize: m ? 10 : 11, fontWeight: 700,
+          letterSpacing: "0.28em", textTransform: "uppercase",
+          padding: m ? "7px 0" : "8px 0",
+        }}>
+          {Array.from({ length: 2 }).map((_, copy) => (
+            <div key={copy} style={{ display: "flex", alignItems: "center", gap: m ? 24 : 38, paddingRight: m ? 24 : 38, whiteSpace: "nowrap" }}>
+              <span>Launching 14 May 2026</span>
+              <span style={{ color: "#8bf2d3", fontSize: 10 }} aria-hidden>◆</span>
+              <span>The Autonomous AI Advertising Agent</span>
+              <span style={{ color: "#ff6b5c", fontSize: 10 }} aria-hidden>◆</span>
+              <span>Alpha — onboarding pilot users</span>
+              <span style={{ color: "#8bf2d3", fontSize: 10 }} aria-hidden>◆</span>
+              <span>Built for founders, not media buyers</span>
+              <span style={{ color: "#ff6b5c", fontSize: 10 }} aria-hidden>◆</span>
+              <span>Sign up at mentic.io</span>
+              <span style={{ color: "#8bf2d3", fontSize: 10 }} aria-hidden>◆</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* ── Mobile: extra background layer OUTSIDE viewport to cover iOS safe areas ── */}
       {m && <div ref={mobileBgRef} style={{ position: "fixed", inset: "-100vh -100vw", zIndex: -1, backgroundColor: "#ffe5e5", pointerEvents: "none" }} />}
 
