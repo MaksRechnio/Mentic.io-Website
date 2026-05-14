@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const NAV_ITEMS: Array<{ label: string; href: string; weight: number; color: string }> = [
   { label: "PRODUCT", href: "/product", weight: 800, color: "#003c46" },
@@ -30,21 +31,30 @@ export default function SiteMenu() {
 
   return (
     <>
-      {/* Top-left wordmark — doubles as a home link */}
+      {/* Top-left brand icon — doubles as a home link */}
       <Link href="/" aria-label="Mentic — back to home" style={{
         position: "fixed",
         top: "clamp(14px, 2vw, 22px)",
         left: "clamp(16px, 3vw, 28px)",
         zIndex: 160,
-        display: "inline-flex", alignItems: "center", gap: 10,
-        color: "#003c46", textDecoration: "none",
-      }}>
-        <span className="font-qurova" style={{
-          fontSize: "clamp(24px, 2.8vw, 32px)",
-          lineHeight: 1, color: "#003c46",
-        }}>
-          mentic
-        </span>
+        display: "inline-flex", alignItems: "center",
+        textDecoration: "none",
+        transition: "transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
+      }}
+      onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.08)"; }}
+      onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}>
+        <Image
+          src="/images/mentic-icon-teal.png"
+          alt="Mentic"
+          width={48}
+          height={48}
+          priority
+          style={{
+            width: "clamp(40px, 4.4vw, 52px)",
+            height: "auto",
+            filter: "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.18))",
+          }}
+        />
       </Link>
 
       {/* Hamburger */}

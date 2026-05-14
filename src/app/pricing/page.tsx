@@ -67,17 +67,17 @@ export default function PricingPage() {
       }}>
         <article style={{
           position: "relative",
-          width: "100%", maxWidth: 1080,
+          width: "100%", maxWidth: 1180,
           background: "#ffffff",
-          borderRadius: 24,
-          padding: "clamp(24px, 3.6vw, 48px)",
+          borderRadius: 28,
+          padding: "clamp(32px, 5vw, 72px)",
           boxShadow:
             "0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(0,60,70,0.08), 0 40px 80px -20px rgba(0,60,70,0.18), 0 0 0 1px rgba(0,60,70,0.04)",
         }}>
           <div style={{
             display: "grid",
             gridTemplateColumns: "minmax(0, 5fr) minmax(0, 6fr)",
-            gap: "clamp(28px, 4vw, 56px)",
+            gap: "clamp(40px, 6vw, 88px)",
             alignItems: "start",
           }} className="pricing-grid">
             {/* Left column — plan summary + price + CTAs */}
@@ -94,7 +94,7 @@ export default function PricingPage() {
               </div>
 
               <h1 style={{
-                margin: "18px 0 6px",
+                margin: "22px 0 10px",
                 fontSize: "clamp(36px, 4.4vw, 60px)",
                 fontWeight: 800,
                 letterSpacing: "-0.015em",
@@ -108,14 +108,14 @@ export default function PricingPage() {
                 fontSize: "clamp(14px, 1.15vw, 16px)",
                 fontWeight: 300,
                 color: "rgba(0,60,70,0.7)",
-                lineHeight: 1.5,
-                maxWidth: 420,
+                lineHeight: 1.6,
+                maxWidth: 440,
               }}>
                 The autonomous agent, supervised end-to-end by a real ad agency. One plan, one price,
                 no fine print.
               </p>
 
-              <div style={{ display: "flex", alignItems: "baseline", gap: 8, margin: "24px 0 8px", flexWrap: "wrap" }}>
+              <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "32px 0 10px", flexWrap: "wrap" }}>
                 <span style={{
                   fontSize: "clamp(56px, 7vw, 96px)",
                   fontWeight: 800,
@@ -136,7 +136,7 @@ export default function PricingPage() {
                 $0 for every agency service on top.
               </div>
 
-              <div style={{ display: "flex", gap: 10, marginTop: 28, flexWrap: "wrap" }}>
+              <div style={{ display: "flex", gap: 12, marginTop: 36, flexWrap: "wrap" }}>
                 <a
                   href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
                   target="_blank" rel="noopener noreferrer"
@@ -172,23 +172,23 @@ export default function PricingPage() {
               <div style={{
                 fontSize: 11, fontWeight: 700, letterSpacing: "0.3em",
                 color: "rgba(0,60,70,0.55)", textTransform: "uppercase",
-                marginBottom: 14,
+                marginBottom: 18,
               }}>
                 What you get
               </div>
               <ul style={{
                 margin: 0, padding: 0, listStyle: "none",
-                display: "flex", flexDirection: "column", gap: 12,
+                display: "flex", flexDirection: "column", gap: 18,
                 fontSize: "clamp(14px, 1.05vw, 16px)",
-                fontWeight: 400, lineHeight: 1.5,
+                fontWeight: 400, lineHeight: 1.6,
                 color: "#003c46",
               }}>
                 {BENEFITS.map((item) => (
-                  <li key={item.bold} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                  <li key={item.bold} style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
                     <span aria-hidden style={{
                       flexShrink: 0,
                       display: "inline-flex", alignItems: "center", justifyContent: "center",
-                      width: 22, height: 22, borderRadius: 999,
+                      width: 24, height: 24, borderRadius: 999,
                       background: "#e3fbf2", color: "#003c46",
                       marginTop: 1,
                     }}>
@@ -205,10 +205,10 @@ export default function PricingPage() {
               </ul>
 
               <div style={{
-                marginTop: 20, padding: "12px 14px",
-                borderRadius: 14,
+                marginTop: 28, padding: "18px 20px",
+                borderRadius: 16,
                 background: "#f2f2f0",
-                fontSize: 12.5, fontWeight: 400, lineHeight: 1.5,
+                fontSize: 13, fontWeight: 400, lineHeight: 1.6,
                 color: "rgba(0,60,70,0.72)",
               }}>
                 <strong style={{ fontWeight: 700, color: "#003c46" }}>Why so much agency support?</strong>{" "}
