@@ -1207,19 +1207,22 @@ export default function PreviewLanding() {
             { label: "NEWS", weight: 700, color: "#003c46" },
             { label: "TEAM", weight: 200, color: "#003c46" },
             { label: "CAREERS", weight: 600, color: "#003c46" },
-          ].map((item, i) => (
+          ].map((item, i) => {
+            const arrowColor = item.color === "#ff6b5c" ? "#003c46" : "#ff6b5c";
+            return (
             <a
               key={item.label}
               href={`/${item.label.toLowerCase()}`}
+              className="menu-nav-link"
               onClick={() => sfxPress()}
-              onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.color = "#ff6b5c"; e.currentTarget.style.transform = "translateX(8px)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = item.color; e.currentTarget.style.transform = "translateX(0)"; }}
+              onMouseEnter={() => sfxHover()}
               style={{
                 fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
                 fontSize: "clamp(32px, 5.6vw, 60px)", lineHeight: 1,
                 fontWeight: item.weight, letterSpacing: "-0.01em",
                 color: item.color,
                 textDecoration: "none", textTransform: "uppercase",
+                display: "inline-flex", alignItems: "center",
                 opacity: menuOpen ? 1 : 0,
                 transform: menuOpen ? "translateX(0)" : "translateX(48px)",
                 filter: menuOpen ? "blur(0px)" : "blur(8px)",
@@ -1231,9 +1234,11 @@ export default function PreviewLanding() {
                 cursor: "pointer",
               }}
             >
-              {item.label}
+              <span className="menu-nav-arrow" aria-hidden style={{ color: arrowColor }}>→</span>
+              <span className="menu-nav-label">{item.label}</span>
             </a>
-          ))}
+            );
+          })}
         </nav>
 
         {/* Bottom CTAs */}

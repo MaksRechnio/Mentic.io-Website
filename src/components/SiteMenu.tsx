@@ -163,33 +163,37 @@ export default function SiteMenu() {
 
         {/* Nav items */}
         <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: "clamp(14px, 1.8vw, 22px)", position: "relative", zIndex: 1 }}>
-          {NAV_ITEMS.map((item, i) => (
-            <Link
-              key={item.label}
-              href={item.href}
-              onClick={() => setOpen(false)}
-              onMouseEnter={(e) => { e.currentTarget.style.color = "#ff6b5c"; e.currentTarget.style.transform = "translateX(8px)"; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = item.color; e.currentTarget.style.transform = "translateX(0)"; }}
-              style={{
-                fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-                fontSize: "clamp(32px, 5.6vw, 60px)", lineHeight: 1,
-                fontWeight: item.weight, letterSpacing: "-0.01em",
-                color: item.color,
-                textDecoration: "none", textTransform: "uppercase",
-                opacity: open ? 1 : 0,
-                transform: open ? "translateX(0)" : "translateX(48px)",
-                filter: open ? "blur(0px)" : "blur(8px)",
-                transitionProperty: "opacity, transform, filter, color",
-                transitionDuration: "0.7s, 0.75s, 0.6s, 0.25s",
-                transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
-                transitionDelay: `${0.22 + i * 0.07}s, ${0.22 + i * 0.07}s, ${0.22 + i * 0.07}s, 0s`,
-                width: "fit-content",
-                cursor: "pointer",
-              }}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV_ITEMS.map((item, i) => {
+            const arrowColor = item.color === "#ff6b5c" ? "#003c46" : "#ff6b5c";
+            return (
+              <Link
+                key={item.label}
+                href={item.href}
+                className="menu-nav-link"
+                onClick={() => setOpen(false)}
+                style={{
+                  fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
+                  fontSize: "clamp(32px, 5.6vw, 60px)", lineHeight: 1,
+                  fontWeight: item.weight, letterSpacing: "-0.01em",
+                  color: item.color,
+                  textDecoration: "none", textTransform: "uppercase",
+                  display: "inline-flex", alignItems: "center",
+                  opacity: open ? 1 : 0,
+                  transform: open ? "translateX(0)" : "translateX(48px)",
+                  filter: open ? "blur(0px)" : "blur(8px)",
+                  transitionProperty: "opacity, transform, filter, color",
+                  transitionDuration: "0.7s, 0.75s, 0.6s, 0.25s",
+                  transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                  transitionDelay: `${0.22 + i * 0.07}s, ${0.22 + i * 0.07}s, ${0.22 + i * 0.07}s, 0s`,
+                  width: "fit-content",
+                  cursor: "pointer",
+                }}
+              >
+                <span className="menu-nav-arrow" aria-hidden style={{ color: arrowColor }}>→</span>
+                <span className="menu-nav-label">{item.label}</span>
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Bottom CTAs */}

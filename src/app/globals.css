@@ -537,6 +537,41 @@ video, video *, video::-webkit-media-controls, video::-webkit-media-controls * {
   animation: line-draw 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* ── Side-menu nav items: arrow-reveal hover ── */
+.menu-nav-link {
+  position: relative;
+  white-space: nowrap;
+}
+.menu-nav-arrow {
+  display: inline-block;
+  width: 0;
+  margin-right: 0;
+  opacity: 0;
+  transform: translateX(-14px);
+  transition:
+    width 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    margin-right 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.35s ease,
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  overflow: hidden;
+  vertical-align: -0.04em;
+}
+.menu-nav-link:hover .menu-nav-arrow {
+  width: 0.85em;
+  margin-right: 0.18em;
+  opacity: 1;
+  transform: translateX(0);
+}
+.menu-nav-label {
+  display: inline-block;
+  transition: letter-spacing 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              color 0.3s ease;
+}
+.menu-nav-link:hover .menu-nav-label {
+  letter-spacing: -0.025em;
+}
+
 /* ── Team-card social pills: hover-fill teal ── */
 .team-social:hover {
   background: #003c46 !important;
