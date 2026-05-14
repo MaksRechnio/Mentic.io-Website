@@ -400,8 +400,6 @@ export default function PreviewLanding() {
 
           case "section-product": {
             gsap.to("#icon-teal", { opacity: 1, duration: 0.4, ease: "power2.out" });
-            gsap.fromTo("#product-glow-a", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.0, ease: "power3.out" });
-            gsap.fromTo("#product-glow-b", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 1.2, ease: "power3.out", delay: 0.1 });
             gsap.fromTo("#product-line-1 .pw",
               { opacity: 0, y: 28, filter: "blur(8px)" },
               { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9, ease: "power3.out", stagger: 0.07, delay: 0.1 }
@@ -429,7 +427,6 @@ export default function PreviewLanding() {
 
           case "section-pain":
             gsap.to(["#glass-card", "#icon-teal"], { opacity: 1, duration: 0.5, ease: "power2.out" });
-            gsap.fromTo("#pain-blob", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.8, ease: "power3.out" });
             gsap.fromTo("#pain-text-1", { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out", delay: 0.1 });
             gsap.fromTo("#pain-text-2", { opacity: 0, clipPath: "inset(0 100% 0 0)" }, { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.7, ease: "power4.out", delay: 0.25 });
             gsap.fromTo("#pain-text-3", { opacity: 0, clipPath: "inset(0 0 100% 0)" }, { opacity: 1, clipPath: "inset(0 0 0% 0)", duration: 0.7, ease: "power4.out", delay: 0.4 });
@@ -536,6 +533,49 @@ export default function PreviewLanding() {
           onLeave: () => exitSection(id),
           onLeaveBack: () => exitSection(id),
         });
+      });
+
+      /* ── Scene blobs: drift continuously across slides 1-4 so transitions
+            don't read as hard slide cuts. Fades in over the first half-viewport,
+            stays present through product/video/pain, then fades out as the
+            white-bg sections take over with their own larger blobs. ── */
+      gsap.fromTo("#scene-coral, #scene-mint",
+        { opacity: 0 },
+        {
+          opacity: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: "#section-hero",
+            start: "top top",
+            end: "bottom center",
+            scrub: 0.6,
+          },
+        }
+      );
+
+      /* Coral blob amplifies into the pain slide for that warm spotlight feel */
+      gsap.to("#scene-coral", {
+        scale: 1.35,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#section-pain",
+          start: "top bottom",
+          end: "center center",
+          scrub: 0.6,
+        },
+      });
+
+      /* Both blobs fade out as the sol section approaches and its
+         own large blob system takes over the canvas */
+      gsap.to("#scene-coral, #scene-mint", {
+        opacity: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#section-sol",
+          start: "top 80%",
+          end: "top 30%",
+          scrub: 0.6,
+        },
       });
 
       /* ── Video: scroll-linked scale grows the frame as the section enters ── */
@@ -1080,6 +1120,19 @@ export default function PreviewLanding() {
           <div id="blob-coral" className="gradient-blob gradient-blob-coral" style={{ position: "fixed", width: m ? "120vw" : "85vw", height: m ? "120vw" : "85vw", left: "-25vw", top: "-25vh", opacity: 0, zIndex: 1 }} />
           <div id="blob-mint" className="gradient-blob gradient-blob-mint" style={{ position: "fixed", width: m ? "110vw" : "75vw", height: m ? "110vw" : "75vw", right: "-25vw", bottom: "-25vh", left: "auto", top: "auto", opacity: 0, zIndex: 1 }} />
 
+          {/* ── Scene blobs for slides 1-4 — fixed so they bleed continuously across section boundaries ── */}
+          <div id="scene-coral" className="gradient-blob gradient-blob-coral" aria-hidden style={{
+            position: "fixed", pointerEvents: "none", opacity: 0, zIndex: 1,
+            width: m ? "75vw" : "48vw", height: m ? "75vw" : "48vw",
+            top: m ? "-40vw" : "-22vw", left: m ? "-40vw" : "-22vw",
+          }} />
+          <div id="scene-mint" className="gradient-blob gradient-blob-mint" aria-hidden style={{
+            position: "fixed", pointerEvents: "none", opacity: 0, zIndex: 1,
+            width: m ? "85vw" : "55vw", height: m ? "85vw" : "55vw",
+            bottom: m ? "-46vw" : "-26vw", right: m ? "-46vw" : "-26vw",
+            left: "auto", top: "auto",
+          }} />
+
           {/* ═══ HERO SECTION ═══ */}
           <section id="section-hero" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="hero-layer" style={{ position: "absolute", inset: 0, zIndex: 5, pointerEvents: "auto", opacity: 0 }}>
@@ -1267,19 +1320,7 @@ export default function PreviewLanding() {
           {/* ═══ PRODUCT SECTION ═══ */}
           <section id="section-product" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#f2f2f0" }}>
           <div id="product-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
-            {/* Ambient blobs */}
-            <div id="product-glow-b" aria-hidden className="gradient-blob gradient-blob-coral" style={{
-              position: "absolute", zIndex: 1, opacity: 0,
-              width: m ? "70vw" : "42vw", height: m ? "70vw" : "42vw",
-              top: m ? "-38vw" : "-22vw", left: m ? "-38vw" : "-22vw",
-              pointerEvents: "none",
-            }} />
-            <div id="product-glow-a" aria-hidden className="gradient-blob gradient-blob-mint" style={{
-              position: "absolute", zIndex: 1, opacity: 0,
-              width: m ? "80vw" : "50vw", height: m ? "80vw" : "50vw",
-              bottom: m ? "-42vw" : "-26vw", right: m ? "-42vw" : "-26vw",
-              pointerEvents: "none",
-            }} />
+            {/* Ambient blobs live in the global scene layer so they bleed across slide boundaries */}
 
             {/* Headline + screenshot stack */}
             {m ? (
@@ -1484,13 +1525,7 @@ export default function PreviewLanding() {
           {/* ═══ PAIN SECTION ═══ */}
           <section id="section-pain" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
           <div id="pain-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
-            <div id="pain-blob" className="gradient-blob gradient-blob-coral" style={{
-              position: "absolute",
-              width: m ? MW(440) : W(1180), height: m ? MH(480) : H(760),
-              left: m ? MX(-25) : X(160), top: m ? MY(185) : Y(110),
-              transform: "rotate(-90deg)",
-              filter: "blur(90px)",
-            }} />
+            {/* Pain ambience handled by the global scene-coral blob — no local blob needed */}
             <div id="pain-text-1" style={{
               position: "absolute",
               top: m ? MY(287) : Y(251), left: m ? MX(65) : X(294),
