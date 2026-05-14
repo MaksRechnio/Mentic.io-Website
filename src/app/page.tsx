@@ -1934,6 +1934,136 @@ export default function PreviewLanding() {
           </div>
           </section>
 
+          {/* ═══ FOOTER ═══ */}
+          <footer id="site-footer" style={{
+            position: "relative",
+            width: "100%",
+            background: "#003c46",
+            color: "#f2f2f0",
+            fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
+            padding: m ? "56px 24px 32px" : "88px 8% 40px",
+            zIndex: 5,
+          }}>
+            <div style={{
+              display: "flex",
+              flexDirection: m ? "column" : "row",
+              alignItems: m ? "flex-start" : "flex-end",
+              justifyContent: "space-between",
+              gap: m ? 36 : 24,
+              maxWidth: 1400,
+              margin: "0 auto",
+            }}>
+              {/* Left column — wordmark + tagline + email */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                <div className="font-qurova" style={{
+                  fontSize: m ? 42 : 56, lineHeight: 1, color: "#8bf2d3",
+                }}>
+                  mentic
+                </div>
+                <div style={{ fontSize: m ? 14 : 15, fontWeight: 300, color: "rgba(242,242,240,0.7)", letterSpacing: "0.01em" }}>
+                  The Autonomous AI Advertising Agent.
+                </div>
+                <a
+                  href="mailto:support@mentic.io"
+                  onMouseEnter={() => sfxHover()}
+                  onClick={() => sfxPress()}
+                  style={{
+                    marginTop: 6,
+                    display: "inline-flex", alignItems: "center", gap: 8,
+                    fontSize: m ? 16 : 18, fontWeight: 500,
+                    color: "#f2f2f0", textDecoration: "none",
+                    transition: "color 200ms ease",
+                    width: "fit-content",
+                  }}
+                  onMouseOver={(e) => { e.currentTarget.style.color = "#8bf2d3"; }}
+                  onMouseOut={(e) => { e.currentTarget.style.color = "#f2f2f0"; }}
+                >
+                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="m22 7-10 6L2 7" />
+                  </svg>
+                  support@mentic.io
+                </a>
+              </div>
+
+              {/* Right column — socials */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: m ? "flex-start" : "flex-end" }}>
+                <div style={{
+                  fontSize: 11, fontWeight: 700, letterSpacing: "0.4em",
+                  textTransform: "uppercase", color: "rgba(242,242,240,0.55)",
+                }}>
+                  Follow
+                </div>
+                <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                  <a href="https://www.instagram.com/mentic.io/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"
+                    style={{ display: "flex", color: "#8bf2d3", opacity: 0.85, transition: "opacity 200ms, transform 200ms" }}
+                    onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.12)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.85"; e.currentTarget.style.transform = "scale(1)"; }}>
+                    <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                      <circle cx="12" cy="12" r="5" />
+                      <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none" />
+                    </svg>
+                  </a>
+                  <a href="https://www.linkedin.com/company/mentic-io" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"
+                    style={{ display: "flex", color: "#8bf2d3", opacity: 0.85, transition: "opacity 200ms, transform 200ms" }}
+                    onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.12)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.85"; e.currentTarget.style.transform = "scale(1)"; }}>
+                    <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
+                      <rect x="2" y="9" width="4" height="12" />
+                      <circle cx="4" cy="4" r="2" />
+                    </svg>
+                  </a>
+                  <a href="https://x.com/Mentic_io" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter"
+                    style={{ display: "flex", color: "#8bf2d3", opacity: 0.85, transition: "opacity 200ms, transform 200ms" }}
+                    onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.opacity = "1"; e.currentTarget.style.transform = "scale(1.12)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.opacity = "0.85"; e.currentTarget.style.transform = "scale(1)"; }}>
+                    <svg width={24} height={24} viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom row — launch + legal */}
+            <div style={{
+              maxWidth: 1400, margin: "0 auto",
+              marginTop: m ? 40 : 56,
+              paddingTop: 20,
+              borderTop: "1px solid rgba(242,242,240,0.1)",
+              display: "flex", flexDirection: m ? "column" : "row",
+              justifyContent: "space-between", alignItems: m ? "flex-start" : "center",
+              gap: 12,
+              fontSize: 12, fontWeight: 300,
+              color: "rgba(242,242,240,0.55)", letterSpacing: "0.02em",
+            }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  padding: "4px 10px", borderRadius: 999,
+                  background: "rgba(139,242,211,0.12)",
+                  color: "#8bf2d3", fontWeight: 600,
+                  fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase",
+                }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 999, background: "#8bf2d3" }} />
+                  Launched 14 May 2026
+                </span>
+                <span>Alpha — onboarding pilot users now.</span>
+              </div>
+              <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
+                <a href="/privacy" style={{ color: "inherit", textDecoration: "none", transition: "color 200ms ease" }}
+                  onMouseEnter={() => sfxHover()}
+                  onMouseOver={(e) => { e.currentTarget.style.color = "#f2f2f0"; }}
+                  onMouseOut={(e) => { e.currentTarget.style.color = "rgba(242,242,240,0.55)"; }}>
+                  Privacy
+                </a>
+                <span>© {new Date().getFullYear()} Mentic. All rights reserved.</span>
+              </div>
+            </div>
+          </footer>
+
         </div>
       </div>
 
