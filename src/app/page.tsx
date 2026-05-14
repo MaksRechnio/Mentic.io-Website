@@ -1309,7 +1309,10 @@ export default function PreviewLanding() {
                     <span className="pw" style={{ fontWeight: 500 }}>launching,</span>{" "}
                     <span className="pw" style={{ fontWeight: 500 }}>managing</span>{" "}
                     <span className="pw">and</span>{" "}
-                    <span className="pw" style={{ fontWeight: 500 }}>optimising.</span>
+                    <span className="pw" style={{ fontWeight: 500 }}>optimising</span>{" "}
+                    <span className="pw">your</span>{" "}
+                    <span className="pw">digital</span>{" "}
+                    <span className="pw">ads.</span>
                   </span>
                   <span id="product-sub" className="product-line" style={{
                     display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: 6,
@@ -1389,7 +1392,10 @@ export default function PreviewLanding() {
                     <span className="pw" style={{ fontWeight: 500 }}>launching,</span>{" "}
                     <span className="pw" style={{ fontWeight: 500 }}>managing</span>{" "}
                     <span className="pw">and</span>{" "}
-                    <span className="pw" style={{ fontWeight: 500 }}>optimising.</span>
+                    <span className="pw" style={{ fontWeight: 500 }}>optimising</span>{" "}
+                    <span className="pw">your</span>{" "}
+                    <span className="pw">digital</span>{" "}
+                    <span className="pw">ads.</span>
                   </span>
                   <span id="product-sub" className="product-line" style={{
                     display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8,
