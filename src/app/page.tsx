@@ -45,6 +45,7 @@ export default function PreviewLanding() {
   const [formError, setFormError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
   const [menuOpen, setMenuOpen] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 1024);
@@ -1011,6 +1012,17 @@ export default function PreviewLanding() {
     };
   }, [isMobile]);
 
+  /* ── Track whether we've scrolled past the hero so the hamburger can detach ── */
+  useEffect(() => {
+    const onScroll = () => {
+      const past = window.scrollY > window.innerHeight * 0.55;
+      setPastHero((prev) => (prev === past ? prev : past));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   /* ── Body scroll lock + Esc-to-close while the side menu is open ── */
   useEffect(() => {
     if (!menuOpen) return;
@@ -1079,6 +1091,10 @@ export default function PreviewLanding() {
         </div>
       )}
       {/* ── Hamburger button (fixed top-right, persists across all sections) ── */}
+      {/* On hero it aligns with the social-icon row (top: 7.44dvh / 4.93dvh mobile, sitting
+          just to the right of the X/Twitter glyph). Once you scroll past ~half a viewport,
+          it detaches to top: 22px and switches to a high-contrast Midnight Teal pill so
+          it stays legible against every later section. */}
       <button
         type="button"
         onClick={() => { sfxPress(); setMenuOpen((o) => !o); }}
@@ -1087,41 +1103,53 @@ export default function PreviewLanding() {
         aria-expanded={menuOpen}
         style={{
           position: "fixed",
-          top: m ? 18 : 28, right: m ? 18 : 28,
+          top: pastHero ? (m ? 16 : 22) : (m ? "4.93dvh" : "7.44dvh"),
+          right: m ? 18 : 24,
           width: 48, height: 48,
-          background: menuOpen ? "transparent" : "rgba(242,242,240,0.55)",
-          backdropFilter: menuOpen ? "none" : "blur(6px)",
-          WebkitBackdropFilter: menuOpen ? "none" : "blur(6px)",
-          border: `1px solid ${menuOpen ? "rgba(0,60,70,0)" : "rgba(0,60,70,0.08)"}`,
+          background: menuOpen
+            ? "transparent"
+            : pastHero
+              ? "#003c46"
+              : "rgba(242,242,240,0.55)",
+          backdropFilter: menuOpen ? "none" : (pastHero ? "none" : "blur(6px)"),
+          WebkitBackdropFilter: menuOpen ? "none" : (pastHero ? "none" : "blur(6px)"),
+          border: `1px solid ${menuOpen ? "rgba(0,60,70,0)" : pastHero ? "rgba(255,255,255,0.08)" : "rgba(0,60,70,0.08)"}`,
           borderRadius: 999,
           cursor: "pointer",
           display: "flex", flexDirection: "column",
           alignItems: "center", justifyContent: "center", gap: 5,
           padding: 0,
           zIndex: 180,
-          transition: "background 0.3s ease, border-color 0.3s ease",
+          transition:
+            "top 0.55s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease",
+          boxShadow: pastHero && !menuOpen
+            ? "0 10px 28px rgba(0,60,70,0.28), 0 2px 6px rgba(0,60,70,0.18)"
+            : "0 0 0 rgba(0,0,0,0)",
           fontFamily: "inherit",
         }}
       >
         <span style={{
           display: "block", width: 18, height: 2,
-          background: "#003c46", borderRadius: 2,
+          background: pastHero && !menuOpen ? "#f2f2f0" : "#003c46",
+          borderRadius: 2,
           transformOrigin: "center",
-          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease",
           transform: menuOpen ? "translateY(7px) rotate(45deg)" : "translateY(0) rotate(0)",
         }} />
         <span style={{
           display: "block", width: 18, height: 2,
-          background: "#003c46", borderRadius: 2,
-          transition: "opacity 0.2s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+          background: pastHero && !menuOpen ? "#f2f2f0" : "#003c46",
+          borderRadius: 2,
+          transition: "opacity 0.2s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease",
           opacity: menuOpen ? 0 : 1,
           transform: menuOpen ? "scaleX(0)" : "scaleX(1)",
         }} />
         <span style={{
           display: "block", width: 18, height: 2,
-          background: "#003c46", borderRadius: 2,
+          background: pastHero && !menuOpen ? "#f2f2f0" : "#003c46",
+          borderRadius: 2,
           transformOrigin: "center",
-          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease",
           transform: menuOpen ? "translateY(-7px) rotate(-45deg)" : "translateY(0) rotate(0)",
         }} />
       </button>
@@ -1146,14 +1174,14 @@ export default function PreviewLanding() {
         aria-hidden={!menuOpen}
         style={{
           position: "fixed", top: 0, right: 0,
-          width: m ? "100vw" : 460,
+          width: m ? "100vw" : "min(46vw, 620px)",
           height: "100dvh",
           background: "#f2f2f0",
           transform: menuOpen ? "translateX(0)" : "translateX(105%)",
           transition: "transform 0.72s cubic-bezier(0.16, 1, 0.3, 1)",
           zIndex: 175,
           display: "flex", flexDirection: "column",
-          padding: m ? "96px 28px 36px" : "120px 56px 52px",
+          padding: m ? "96px 28px 36px" : "128px 72px 56px",
           boxShadow: menuOpen ? "-30px 0 80px rgba(0,60,70,0.18)" : "none",
           fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
           overflow: "hidden",
