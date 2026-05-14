@@ -46,6 +46,7 @@ export default function PreviewLanding() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
   const [menuOpen, setMenuOpen] = useState(false);
   const [pastHero, setPastHero] = useState(false);
+  const [emailCopied, setEmailCopied] = useState(false);
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 1024);
@@ -1103,8 +1104,10 @@ export default function PreviewLanding() {
         aria-expanded={menuOpen}
         style={{
           position: "fixed",
-          top: pastHero ? (m ? 16 : 22) : (m ? "4.93dvh" : "7.44dvh"),
-          right: m ? 18 : 24,
+          top: pastHero
+            ? (m ? 14 : 22)
+            : (m ? 14 : "calc(7.44dvh - 4px)"),
+          right: m ? 14 : 24,
           width: 48, height: 48,
           background: menuOpen
             ? "transparent"
@@ -1384,7 +1387,7 @@ export default function PreviewLanding() {
             <div id="hero-alpha" style={{
               position: "absolute",
               top: m ? MY(42) : Y(72), right: m ? MX(20) : X(1491 - 1164 - 229.913),
-              display: "flex", gap: m ? 12 : 18, alignItems: "center",
+              display: m ? "none" : "flex", gap: m ? 12 : 18, alignItems: "center",
               zIndex: 2,
             }}>
               {/* Book a Demo */}
@@ -2187,7 +2190,7 @@ export default function PreviewLanding() {
                 <div key={copy} style={{ display: "flex", alignItems: "center", gap: m ? 28 : 56, paddingRight: m ? 28 : 56, whiteSpace: "nowrap" }}>
                   <span>
                     <span style={{ fontWeight: 200 }}>Launching </span>
-                    <span style={{ fontWeight: 800, color: "#ff6b5c" }}>14 May 2026</span>
+                    <span style={{ fontWeight: 800, color: "#ff6b5c" }}>18 May 2026</span>
                   </span>
                   <span style={{ color: "#8bf2d3", fontWeight: 800 }} aria-hidden>✦</span>
                   <span>
@@ -2253,27 +2256,52 @@ export default function PreviewLanding() {
                 <div style={{ fontSize: m ? 14 : 15, fontWeight: 300, color: "rgba(242,242,240,0.7)", letterSpacing: "0.01em" }}>
                   The Autonomous AI Advertising Agent.
                 </div>
-                <a
-                  href="mailto:support@mentic.io"
+                <button
+                  type="button"
                   onMouseEnter={() => sfxHover()}
-                  onClick={() => sfxPress()}
+                  onClick={async () => {
+                    sfxPress();
+                    try {
+                      await navigator.clipboard.writeText("support@mentic.io");
+                    } catch {
+                      // Fallback for browsers without clipboard API access
+                      const ta = document.createElement("textarea");
+                      ta.value = "support@mentic.io";
+                      ta.style.position = "fixed"; ta.style.opacity = "0";
+                      document.body.appendChild(ta); ta.focus(); ta.select();
+                      try { document.execCommand("copy"); } catch { /* noop */ }
+                      document.body.removeChild(ta);
+                    }
+                    setEmailCopied(true);
+                    setTimeout(() => setEmailCopied(false), 1800);
+                  }}
+                  aria-label="Copy support email address to clipboard"
                   style={{
                     marginTop: 6,
                     display: "inline-flex", alignItems: "center", gap: 8,
                     fontSize: m ? 16 : 18, fontWeight: 500,
-                    color: "#f2f2f0", textDecoration: "none",
+                    color: emailCopied ? "#8bf2d3" : "#f2f2f0",
+                    background: "transparent", border: "none", padding: 0,
+                    fontFamily: "inherit",
+                    cursor: "pointer",
                     transition: "color 200ms ease",
                     width: "fit-content",
                   }}
-                  onMouseOver={(e) => { e.currentTarget.style.color = "#8bf2d3"; }}
-                  onMouseOut={(e) => { e.currentTarget.style.color = "#f2f2f0"; }}
+                  onMouseOver={(e) => { if (!emailCopied) e.currentTarget.style.color = "#8bf2d3"; }}
+                  onMouseOut={(e) => { if (!emailCopied) e.currentTarget.style.color = "#f2f2f0"; }}
                 >
-                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                    <rect x="2" y="4" width="20" height="16" rx="2" />
-                    <path d="m22 7-10 6L2 7" />
-                  </svg>
-                  support@mentic.io
-                </a>
+                  {emailCopied ? (
+                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  ) : (
+                    <svg width={16} height={16} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <rect x="9" y="9" width="13" height="13" rx="2" />
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                    </svg>
+                  )}
+                  {emailCopied ? "Copied to clipboard" : "support@mentic.io"}
+                </button>
               </div>
 
               {/* Right column — socials */}
@@ -2338,7 +2366,7 @@ export default function PreviewLanding() {
                   fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase",
                 }}>
                   <span style={{ width: 6, height: 6, borderRadius: 999, background: "#8bf2d3" }} />
-                  Launched 14 May 2026
+                  Launched 18 May 2026
                 </span>
                 <span>Alpha — onboarding pilot users now.</span>
               </div>
