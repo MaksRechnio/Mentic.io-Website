@@ -1783,6 +1783,7 @@ export default function PreviewLanding() {
               <video
                 id="mentic-video"
                 src="/mentic-launch-video.mp4"
+                poster="/mentic-launch-poster.jpg"
                 controls
                 playsInline
                 preload="metadata"
