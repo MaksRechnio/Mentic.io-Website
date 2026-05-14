@@ -968,7 +968,7 @@ export default function PreviewLanding() {
 
     const onOver = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
-      const isInteractive = t.closest("a, button, [role='button'], input, textarea, select, .modal-submit, [style*='cursor']");
+      const isInteractive = t.closest("a, button, [role='button'], input, textarea, select, .modal-submit, [style*='cursor'], #site-footer");
       if (isInteractive && !hovering) {
         hovering = true;
         cursor.style.width = "20px";
