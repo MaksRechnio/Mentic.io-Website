@@ -8,7 +8,7 @@ export type ComingSoonProps = {
 
 export default function ComingSoon({ section, blurb }: ComingSoonProps) {
   return (
-    <main style={{
+    <main className="use-native-cursor" style={{
       minHeight: "100dvh",
       width: "100%",
       background: "#f2f2f0",

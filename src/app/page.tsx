@@ -1091,41 +1091,34 @@ export default function PreviewLanding() {
           }} />
         </div>
       )}
-      {/* ── Hamburger button (fixed top-right, persists across all sections) ── */}
-      {/* On hero it aligns with the social-icon row (top: 7.44dvh / 4.93dvh mobile, sitting
-          just to the right of the X/Twitter glyph). Once you scroll past ~half a viewport,
-          it detaches to top: 22px and switches to a high-contrast Midnight Teal pill so
-          it stays legible against every later section. */}
+      {/* ── Floating hamburger — only after the hero scrolls past (desktop) or always on mobile,
+            since the inline hamburger lives inside hero-alpha which is hidden on small screens. ── */}
       <button
         type="button"
         onClick={() => { sfxPress(); setMenuOpen((o) => !o); }}
         onMouseEnter={() => sfxHover()}
         aria-label={menuOpen ? "Close menu" : "Open menu"}
         aria-expanded={menuOpen}
+        aria-hidden={!(pastHero || m) && !menuOpen}
         style={{
           position: "fixed",
-          top: pastHero
-            ? (m ? 14 : 22)
-            : (m ? 14 : "calc(7.44dvh - 4px)"),
+          top: m ? 14 : 22,
           right: m ? 14 : 24,
           width: 48, height: 48,
-          background: menuOpen
-            ? "transparent"
-            : pastHero
-              ? "#003c46"
-              : "rgba(242,242,240,0.55)",
-          backdropFilter: menuOpen ? "none" : (pastHero ? "none" : "blur(6px)"),
-          WebkitBackdropFilter: menuOpen ? "none" : (pastHero ? "none" : "blur(6px)"),
-          border: `1px solid ${menuOpen ? "rgba(0,60,70,0)" : pastHero ? "rgba(255,255,255,0.08)" : "rgba(0,60,70,0.08)"}`,
+          background: menuOpen ? "transparent" : "#003c46",
+          border: `1px solid ${menuOpen ? "rgba(0,60,70,0)" : "rgba(255,255,255,0.08)"}`,
           borderRadius: 999,
           cursor: "pointer",
           display: "flex", flexDirection: "column",
           alignItems: "center", justifyContent: "center", gap: 5,
           padding: 0,
           zIndex: 180,
+          opacity: (pastHero || m || menuOpen) ? 1 : 0,
+          pointerEvents: (pastHero || m || menuOpen) ? "auto" : "none",
+          transform: (pastHero || m || menuOpen) ? "translateY(0) scale(1)" : "translateY(-8px) scale(0.9)",
           transition:
-            "top 0.55s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease",
-          boxShadow: pastHero && !menuOpen
+            "opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease",
+          boxShadow: !menuOpen
             ? "0 10px 28px rgba(0,60,70,0.28), 0 2px 6px rgba(0,60,70,0.18)"
             : "0 0 0 rgba(0,0,0,0)",
           fontFamily: "inherit",
@@ -1133,7 +1126,7 @@ export default function PreviewLanding() {
       >
         <span style={{
           display: "block", width: 18, height: 2,
-          background: pastHero && !menuOpen ? "#f2f2f0" : "#003c46",
+          background: menuOpen ? "#003c46" : "#f2f2f0",
           borderRadius: 2,
           transformOrigin: "center",
           transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease",
@@ -1141,7 +1134,7 @@ export default function PreviewLanding() {
         }} />
         <span style={{
           display: "block", width: 18, height: 2,
-          background: pastHero && !menuOpen ? "#f2f2f0" : "#003c46",
+          background: menuOpen ? "#003c46" : "#f2f2f0",
           borderRadius: 2,
           transition: "opacity 0.2s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease",
           opacity: menuOpen ? 0 : 1,
@@ -1149,7 +1142,7 @@ export default function PreviewLanding() {
         }} />
         <span style={{
           display: "block", width: 18, height: 2,
-          background: pastHero && !menuOpen ? "#f2f2f0" : "#003c46",
+          background: menuOpen ? "#003c46" : "#f2f2f0",
           borderRadius: 2,
           transformOrigin: "center",
           transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease",
@@ -1490,6 +1483,51 @@ export default function PreviewLanding() {
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                 </svg>
               </a>
+              {/* Inline hamburger — sits inside hero-alpha so it tracks the social row exactly */}
+              <button
+                type="button"
+                onClick={() => { sfxPress(); setMenuOpen((o) => !o); }}
+                onMouseEnter={() => sfxHover()}
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuOpen}
+                style={{
+                  marginLeft: 4,
+                  width: 38, height: 38,
+                  background: "transparent",
+                  border: `1.5px solid ${menuOpen ? "transparent" : "#ffffff"}`,
+                  borderRadius: 999,
+                  cursor: "pointer",
+                  display: "flex", flexDirection: "column",
+                  alignItems: "center", justifyContent: "center", gap: 4,
+                  padding: 0,
+                  transition: "background 0.25s ease, border-color 0.25s ease",
+                  fontFamily: "inherit",
+                }}
+                onMouseOver={(e) => { if (!menuOpen) e.currentTarget.style.background = "rgba(255,255,255,0.12)"; }}
+                onMouseOut={(e) => { if (!menuOpen) e.currentTarget.style.background = "transparent"; }}
+              >
+                <span style={{
+                  display: "block", width: 16, height: 1.5,
+                  background: "#ffffff", borderRadius: 2,
+                  transformOrigin: "center",
+                  transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+                  transform: menuOpen ? "translateY(5.5px) rotate(45deg)" : "translateY(0) rotate(0)",
+                }} />
+                <span style={{
+                  display: "block", width: 16, height: 1.5,
+                  background: "#ffffff", borderRadius: 2,
+                  transition: "opacity 0.2s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                  opacity: menuOpen ? 0 : 1,
+                  transform: menuOpen ? "scaleX(0)" : "scaleX(1)",
+                }} />
+                <span style={{
+                  display: "block", width: 16, height: 1.5,
+                  background: "#ffffff", borderRadius: 2,
+                  transformOrigin: "center",
+                  transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+                  transform: menuOpen ? "translateY(-5.5px) rotate(-45deg)" : "translateY(0) rotate(0)",
+                }} />
+              </button>
             </div>
             <h1 id="hero-headline" style={{
               position: "absolute",

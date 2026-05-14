@@ -83,6 +83,19 @@ video, video *, video::-webkit-media-controls, video::-webkit-media-controls * {
   cursor: auto !important;
 }
 
+/* ── Restore the native cursor on routes that don't render the custom one (e.g. coming-soon pages) ── */
+.use-native-cursor,
+.use-native-cursor *,
+.use-native-cursor *::before,
+.use-native-cursor *::after {
+  cursor: auto !important;
+}
+.use-native-cursor a,
+.use-native-cursor button,
+.use-native-cursor [role="button"] {
+  cursor: pointer !important;
+}
+
 /* ── Product headline: per-word / per-letter animated spans ── */
 .product-line .pw,
 .product-line .pl {
