@@ -67,8 +67,9 @@ export const metadata: Metadata = {
     site: "@Mentic_io",
   },
   icons: {
-    icon: "/favicon.png",
-    apple: "/favicon.png",
+    icon: "/mentic-app-icon.png",
+    shortcut: "/favicon.png",
+    apple: "/mentic-app-icon.png",
   },
 };
 

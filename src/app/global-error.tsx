@@ -10,7 +10,7 @@ export default function GlobalError({
     <html lang="en">
       <head>
         <title>mentic</title>
-        <link rel="icon" href="/favicon.png" />
+        <link rel="icon" href="/mentic-app-icon.png" />
         <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
       </head>
       <body style={{ margin: 0 }}>
