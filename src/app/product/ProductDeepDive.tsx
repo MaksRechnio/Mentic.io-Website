@@ -671,7 +671,10 @@ function StrategyScene() {
               position: "relative",
               borderRadius: 22,
               overflow: "hidden",
+              width: "100%",
+              maxWidth: "min(100%, calc((48vh) * 1366 / 768))",
               aspectRatio: "1366 / 768",
+              margin: "0 auto",
               boxShadow:
                 "0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(0,60,70,0.10), 0 50px 100px -20px rgba(0,60,70,0.22), 0 0 0 1px rgba(0,60,70,0.04)",
               ...scaleIn(p, 0.35, 0.62, 0.94, 40),
@@ -716,13 +719,13 @@ function LaunchScene() {
             p={p}
           />
           <div style={{
-            marginTop: "clamp(36px, 5vh, 56px)",
             position: "relative",
             borderRadius: 24,
             overflow: "hidden",
+            width: "100%",
+            maxWidth: "min(1180px, calc((42vh) * 1366 / 768))",
             aspectRatio: "1366 / 768",
-            maxWidth: 1180,
-            margin: "clamp(36px, 5vh, 56px) auto 0",
+            margin: "clamp(24px, 4vh, 40px) auto 0",
             boxShadow:
               "0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(0,60,70,0.10), 0 50px 100px -20px rgba(0,60,70,0.24), 0 0 0 1px rgba(0,60,70,0.04)",
             ...scaleIn(p, 0.2, 0.5, 0.9, 60),
@@ -775,15 +778,13 @@ function LaunchScene() {
 /* ─────────────────────────────────────────────────────────────
    05 — 21-agent roster
    ─────────────────────────────────────────────────────────── */
-const ROSTER: Array<{ name: string; status: "Built" | "MVP" | "Partial" | "Planned" }> = [
+const ROSTER: Array<{ name: string; status: "Built" | "MVP" | "Planned" }> = [
   { name: "Sidebar Assistant", status: "Built" },
   { name: "Research", status: "Built" },
   { name: "Meta Reactive Optimisation", status: "Built" },
   { name: "Creative Intelligence", status: "Built" },
   { name: "Advertising Strategy", status: "Built" },
   { name: "Competitive Creative Analyst", status: "MVP" },
-  { name: "Optimisation Decision-Maker", status: "Partial" },
-  { name: "Budget & Payment", status: "Partial" },
   { name: "Creative Generator", status: "Planned" },
   { name: "Predictive", status: "Planned" },
   { name: "Strategy Checker", status: "Planned" },
@@ -799,11 +800,10 @@ const ROSTER: Array<{ name: string; status: "Built" | "MVP" | "Partial" | "Plann
   { name: "X / Twitter Reactive", status: "Planned" },
 ];
 
-function statusStyle(s: "Built" | "MVP" | "Partial" | "Planned") {
+function statusStyle(s: "Built" | "MVP" | "Planned") {
   switch (s) {
     case "Built":   return { bg: "#003c46", color: "#f2f2f0", border: "transparent" };
     case "MVP":     return { bg: "rgba(139,242,211,0.35)", color: "#003c46", border: "rgba(139,242,211,0.7)" };
-    case "Partial": return { bg: "rgba(255,107,92,0.18)", color: "#003c46", border: "rgba(255,107,92,0.5)" };
     case "Planned": return { bg: "rgba(0,60,70,0.05)", color: "rgba(0,60,70,0.7)", border: "rgba(0,60,70,0.1)" };
   }
 }
@@ -817,7 +817,7 @@ function AgentRosterScene() {
             number="05"
             eyebrow="The agentic infrastructure"
             parts={[
-              { text: "21 ", color: CORAL, weight: 800 },
+              { text: "19 ", color: CORAL, weight: 800 },
               { text: "specialised agents. ", color: TEAL, weight: 800 },
               { text: "One ", color: TEAL, weight: 200 },
               { text: "team", color: TEAL, weight: 800 },
@@ -835,7 +835,6 @@ function AgentRosterScene() {
             {[
               { label: "Built", swatch: "#003c46" },
               { label: "MVP", swatch: "#8bf2d3" },
-              { label: "Partial", swatch: "#ff6b5c" },
               { label: "Planned", swatch: "rgba(0,60,70,0.18)" },
             ].map((l, i) => (
               <div key={l.label} style={{
@@ -1029,13 +1028,13 @@ function DashboardScene() {
             p={p}
           />
           <div style={{
-            marginTop: "clamp(36px, 5vh, 56px)",
             position: "relative",
             borderRadius: 24,
             overflow: "hidden",
+            width: "100%",
+            maxWidth: "min(1180px, calc((48vh) * 1366 / 768))",
             aspectRatio: "1366 / 768",
-            maxWidth: 1180,
-            margin: "clamp(36px, 5vh, 56px) auto 0",
+            margin: "clamp(24px, 4vh, 40px) auto 0",
             boxShadow:
               "0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(0,60,70,0.10), 0 50px 100px -20px rgba(0,60,70,0.24), 0 0 0 1px rgba(0,60,70,0.04)",
             ...scaleIn(p, 0.18, 0.5, 0.9, 60),
