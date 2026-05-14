@@ -445,6 +445,13 @@ video, video *, video::-webkit-media-controls, video::-webkit-media-controls * {
   color: var(--coral);
 }
 
+/* ── Team-card social pills: hover-fill teal ── */
+.team-social:hover {
+  background: #003c46 !important;
+  color: #f2f2f0 !important;
+  transform: translateY(-2px);
+}
+
 /* ── Subpage intro animations ── */
 @keyframes page-fade-up {
   from { opacity: 0; transform: translateY(28px); }

@@ -13,6 +13,8 @@ type Member = {
   role: string;
   photo?: { src: string; alt: string };
   initials?: string;
+  linkedin: string;
+  instagram: string;
 };
 
 const TEAM: Member[] = [
@@ -20,16 +22,22 @@ const TEAM: Member[] = [
     name: "Maksymilian Rechnio",
     role: "CEO",
     photo: { src: "/images/team/maks-rechnio.jpeg", alt: "Maksymilian Rechnio" },
+    linkedin: "https://www.linkedin.com/in/maksymilian-rechnio",
+    instagram: "https://www.instagram.com/maksymilian_rechnio/",
   },
   {
     name: "Bo Bredenbruecher",
     role: "CTO",
     photo: { src: "/images/team/bo-bredenbruecher.jpg", alt: "Bo Bredenbruecher" },
+    linkedin: "https://www.linkedin.com/in/bobredenbruecher/",
+    instagram: "https://www.instagram.com/justusbo/",
   },
   {
     name: "Miguel Werneck Roale",
     role: "Founding Engineer",
     initials: "MWR",
+    linkedin: "https://www.linkedin.com/in/miguel-werneck-roale-901a6b213/",
+    instagram: "https://www.instagram.com/miguelwroale/",
   },
 ];
 
@@ -175,7 +183,7 @@ export default function TeamPage() {
                 </div>
               </div>
 
-              {/* Name + role */}
+              {/* Name + role + socials */}
               <div style={{ padding: "0 4px" }}>
                 <div style={{
                   fontSize: 11, fontWeight: 700, letterSpacing: "0.24em",
@@ -194,6 +202,53 @@ export default function TeamPage() {
                 }}>
                   {member.name}
                 </h2>
+                <div style={{
+                  marginTop: 14,
+                  display: "flex", gap: 10, alignItems: "center",
+                }}>
+                  <a
+                    href={member.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${member.name} on LinkedIn`}
+                    className="team-social"
+                    style={{
+                      display: "inline-flex", alignItems: "center", justifyContent: "center",
+                      width: 36, height: 36,
+                      borderRadius: 999,
+                      background: "rgba(0,60,70,0.06)",
+                      color: "#003c46",
+                      textDecoration: "none",
+                      transition: "background 0.25s ease, color 0.25s ease, transform 0.25s ease",
+                    }}
+                  >
+                    <svg width={18} height={18} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+                      <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z" />
+                    </svg>
+                  </a>
+                  <a
+                    href={member.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`${member.name} on Instagram`}
+                    className="team-social"
+                    style={{
+                      display: "inline-flex", alignItems: "center", justifyContent: "center",
+                      width: 36, height: 36,
+                      borderRadius: 999,
+                      background: "rgba(0,60,70,0.06)",
+                      color: "#003c46",
+                      textDecoration: "none",
+                      transition: "background 0.25s ease, color 0.25s ease, transform 0.25s ease",
+                    }}
+                  >
+                    <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                      <circle cx="12" cy="12" r="4.5" />
+                      <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none" />
+                    </svg>
+                  </a>
+                </div>
               </div>
             </article>
           ))}
