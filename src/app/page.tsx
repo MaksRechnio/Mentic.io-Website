@@ -44,6 +44,7 @@ export default function PreviewLanding() {
   const [formStatus, setFormStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [formError, setFormError] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const update = () => setIsMobile(window.innerWidth < 1024);
@@ -1010,6 +1011,19 @@ export default function PreviewLanding() {
     };
   }, [isMobile]);
 
+  /* ── Body scroll lock + Esc-to-close while the side menu is open ── */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = prev;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
   /* ── Sync html + mobile-bg + theme-color with #bg on mobile (fixes iOS Safari safe-area stripes) ── */
   useEffect(() => {
     if (!isMobile) return;
@@ -1064,6 +1078,194 @@ export default function PreviewLanding() {
           }} />
         </div>
       )}
+      {/* ── Hamburger button (fixed top-right, persists across all sections) ── */}
+      <button
+        type="button"
+        onClick={() => { sfxPress(); setMenuOpen((o) => !o); }}
+        onMouseEnter={() => sfxHover()}
+        aria-label={menuOpen ? "Close menu" : "Open menu"}
+        aria-expanded={menuOpen}
+        style={{
+          position: "fixed",
+          top: m ? 18 : 28, right: m ? 18 : 28,
+          width: 48, height: 48,
+          background: menuOpen ? "transparent" : "rgba(242,242,240,0.55)",
+          backdropFilter: menuOpen ? "none" : "blur(6px)",
+          WebkitBackdropFilter: menuOpen ? "none" : "blur(6px)",
+          border: `1px solid ${menuOpen ? "rgba(0,60,70,0)" : "rgba(0,60,70,0.08)"}`,
+          borderRadius: 999,
+          cursor: "pointer",
+          display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center", gap: 5,
+          padding: 0,
+          zIndex: 180,
+          transition: "background 0.3s ease, border-color 0.3s ease",
+          fontFamily: "inherit",
+        }}
+      >
+        <span style={{
+          display: "block", width: 18, height: 2,
+          background: "#003c46", borderRadius: 2,
+          transformOrigin: "center",
+          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+          transform: menuOpen ? "translateY(7px) rotate(45deg)" : "translateY(0) rotate(0)",
+        }} />
+        <span style={{
+          display: "block", width: 18, height: 2,
+          background: "#003c46", borderRadius: 2,
+          transition: "opacity 0.2s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+          opacity: menuOpen ? 0 : 1,
+          transform: menuOpen ? "scaleX(0)" : "scaleX(1)",
+        }} />
+        <span style={{
+          display: "block", width: 18, height: 2,
+          background: "#003c46", borderRadius: 2,
+          transformOrigin: "center",
+          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+          transform: menuOpen ? "translateY(-7px) rotate(-45deg)" : "translateY(0) rotate(0)",
+        }} />
+      </button>
+
+      {/* ── Backdrop ── */}
+      <div
+        onClick={() => setMenuOpen(false)}
+        style={{
+          position: "fixed", inset: 0,
+          background: "rgba(0,60,70,0.34)",
+          backdropFilter: "blur(8px)",
+          WebkitBackdropFilter: "blur(8px)",
+          opacity: menuOpen ? 1 : 0,
+          pointerEvents: menuOpen ? "auto" : "none",
+          transition: "opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1)",
+          zIndex: 170,
+        }}
+      />
+
+      {/* ── Slide-in side menu ── */}
+      <aside
+        aria-hidden={!menuOpen}
+        style={{
+          position: "fixed", top: 0, right: 0,
+          width: m ? "100vw" : 460,
+          height: "100dvh",
+          background: "#f2f2f0",
+          transform: menuOpen ? "translateX(0)" : "translateX(105%)",
+          transition: "transform 0.72s cubic-bezier(0.16, 1, 0.3, 1)",
+          zIndex: 175,
+          display: "flex", flexDirection: "column",
+          padding: m ? "96px 28px 36px" : "120px 56px 52px",
+          boxShadow: menuOpen ? "-30px 0 80px rgba(0,60,70,0.18)" : "none",
+          fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
+          overflow: "hidden",
+        }}
+      >
+        {/* Top-right accent stripe that draws in once the panel arrives */}
+        <div aria-hidden style={{
+          position: "absolute", top: 0, right: 0,
+          width: menuOpen ? (m ? 100 : 140) : 0, height: 3,
+          background: "linear-gradient(90deg, #ff6b5c 0%, #8bf2d3 100%)",
+          transition: "width 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.25s",
+        }} />
+        {/* Soft coral glow in the bottom-left for depth */}
+        <div aria-hidden className="gradient-blob gradient-blob-coral" style={{
+          position: "absolute", width: m ? "120vw" : "70%", height: m ? "120vw" : "70%",
+          bottom: m ? "-70vw" : "-35%", left: m ? "-50vw" : "-25%",
+          opacity: menuOpen ? 0.55 : 0,
+          transition: "opacity 0.9s ease 0.2s",
+          pointerEvents: "none",
+        }} />
+
+        {/* Nav items */}
+        <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: m ? 14 : 20, position: "relative", zIndex: 1 }}>
+          {[
+            { label: "PRODUCT", weight: 800, color: "#003c46" },
+            { label: "PRICING", weight: 300, color: "#ff6b5c" },
+            { label: "NEWS", weight: 700, color: "#003c46" },
+            { label: "TEAM", weight: 200, color: "#003c46" },
+            { label: "CAREERS", weight: 600, color: "#003c46" },
+          ].map((item, i) => (
+            <a
+              key={item.label}
+              href={`/${item.label.toLowerCase()}`}
+              onClick={() => sfxPress()}
+              onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.color = "#ff6b5c"; e.currentTarget.style.transform = "translateX(8px)"; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = item.color; e.currentTarget.style.transform = "translateX(0)"; }}
+              style={{
+                fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
+                fontSize: m ? 36 : 56, lineHeight: 1,
+                fontWeight: item.weight, letterSpacing: "-0.01em",
+                color: item.color,
+                textDecoration: "none", textTransform: "uppercase",
+                opacity: menuOpen ? 1 : 0,
+                transform: menuOpen ? "translateX(0)" : "translateX(48px)",
+                filter: menuOpen ? "blur(0px)" : "blur(8px)",
+                transitionProperty: "opacity, transform, filter, color",
+                transitionDuration: "0.7s, 0.75s, 0.6s, 0.25s",
+                transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                transitionDelay: `${0.22 + i * 0.07}s, ${0.22 + i * 0.07}s, ${0.22 + i * 0.07}s, 0s`,
+                width: "fit-content",
+                cursor: "pointer",
+              }}
+            >
+              {item.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* Bottom CTAs */}
+        <div style={{
+          display: "flex", flexDirection: "column", gap: 12,
+          position: "relative", zIndex: 1,
+          opacity: menuOpen ? 1 : 0,
+          transform: menuOpen ? "translateY(0)" : "translateY(28px)",
+          transition: "opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.6s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.6s",
+        }}>
+          <a
+            href="https://app.mentic.io/login"
+            onClick={() => sfxPress()}
+            onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.color = "#003c46"; e.currentTarget.style.letterSpacing = "0.24em"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.color = "rgba(0,60,70,0.6)"; e.currentTarget.style.letterSpacing = "0.18em"; }}
+            style={{
+              fontSize: 13, fontWeight: 700, letterSpacing: "0.18em",
+              textTransform: "uppercase", color: "rgba(0,60,70,0.6)",
+              textDecoration: "none", padding: "6px 0",
+              transition: "color 0.25s ease, letter-spacing 0.3s ease",
+              width: "fit-content",
+            }}
+          >Log in</a>
+          <button
+            type="button"
+            onClick={() => { sfxPress(); setMenuOpen(false); setTimeout(() => openSignup(), 280); }}
+            onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.background = "#00525f"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#003c46"; e.currentTarget.style.transform = "translateY(0)"; }}
+            style={{
+              background: "#003c46", color: "#f2f2f0",
+              border: "none", borderRadius: 999,
+              padding: "15px 28px", fontSize: 13, fontWeight: 700,
+              letterSpacing: "0.18em", textTransform: "uppercase",
+              cursor: "pointer", fontFamily: "inherit",
+              transition: "background 0.25s ease, transform 0.25s ease",
+            }}
+          >Sign up</button>
+          <a
+            href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
+            target="_blank" rel="noopener noreferrer"
+            onClick={() => sfxPress()}
+            onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.background = "#a8f7df"; e.currentTarget.style.transform = "translateY(-1px)"; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = "#8bf2d3"; e.currentTarget.style.transform = "translateY(0)"; }}
+            style={{
+              background: "#8bf2d3", color: "#003c46",
+              border: "none", borderRadius: 999,
+              padding: "15px 28px", fontSize: 13, fontWeight: 700,
+              letterSpacing: "0.18em", textTransform: "uppercase",
+              textDecoration: "none", textAlign: "center",
+              cursor: "pointer", fontFamily: "inherit",
+              transition: "background 0.25s ease, transform 0.25s ease",
+            }}
+          >Book a Demo</a>
+        </div>
+      </aside>
+
       {/* ── Mobile: extra background layer OUTSIDE viewport to cover iOS safe areas ── */}
       {m && <div ref={mobileBgRef} style={{ position: "fixed", inset: "-100vh -100vw", zIndex: -1, backgroundColor: "#ffe5e5", pointerEvents: "none" }} />}
 
