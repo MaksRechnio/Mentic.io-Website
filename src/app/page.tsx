@@ -1306,11 +1306,10 @@ export default function PreviewLanding() {
                     ))}
                   </span>
                   <span id="product-line-3" className="product-line" style={{ display: "block", fontSize: 17, fontWeight: 200, letterSpacing: "0.01em" }}>
-                    <span className="pw">running</span>{" "}
+                    <span className="pw" style={{ fontWeight: 500 }}>launching,</span>{" "}
+                    <span className="pw" style={{ fontWeight: 500 }}>managing</span>{" "}
                     <span className="pw">and</span>{" "}
-                    <span className="pw">optimising</span>{" "}
-                    <span className="pw">your</span>{" "}
-                    <span className="pw" style={{ fontWeight: 400 }}>ads.</span>
+                    <span className="pw" style={{ fontWeight: 500 }}>optimising.</span>
                   </span>
                   <span id="product-sub" className="product-line" style={{
                     display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: 6,
@@ -1387,11 +1386,10 @@ export default function PreviewLanding() {
                     ))}
                   </span>
                   <span id="product-line-3" className="product-line" style={{ display: "block", fontWeight: 200, fontSize: "clamp(22px, 2.2vw, 38px)", letterSpacing: "0.01em" }}>
-                    <span className="pw">running</span>{" "}
+                    <span className="pw" style={{ fontWeight: 500 }}>launching,</span>{" "}
+                    <span className="pw" style={{ fontWeight: 500 }}>managing</span>{" "}
                     <span className="pw">and</span>{" "}
-                    <span className="pw">optimising</span>{" "}
-                    <span className="pw">your</span>{" "}
-                    <span className="pw" style={{ fontWeight: 400 }}>ads.</span>
+                    <span className="pw" style={{ fontWeight: 500 }}>optimising.</span>
                   </span>
                   <span id="product-sub" className="product-line" style={{
                     display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8,
