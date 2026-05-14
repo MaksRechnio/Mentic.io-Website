@@ -545,6 +545,9 @@ video, video *, video::-webkit-media-controls, video::-webkit-media-controls * {
 .menu-nav-arrow {
   display: inline-block;
   width: 0;
+  height: 0.12em;
+  background: currentColor;
+  border-radius: 2px;
   margin-right: 0;
   opacity: 0;
   transform: translateX(-14px);
@@ -554,12 +557,12 @@ video, video *, video::-webkit-media-controls, video::-webkit-media-controls * {
     opacity 0.35s ease,
     transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   pointer-events: none;
-  overflow: hidden;
-  vertical-align: -0.04em;
+  vertical-align: middle;
+  align-self: center;
 }
 .menu-nav-link:hover .menu-nav-arrow {
-  width: 0.85em;
-  margin-right: 0.18em;
+  width: 0.55em;
+  margin-right: 0.24em;
   opacity: 1;
   transform: translateX(0);
 }

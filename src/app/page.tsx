@@ -1234,7 +1234,7 @@ export default function PreviewLanding() {
                 cursor: "pointer",
               }}
             >
-              <span className="menu-nav-arrow" aria-hidden style={{ color: arrowColor }}>→</span>
+              <span className="menu-nav-arrow" aria-hidden style={{ color: arrowColor }} />
               <span className="menu-nav-label">{item.label}</span>
             </a>
             );
