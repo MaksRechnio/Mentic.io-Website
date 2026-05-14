@@ -47,15 +47,17 @@ export default function PricingPage() {
       <SiteMenu />
 
       {/* Corner blobs */}
-      <div aria-hidden className="gradient-blob gradient-blob-coral" style={{
+      <div aria-hidden className="gradient-blob gradient-blob-coral intro-fade-in" style={{
         position: "absolute", pointerEvents: "none",
         width: "min(45vw, 720px)", height: "min(45vw, 720px)",
         top: "-22vw", left: "-22vw",
+        animationDelay: "0.1s",
       }} />
-      <div aria-hidden className="gradient-blob gradient-blob-mint" style={{
+      <div aria-hidden className="gradient-blob gradient-blob-mint intro-fade-in" style={{
         position: "absolute", pointerEvents: "none",
         width: "min(55vw, 880px)", height: "min(55vw, 880px)",
         bottom: "-28vw", right: "-28vw",
+        animationDelay: "0.2s",
       }} />
 
       {/* Pricing card */}
@@ -65,7 +67,7 @@ export default function PricingPage() {
         display: "flex", justifyContent: "center", alignItems: "center",
         padding: "clamp(76px, 9vh, 120px) clamp(16px, 4vw, 56px) clamp(28px, 4vh, 56px)",
       }}>
-        <article style={{
+        <article className="intro-scale-in" style={{
           position: "relative",
           width: "100%", maxWidth: 1180,
           background: "#ffffff",
@@ -73,6 +75,7 @@ export default function PricingPage() {
           padding: "clamp(32px, 5vw, 72px)",
           boxShadow:
             "0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(0,60,70,0.08), 0 40px 80px -20px rgba(0,60,70,0.18), 0 0 0 1px rgba(0,60,70,0.04)",
+          animationDelay: "0.15s",
         }}>
           <div style={{
             display: "grid",

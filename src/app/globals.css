@@ -445,6 +445,58 @@ video, video *, video::-webkit-media-controls, video::-webkit-media-controls * {
   color: var(--coral);
 }
 
+/* ── Subpage intro animations ── */
+@keyframes page-fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes page-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes page-scale-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes page-blur-in {
+  from { opacity: 0; filter: blur(8px); transform: translateY(14px); }
+  to { opacity: 1; filter: blur(0); transform: translateY(0); }
+}
+
+.intro-fade-up {
+  opacity: 0;
+  animation: page-fade-up 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.intro-fade-in {
+  opacity: 0;
+  animation: page-fade-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.intro-scale-in {
+  opacity: 0;
+  animation: page-scale-in 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.intro-blur-in {
+  opacity: 0;
+  animation: page-blur-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── SiteMenu icon: cursor + rotation on hover ── */
+.site-menu-icon-link,
+.site-menu-icon-link * {
+  cursor: pointer !important;
+}
+.site-menu-icon-link img {
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.site-menu-icon-link:hover img {
+  transform: scale(1.1) rotate(360deg);
+}
+.site-menu-hamburger,
+.site-menu-hamburger * {
+  cursor: pointer !important;
+}
+
 /* Announcement marquee — continuous horizontal scroll */
 @keyframes marquee-scroll {
   from { transform: translate3d(0, 0, 0); }

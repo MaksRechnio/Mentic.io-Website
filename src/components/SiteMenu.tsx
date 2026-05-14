@@ -32,25 +32,27 @@ export default function SiteMenu() {
   return (
     <>
       {/* Top-left brand icon — doubles as a home link */}
-      <Link href="/" aria-label="Mentic — back to home" style={{
-        position: "fixed",
-        top: "clamp(14px, 2vw, 22px)",
-        left: "clamp(16px, 3vw, 28px)",
-        zIndex: 160,
-        display: "inline-flex", alignItems: "center",
-        textDecoration: "none",
-        transition: "transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)",
-      }}
-      onMouseEnter={(e) => { e.currentTarget.style.transform = "scale(1.08)"; }}
-      onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}>
+      <Link
+        href="/"
+        aria-label="Mentic — back to home"
+        className="site-menu-icon-link"
+        style={{
+          position: "fixed",
+          top: "clamp(14px, 2vw, 22px)",
+          left: "clamp(16px, 3vw, 28px)",
+          zIndex: 160,
+          display: "inline-flex", alignItems: "center",
+          textDecoration: "none",
+        }}
+      >
         <Image
-          src="/images/mentic-icon-teal.png"
+          src="/images/mentic-icon-orange.png"
           alt="Mentic"
-          width={48}
-          height={48}
+          width={56}
+          height={56}
           priority
           style={{
-            width: "clamp(40px, 4.4vw, 52px)",
+            width: "clamp(44px, 4.6vw, 56px)",
             height: "auto",
             filter: "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.18))",
           }}
@@ -63,6 +65,7 @@ export default function SiteMenu() {
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
+        className="site-menu-hamburger"
         style={{
           position: "fixed",
           top: "clamp(14px, 2vw, 22px)",

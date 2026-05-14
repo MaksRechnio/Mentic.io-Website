@@ -21,15 +21,17 @@ export default function ComingSoon({ section, blurb }: ComingSoonProps) {
       <SiteMenu />
 
       {/* Corner blobs */}
-      <div aria-hidden className="gradient-blob gradient-blob-coral" style={{
+      <div aria-hidden className="gradient-blob gradient-blob-coral intro-fade-in" style={{
         position: "absolute", pointerEvents: "none",
         width: "min(45vw, 720px)", height: "min(45vw, 720px)",
         top: "-22vw", left: "-22vw",
+        animationDelay: "0.1s",
       }} />
-      <div aria-hidden className="gradient-blob gradient-blob-mint" style={{
+      <div aria-hidden className="gradient-blob gradient-blob-mint intro-fade-in" style={{
         position: "absolute", pointerEvents: "none",
         width: "min(55vw, 880px)", height: "min(55vw, 880px)",
         bottom: "-28vw", right: "-28vw",
+        animationDelay: "0.2s",
       }} />
 
       <section style={{
@@ -40,7 +42,7 @@ export default function ComingSoon({ section, blurb }: ComingSoonProps) {
         padding: "clamp(76px, 9vh, 120px) clamp(20px, 6vw, 56px) clamp(28px, 4vh, 56px)",
         textAlign: "center",
       }}>
-        <h1 style={{
+        <h1 className="intro-blur-in" style={{
           margin: 0,
           fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
           fontSize: "clamp(56px, 11vw, 168px)",
@@ -48,22 +50,25 @@ export default function ComingSoon({ section, blurb }: ComingSoonProps) {
           fontWeight: 200,
           letterSpacing: "-0.02em",
           color: "#003c46",
+          animationDelay: "0.1s",
         }}>
-          <span style={{ display: "block", fontWeight: 200 }}>{section}</span>
-          <span style={{ display: "block", fontWeight: 800, color: "#ff6b5c" }}>coming soon.</span>
+          <span className="intro-fade-up" style={{ display: "block", fontWeight: 200, animationDelay: "0.18s" }}>{section}</span>
+          <span className="intro-fade-up" style={{ display: "block", fontWeight: 800, color: "#ff6b5c", animationDelay: "0.32s" }}>coming soon.</span>
         </h1>
-        <p style={{
+        <p className="intro-fade-up" style={{
           marginTop: 28,
           maxWidth: 560,
           fontSize: "clamp(15px, 1.4vw, 19px)", fontWeight: 300,
           lineHeight: 1.55, color: "rgba(0,60,70,0.7)",
+          animationDelay: "0.5s",
         }}>
           {blurb ?? `The ${section.toLowerCase()} page is in the workshop. We'll flip it on as soon as it's ready. In the meantime, open the menu — or grab a demo below.`}
         </p>
 
-        <div style={{
+        <div className="intro-fade-up" style={{
           marginTop: 32,
           display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center",
+          animationDelay: "0.65s",
         }}>
           <a
             href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"

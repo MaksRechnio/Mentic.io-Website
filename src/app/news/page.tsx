@@ -41,15 +41,17 @@ export default function NewsPage() {
       <SiteMenu />
 
       {/* Corner blobs */}
-      <div aria-hidden className="gradient-blob gradient-blob-coral" style={{
+      <div aria-hidden className="gradient-blob gradient-blob-coral intro-fade-in" style={{
         position: "absolute", pointerEvents: "none",
         width: "min(45vw, 720px)", height: "min(45vw, 720px)",
         top: "-22vw", left: "-22vw",
+        animationDelay: "0.1s",
       }} />
-      <div aria-hidden className="gradient-blob gradient-blob-mint" style={{
+      <div aria-hidden className="gradient-blob gradient-blob-mint intro-fade-in" style={{
         position: "absolute", pointerEvents: "none",
         width: "min(55vw, 880px)", height: "min(55vw, 880px)",
         bottom: "-28vw", right: "-28vw",
+        animationDelay: "0.2s",
       }} />
 
       {/* News list */}
@@ -64,13 +66,14 @@ export default function NewsPage() {
           display: "flex", flexDirection: "column", gap: 16,
         }}>
           {NEWS.map((item, i) => (
-            <article key={i} style={{
+            <article key={i} className="intro-scale-in" style={{
               position: "relative",
               background: "#ffffff",
               borderRadius: 24,
               padding: "clamp(22px, 3vw, 40px)",
               boxShadow:
                 "0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(0,60,70,0.08), 0 40px 80px -20px rgba(0,60,70,0.16), 0 0 0 1px rgba(0,60,70,0.04)",
+              animationDelay: `${0.15 + i * 0.1}s`,
             }}>
               <div style={{
                 display: "flex", alignItems: "center", justifyContent: "space-between",
@@ -117,10 +120,11 @@ export default function NewsPage() {
             </article>
           ))}
 
-          <p style={{
+          <p className="intro-fade-up" style={{
             margin: "8px auto 0",
             fontSize: 13, fontWeight: 300,
             color: "rgba(0,60,70,0.5)", textAlign: "center",
+            animationDelay: `${0.25 + NEWS.length * 0.1}s`,
           }}>
             More updates as we ship. Follow{" "}
             <a
