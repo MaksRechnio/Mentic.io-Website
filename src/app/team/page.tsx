@@ -35,7 +35,7 @@ const TEAM: Member[] = [
   {
     name: "Miguel Werneck Roale",
     role: "Founding Engineer",
-    initials: "MWR",
+    photo: { src: "/images/team/miguel-werneck-roale.jpeg", alt: "Miguel Werneck Roale" },
     linkedin: "https://www.linkedin.com/in/miguel-werneck-roale-901a6b213/",
     instagram: "https://www.instagram.com/miguelwroale/",
   },
