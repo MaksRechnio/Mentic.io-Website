@@ -59,6 +59,18 @@ html {
   background: var(--coral);
 }
 
+@media (max-width: 1023px) {
+  html {
+    scroll-behavior: auto;
+    overscroll-behavior: auto;
+    scroll-snap-type: none;
+  }
+  body {
+    scroll-snap-type: none;
+    overscroll-behavior: auto;
+  }
+}
+
 html::-webkit-scrollbar {
   display: none;
 }

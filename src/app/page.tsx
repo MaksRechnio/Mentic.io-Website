@@ -304,8 +304,9 @@ export default function PreviewLanding() {
 
   /* ── Scroll-stop snap: only locks onto a section when the user stops
      within 15% of a section boundary. Debounced so it never fights an
-     active scroll gesture. ── */
+     active scroll gesture. Desktop only — mobile scrolls freely. ── */
   useEffect(() => {
+    if (isMobile) return;
     let timer: ReturnType<typeof setTimeout> | null = null;
     let programmatic = false;
     let programmaticUntil = 0;
@@ -331,7 +332,7 @@ export default function PreviewLanding() {
       window.removeEventListener("scroll", onScroll);
       if (timer) clearTimeout(timer);
     };
-  }, []);
+  }, [isMobile]);
 
   /* ── Per-section scroll-triggered animations — one frame at a time ── */
   useEffect(() => {
