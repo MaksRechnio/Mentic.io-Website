@@ -171,11 +171,11 @@ export default function PricingPage() {
       }} />
 
       {/* Pricing cards */}
-      <section style={{
+      <section className="pricing-section" style={{
         flex: 1,
         position: "relative", zIndex: 2,
         display: "flex", justifyContent: "center", alignItems: "center",
-        padding: "clamp(76px, 9vh, 120px) clamp(16px, 4vw, 56px) clamp(28px, 4vh, 56px)",
+        padding: "clamp(96px, 12vh, 140px) clamp(16px, 4vw, 56px) clamp(40px, 6vh, 72px)",
       }}>
         <div className="pricing-cards" style={{
           width: "100%", maxWidth: 1240,
@@ -185,7 +185,7 @@ export default function PricingPage() {
           alignItems: "stretch",
         }}>
           {/* ── Simplicity tier ── */}
-          <article className="intro-scale-in" style={{
+          <article className="intro-scale-in pricing-card" style={{
             position: "relative",
             background: "#ffffff",
             borderRadius: 28,
@@ -195,18 +195,19 @@ export default function PricingPage() {
             animationDelay: "0.1s",
             display: "flex", flexDirection: "column",
           }}>
-            <div style={{
+            <div className="plan-badge" style={{
               display: "inline-flex", alignItems: "center", gap: 8, alignSelf: "flex-start",
               padding: "6px 14px", borderRadius: 999,
               background: "#e3fbf2", color: "#007a64",
               fontSize: 11, fontWeight: 700, letterSpacing: "0.16em",
               textTransform: "uppercase",
+              maxWidth: "100%",
             }}>
-              <span aria-hidden style={{ width: 6, height: 6, borderRadius: 999, background: "#007a64" }} />
-              Self-serve
+              <span aria-hidden style={{ flexShrink: 0, width: 6, height: 6, borderRadius: 999, background: "#007a64" }} />
+              <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Self-serve</span>
             </div>
 
-            <h2 style={{
+            <h2 className="plan-title" style={{
               margin: "22px 0 10px",
               fontSize: "clamp(30px, 3.4vw, 48px)",
               fontWeight: 800, letterSpacing: "-0.015em",
@@ -225,7 +226,7 @@ export default function PricingPage() {
             </p>
 
             <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "28px 0 6px", flexWrap: "wrap" }}>
-              <span style={{
+              <span className="plan-price" style={{
                 fontSize: "clamp(44px, 5.4vw, 72px)",
                 fontWeight: 800, color: "#003c46",
                 lineHeight: 0.95, letterSpacing: "-0.025em",
@@ -243,8 +244,9 @@ export default function PricingPage() {
               No agency services. Just the agent.
             </div>
 
-            <div style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
+            <div className="plan-cta-row" style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
               <a
+                className="plan-cta"
                 href="/#signup"
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
@@ -296,7 +298,7 @@ export default function PricingPage() {
           </article>
 
           {/* ── Alpha plan (featured) ── */}
-          <article className="intro-scale-in" style={{
+          <article className="intro-scale-in pricing-card" style={{
             position: "relative",
             background: "#ffffff",
             borderRadius: 28,
@@ -306,18 +308,19 @@ export default function PricingPage() {
             animationDelay: "0.15s",
             display: "flex", flexDirection: "column",
           }}>
-            <div style={{
+            <div className="plan-badge" style={{
               display: "inline-flex", alignItems: "center", gap: 8, alignSelf: "flex-start",
               padding: "6px 14px", borderRadius: 999,
               background: "#fff3f2", color: "#ff6b5c",
               fontSize: 11, fontWeight: 700, letterSpacing: "0.16em",
               textTransform: "uppercase",
+              maxWidth: "100%",
             }}>
-              <span aria-hidden style={{ width: 6, height: 6, borderRadius: 999, background: "#ff6b5c" }} />
-              Limited — pilot users only
+              <span aria-hidden style={{ flexShrink: 0, width: 6, height: 6, borderRadius: 999, background: "#ff6b5c" }} />
+              <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Limited — pilot users only</span>
             </div>
 
-            <h1 style={{
+            <h1 className="plan-title" style={{
               margin: "22px 0 10px",
               fontSize: "clamp(30px, 3.4vw, 48px)",
               fontWeight: 800, letterSpacing: "-0.015em",
@@ -336,7 +339,7 @@ export default function PricingPage() {
             </p>
 
             <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "28px 0 6px", flexWrap: "wrap" }}>
-              <span style={{
+              <span className="plan-price" style={{
                 fontSize: "clamp(44px, 5.4vw, 72px)",
                 fontWeight: 800, color: "#003c46",
                 lineHeight: 0.95, letterSpacing: "-0.025em",
@@ -354,8 +357,9 @@ export default function PricingPage() {
               $0 for every agency service on top.
             </div>
 
-            <div style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
+            <div className="plan-cta-row" style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
               <a
+                className="plan-cta"
                 href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
                 target="_blank" rel="noopener noreferrer"
                 style={{
@@ -370,6 +374,7 @@ export default function PricingPage() {
                 Book a Demo
               </a>
               <a
+                className="plan-cta"
                 href="/#signup"
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
@@ -434,10 +439,46 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Stack cards under 960px */}
+      {/* Responsive: stack under 1080px, tighten on small screens */}
       <style>{`
-        @media (max-width: 960px) {
-          .pricing-cards { grid-template-columns: 1fr !important; }
+        @media (max-width: 1080px) {
+          .pricing-cards {
+            grid-template-columns: 1fr !important;
+            max-width: 620px !important;
+          }
+          .pricing-section {
+            align-items: flex-start !important;
+          }
+        }
+        @media (max-width: 640px) {
+          .pricing-card {
+            padding: 24px !important;
+            border-radius: 22px !important;
+          }
+          .plan-badge {
+            letter-spacing: 0.12em !important;
+            font-size: 10px !important;
+            padding: 5px 11px !important;
+          }
+          .plan-title {
+            font-size: 32px !important;
+          }
+          .plan-price {
+            font-size: 48px !important;
+          }
+          .plan-cta {
+            padding: 13px 20px !important;
+            letter-spacing: 0.14em !important;
+            font-size: 12px !important;
+          }
+          .plan-cta-row {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 10px !important;
+          }
+          .plan-cta-row > a {
+            width: 100%;
+          }
         }
       `}</style>
     </main>
