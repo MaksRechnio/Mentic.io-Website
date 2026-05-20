@@ -4,11 +4,11 @@ import SiteMenu from "@/components/SiteMenu";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Mentic alpha pricing — $997/month for the autonomous agent plus a senior team of human media buyers from EXQDigital, plus every EXQDigital agency service (including full visual materials creation, editing and generation) included free for pilot users.",
+    "Mentic pricing — Advertising Simplicity at $247/month for full Mentic.io access (self-serve, no human media buyers), or the Alpha plan at $997/month with a senior team of human media buyers from EXQDigital and every EXQDigital agency service included free for pilot users.",
   alternates: { canonical: "/pricing" },
 };
 
-const BENEFITS = [
+const ALPHA_BENEFITS = [
   {
     bold: "Full Mentic.io access",
     rest: " — autonomous strategy, launches and optimisation across your ad accounts.",
@@ -28,6 +28,25 @@ const BENEFITS = [
   {
     bold: "Direct line to the team",
     rest: " — Slack and Telegram with the founders and the agency.",
+  },
+];
+
+const SIMPLICITY_BENEFITS = [
+  {
+    bold: "Full Mentic.io access",
+    rest: " — autonomous strategy, launches and optimisation across your ad accounts.",
+  },
+  {
+    bold: "Fully self-serve",
+    rest: " — you drive the agent and own the day-to-day. No human media buyers in the loop.",
+  },
+  {
+    bold: "All core automations",
+    rest: " — audience research, creative briefs, campaign builds, daily optimisation and reporting.",
+  },
+  {
+    bold: "Same product, smaller footprint",
+    rest: " — built for teams who want the autonomy of Mentic without the agency wrap-around.",
   },
 ];
 
@@ -60,174 +79,274 @@ export default function PricingPage() {
         animationDelay: "0.2s",
       }} />
 
-      {/* Pricing card */}
+      {/* Pricing cards */}
       <section style={{
         flex: 1,
         position: "relative", zIndex: 2,
         display: "flex", justifyContent: "center", alignItems: "center",
         padding: "clamp(76px, 9vh, 120px) clamp(16px, 4vw, 56px) clamp(28px, 4vh, 56px)",
       }}>
-        <article className="intro-scale-in" style={{
-          position: "relative",
-          width: "100%", maxWidth: 1180,
-          background: "#ffffff",
-          borderRadius: 28,
-          padding: "clamp(32px, 5vw, 72px)",
-          boxShadow:
-            "0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(0,60,70,0.08), 0 40px 80px -20px rgba(0,60,70,0.18), 0 0 0 1px rgba(0,60,70,0.04)",
-          animationDelay: "0.15s",
+        <div className="pricing-cards" style={{
+          width: "100%", maxWidth: 1240,
+          display: "grid",
+          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
+          gap: "clamp(20px, 2.4vw, 32px)",
+          alignItems: "stretch",
         }}>
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 5fr) minmax(0, 6fr)",
-            gap: "clamp(40px, 6vw, 88px)",
-            alignItems: "start",
-          }} className="pricing-grid">
-            {/* Left column — plan summary + price + CTAs */}
-            <div>
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "6px 14px", borderRadius: 999,
-                background: "#fff3f2", color: "#ff6b5c",
-                fontSize: 11, fontWeight: 700, letterSpacing: "0.16em",
-                textTransform: "uppercase",
-              }}>
-                <span aria-hidden style={{ width: 6, height: 6, borderRadius: 999, background: "#ff6b5c" }} />
-                Limited — pilot users only
-              </div>
-
-              <h1 style={{
-                margin: "22px 0 10px",
-                fontSize: "clamp(36px, 4.4vw, 60px)",
-                fontWeight: 800,
-                letterSpacing: "-0.015em",
-                lineHeight: 1.02,
-                color: "#003c46",
-              }}>
-                Alpha plan
-              </h1>
-              <p style={{
-                margin: 0,
-                fontSize: "clamp(14px, 1.15vw, 16px)",
-                fontWeight: 300,
-                color: "rgba(0,60,70,0.7)",
-                lineHeight: 1.6,
-                maxWidth: 440,
-              }}>
-                The autonomous agent, supervised end-to-end by a real ad agency. One plan, one price,
-                no fine print.
-              </p>
-
-              <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "32px 0 10px", flexWrap: "wrap" }}>
-                <span style={{
-                  fontSize: "clamp(56px, 7vw, 96px)",
-                  fontWeight: 800,
-                  color: "#003c46",
-                  lineHeight: 0.95,
-                  letterSpacing: "-0.025em",
-                }}>
-                  $997
-                </span>
-                <span style={{
-                  fontSize: 18, fontWeight: 400, color: "rgba(0,60,70,0.65)",
-                  letterSpacing: "0.02em",
-                }}>
-                  / month
-                </span>
-              </div>
-              <div style={{ fontSize: 13, fontWeight: 500, color: "#ff6b5c", letterSpacing: "0.02em" }}>
-                $0 for every agency service on top.
-              </div>
-
-              <div style={{ display: "flex", gap: 12, marginTop: 36, flexWrap: "wrap" }}>
-                <a
-                  href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
-                  target="_blank" rel="noopener noreferrer"
-                  style={{
-                    display: "inline-flex", alignItems: "center", justifyContent: "center",
-                    padding: "15px 26px", borderRadius: 999,
-                    background: "#003c46", color: "#f2f2f0",
-                    fontSize: 13, fontWeight: 700,
-                    letterSpacing: "0.18em", textTransform: "uppercase",
-                    textDecoration: "none",
-                  }}
-                >
-                  Book a Demo
-                </a>
-                <a
-                  href="/#signup"
-                  style={{
-                    display: "inline-flex", alignItems: "center", justifyContent: "center",
-                    padding: "15px 26px", borderRadius: 999,
-                    background: "#8bf2d3", color: "#003c46",
-                    fontSize: 13, fontWeight: 700,
-                    letterSpacing: "0.18em", textTransform: "uppercase",
-                    textDecoration: "none",
-                  }}
-                >
-                  Sign up
-                </a>
-              </div>
+          {/* ── Simplicity tier ── */}
+          <article className="intro-scale-in" style={{
+            position: "relative",
+            background: "#ffffff",
+            borderRadius: 28,
+            padding: "clamp(28px, 3.6vw, 52px)",
+            boxShadow:
+              "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,60,70,0.06), 0 24px 56px -16px rgba(0,60,70,0.12), 0 0 0 1px rgba(0,60,70,0.04)",
+            animationDelay: "0.1s",
+            display: "flex", flexDirection: "column",
+          }}>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 8, alignSelf: "flex-start",
+              padding: "6px 14px", borderRadius: 999,
+              background: "#e3fbf2", color: "#007a64",
+              fontSize: 11, fontWeight: 700, letterSpacing: "0.16em",
+              textTransform: "uppercase",
+            }}>
+              <span aria-hidden style={{ width: 6, height: 6, borderRadius: 999, background: "#007a64" }} />
+              Self-serve
             </div>
 
-            {/* Right column — benefits list + alpha note */}
-            <div>
-              <div style={{
-                fontSize: 11, fontWeight: 700, letterSpacing: "0.3em",
-                color: "rgba(0,60,70,0.55)", textTransform: "uppercase",
-                marginBottom: 18,
-              }}>
-                What you get
-              </div>
-              <ul style={{
-                margin: 0, padding: 0, listStyle: "none",
-                display: "flex", flexDirection: "column", gap: 18,
-                fontSize: "clamp(14px, 1.05vw, 16px)",
-                fontWeight: 400, lineHeight: 1.6,
-                color: "#003c46",
-              }}>
-                {BENEFITS.map((item) => (
-                  <li key={item.bold} style={{ display: "flex", alignItems: "flex-start", gap: 14 }}>
-                    <span aria-hidden style={{
-                      flexShrink: 0,
-                      display: "inline-flex", alignItems: "center", justifyContent: "center",
-                      width: 24, height: 24, borderRadius: 999,
-                      background: "#e3fbf2", color: "#003c46",
-                      marginTop: 1,
-                    }}>
-                      <svg width={12} height={12} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </span>
-                    <span>
-                      <strong style={{ fontWeight: 700 }}>{item.bold}</strong>
-                      {item.rest}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+            <h2 style={{
+              margin: "22px 0 10px",
+              fontSize: "clamp(30px, 3.4vw, 48px)",
+              fontWeight: 800, letterSpacing: "-0.015em",
+              lineHeight: 1.02, color: "#003c46",
+            }}>
+              Advertising Simplicity
+            </h2>
+            <p style={{
+              margin: 0,
+              fontSize: "clamp(14px, 1.05vw, 16px)",
+              fontWeight: 300, color: "rgba(0,60,70,0.7)",
+              lineHeight: 1.6, maxWidth: 440,
+            }}>
+              Full Mentic.io access, no human media buyers in the loop. The autonomous agent on its own —
+              you drive, it executes.
+            </p>
 
-              <div style={{
-                marginTop: 28, padding: "18px 20px",
-                borderRadius: 16,
-                background: "#f2f2f0",
-                fontSize: 13, fontWeight: 400, lineHeight: 1.6,
-                color: "rgba(0,60,70,0.72)",
+            <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "28px 0 6px", flexWrap: "wrap" }}>
+              <span style={{
+                fontSize: "clamp(44px, 5.4vw, 72px)",
+                fontWeight: 800, color: "#003c46",
+                lineHeight: 0.95, letterSpacing: "-0.025em",
               }}>
-                <strong style={{ fontWeight: 700, color: "#003c46" }}>Why so much agency support?</strong>{" "}
-                We're in alpha and would rather have humans in the loop than let early users hit a rough
-                edge alone. The free agency wrap-around is a thank-you for piloting with us — it ends
-                when we exit alpha.
-              </div>
+                $247
+              </span>
+              <span style={{
+                fontSize: 16, fontWeight: 400, color: "rgba(0,60,70,0.65)",
+                letterSpacing: "0.02em",
+              }}>
+                / month
+              </span>
             </div>
-          </div>
-        </article>
+            <div style={{ fontSize: 13, fontWeight: 500, color: "rgba(0,60,70,0.6)", letterSpacing: "0.02em" }}>
+              No agency services. Just the agent.
+            </div>
+
+            <div style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
+              <a
+                href="/#signup"
+                style={{
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  padding: "14px 24px", borderRadius: 999,
+                  background: "#003c46", color: "#f2f2f0",
+                  fontSize: 13, fontWeight: 700,
+                  letterSpacing: "0.18em", textTransform: "uppercase",
+                  textDecoration: "none",
+                }}
+              >
+                Sign up
+              </a>
+            </div>
+
+            <div style={{
+              fontSize: 11, fontWeight: 700, letterSpacing: "0.3em",
+              color: "rgba(0,60,70,0.55)", textTransform: "uppercase",
+              margin: "36px 0 16px",
+            }}>
+              What you get
+            </div>
+            <ul style={{
+              margin: 0, padding: 0, listStyle: "none",
+              display: "flex", flexDirection: "column", gap: 14,
+              fontSize: "clamp(14px, 1vw, 15px)",
+              fontWeight: 400, lineHeight: 1.6,
+              color: "#003c46",
+            }}>
+              {SIMPLICITY_BENEFITS.map((item) => (
+                <li key={item.bold} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                  <span aria-hidden style={{
+                    flexShrink: 0,
+                    display: "inline-flex", alignItems: "center", justifyContent: "center",
+                    width: 22, height: 22, borderRadius: 999,
+                    background: "#e3fbf2", color: "#003c46",
+                    marginTop: 1,
+                  }}>
+                    <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </span>
+                  <span>
+                    <strong style={{ fontWeight: 700 }}>{item.bold}</strong>
+                    {item.rest}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </article>
+
+          {/* ── Alpha plan (featured) ── */}
+          <article className="intro-scale-in" style={{
+            position: "relative",
+            background: "#ffffff",
+            borderRadius: 28,
+            padding: "clamp(28px, 3.6vw, 52px)",
+            boxShadow:
+              "0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(0,60,70,0.08), 0 40px 80px -20px rgba(0,60,70,0.18), 0 0 0 2px #ff6b5c",
+            animationDelay: "0.15s",
+            display: "flex", flexDirection: "column",
+          }}>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 8, alignSelf: "flex-start",
+              padding: "6px 14px", borderRadius: 999,
+              background: "#fff3f2", color: "#ff6b5c",
+              fontSize: 11, fontWeight: 700, letterSpacing: "0.16em",
+              textTransform: "uppercase",
+            }}>
+              <span aria-hidden style={{ width: 6, height: 6, borderRadius: 999, background: "#ff6b5c" }} />
+              Limited — pilot users only
+            </div>
+
+            <h1 style={{
+              margin: "22px 0 10px",
+              fontSize: "clamp(30px, 3.4vw, 48px)",
+              fontWeight: 800, letterSpacing: "-0.015em",
+              lineHeight: 1.02, color: "#003c46",
+            }}>
+              Alpha plan
+            </h1>
+            <p style={{
+              margin: 0,
+              fontSize: "clamp(14px, 1.05vw, 16px)",
+              fontWeight: 300, color: "rgba(0,60,70,0.7)",
+              lineHeight: 1.6, maxWidth: 440,
+            }}>
+              The autonomous agent, supervised end-to-end by a real ad agency. One plan, one price,
+              no fine print.
+            </p>
+
+            <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "28px 0 6px", flexWrap: "wrap" }}>
+              <span style={{
+                fontSize: "clamp(44px, 5.4vw, 72px)",
+                fontWeight: 800, color: "#003c46",
+                lineHeight: 0.95, letterSpacing: "-0.025em",
+              }}>
+                $997
+              </span>
+              <span style={{
+                fontSize: 16, fontWeight: 400, color: "rgba(0,60,70,0.65)",
+                letterSpacing: "0.02em",
+              }}>
+                / month
+              </span>
+            </div>
+            <div style={{ fontSize: 13, fontWeight: 500, color: "#ff6b5c", letterSpacing: "0.02em" }}>
+              $0 for every agency service on top.
+            </div>
+
+            <div style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
+              <a
+                href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
+                target="_blank" rel="noopener noreferrer"
+                style={{
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  padding: "14px 24px", borderRadius: 999,
+                  background: "#003c46", color: "#f2f2f0",
+                  fontSize: 13, fontWeight: 700,
+                  letterSpacing: "0.18em", textTransform: "uppercase",
+                  textDecoration: "none",
+                }}
+              >
+                Book a Demo
+              </a>
+              <a
+                href="/#signup"
+                style={{
+                  display: "inline-flex", alignItems: "center", justifyContent: "center",
+                  padding: "14px 24px", borderRadius: 999,
+                  background: "#8bf2d3", color: "#003c46",
+                  fontSize: 13, fontWeight: 700,
+                  letterSpacing: "0.18em", textTransform: "uppercase",
+                  textDecoration: "none",
+                }}
+              >
+                Sign up
+              </a>
+            </div>
+
+            <div style={{
+              fontSize: 11, fontWeight: 700, letterSpacing: "0.3em",
+              color: "rgba(0,60,70,0.55)", textTransform: "uppercase",
+              margin: "36px 0 16px",
+            }}>
+              What you get
+            </div>
+            <ul style={{
+              margin: 0, padding: 0, listStyle: "none",
+              display: "flex", flexDirection: "column", gap: 14,
+              fontSize: "clamp(14px, 1vw, 15px)",
+              fontWeight: 400, lineHeight: 1.6,
+              color: "#003c46",
+            }}>
+              {ALPHA_BENEFITS.map((item) => (
+                <li key={item.bold} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                  <span aria-hidden style={{
+                    flexShrink: 0,
+                    display: "inline-flex", alignItems: "center", justifyContent: "center",
+                    width: 22, height: 22, borderRadius: 999,
+                    background: "#e3fbf2", color: "#003c46",
+                    marginTop: 1,
+                  }}>
+                    <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </span>
+                  <span>
+                    <strong style={{ fontWeight: 700 }}>{item.bold}</strong>
+                    {item.rest}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div style={{
+              marginTop: 24, padding: "16px 18px",
+              borderRadius: 16, background: "#f2f2f0",
+              fontSize: 13, fontWeight: 400, lineHeight: 1.6,
+              color: "rgba(0,60,70,0.72)",
+            }}>
+              <strong style={{ fontWeight: 700, color: "#003c46" }}>Why so much agency support?</strong>{" "}
+              We're in alpha and would rather have humans in the loop than let early users hit a rough
+              edge alone. The free agency wrap-around is a thank-you for piloting with us — it ends
+              when we exit alpha.
+            </div>
+          </article>
+        </div>
       </section>
 
-      {/* Stack columns under 880px */}
+      {/* Stack cards under 960px */}
       <style>{`
-        @media (max-width: 880px) {
-          .pricing-grid { grid-template-columns: 1fr !important; }
+        @media (max-width: 960px) {
+          .pricing-cards { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </main>
