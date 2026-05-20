@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     title: "Privacy Policy | Mentic",
     description:
       "How Mentic collects, uses, stores, shares, and protects personal information.",
-    url: "https://mentic.io/privacy",
+    url: "https://www.mentic.io/privacy",
     type: "article",
   },
 };
@@ -22,8 +22,39 @@ const CONTACT_EMAIL = "maksymilian@mentic.io";
 const ADDRESS = "251 Little Falls Drive, Wilmington, New Castle County, Delaware 19808, USA";
 const LEGAL_ENTITY = "Mentic Inc.";
 
+const SITE_URL = "https://www.mentic.io";
+
+const privacyJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Privacy Policy", item: `${SITE_URL}/privacy` },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${SITE_URL}/privacy#webpage`,
+      url: `${SITE_URL}/privacy`,
+      name: "Privacy Policy | Mentic",
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      about: { "@id": `${SITE_URL}/#organization` },
+      datePublished: "2026-02-24",
+      dateModified: "2026-02-24",
+      inLanguage: "en-US",
+    },
+  ],
+};
+
 export default function PrivacyPolicyPage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(privacyJsonLd) }}
+      />
     <main className="privacy-page">
       <div className="privacy-shell">
         <header className="privacy-header">
@@ -329,5 +360,6 @@ export default function PrivacyPolicyPage() {
         </article>
       </div>
     </main>
+    </>
   );
 }

@@ -1,11 +1,97 @@
 import type { Metadata } from "next";
 import SiteMenu from "@/components/SiteMenu";
 
+const SITE_URL = "https://www.mentic.io";
+const PRICING_TITLE = "Pricing";
+const PRICING_DESCRIPTION =
+  "Mentic pricing — Advertising Simplicity at $247/month for full Mentic.io access (self-serve, no human media buyers), or the Alpha plan at $997/month with a senior team of human media buyers from EXQDigital and every EXQDigital agency service included free for pilot users.";
+
 export const metadata: Metadata = {
-  title: "Pricing",
-  description:
-    "Mentic pricing — Advertising Simplicity at $247/month for full Mentic.io access (self-serve, no human media buyers), or the Alpha plan at $997/month with a senior team of human media buyers from EXQDigital and every EXQDigital agency service included free for pilot users.",
+  title: PRICING_TITLE,
+  description: PRICING_DESCRIPTION,
   alternates: { canonical: "/pricing" },
+  openGraph: {
+    type: "website",
+    url: `${SITE_URL}/pricing`,
+    title: `${PRICING_TITLE} | Mentic`,
+    description: PRICING_DESCRIPTION,
+  },
+  twitter: {
+    title: `${PRICING_TITLE} | Mentic`,
+    description: PRICING_DESCRIPTION,
+  },
+};
+
+const pricingJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Pricing", item: `${SITE_URL}/pricing` },
+      ],
+    },
+    {
+      "@type": "Product",
+      "@id": `${SITE_URL}/pricing#product`,
+      name: "Mentic",
+      description: PRICING_DESCRIPTION,
+      brand: { "@id": `${SITE_URL}/#organization` },
+      image: `${SITE_URL}/opengraph-image`,
+      offers: {
+        "@type": "AggregateOffer",
+        priceCurrency: "USD",
+        lowPrice: "247",
+        highPrice: "997",
+        offerCount: 2,
+        offers: [
+          {
+            "@type": "Offer",
+            name: "Advertising Simplicity",
+            description:
+              "Full Mentic.io access — autonomous strategy, launches and optimisation, fully self-serve, no human media buyers.",
+            price: "247",
+            priceCurrency: "USD",
+            url: `${SITE_URL}/pricing`,
+            availability: "https://schema.org/InStock",
+            category: "Self-serve",
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              price: "247",
+              priceCurrency: "USD",
+              referenceQuantity: {
+                "@type": "QuantitativeValue",
+                value: 1,
+                unitCode: "MON",
+              },
+            },
+          },
+          {
+            "@type": "Offer",
+            name: "Alpha plan",
+            description:
+              "Full Mentic.io access plus a senior team of human media buyers from EXQDigital and every EXQDigital agency service included free for pilot users.",
+            price: "997",
+            priceCurrency: "USD",
+            url: `${SITE_URL}/pricing`,
+            availability: "https://schema.org/LimitedAvailability",
+            category: "Agency-wrapped",
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              price: "997",
+              priceCurrency: "USD",
+              referenceQuantity: {
+                "@type": "QuantitativeValue",
+                value: 1,
+                unitCode: "MON",
+              },
+            },
+          },
+        ],
+      },
+    },
+  ],
 };
 
 const ALPHA_BENEFITS = [
@@ -52,6 +138,11 @@ const SIMPLICITY_BENEFITS = [
 
 export default function PricingPage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingJsonLd) }}
+      />
     <main className="use-native-cursor" style={{
       minHeight: "100dvh",
       width: "100%",
@@ -350,5 +441,6 @@ export default function PricingPage() {
         }
       `}</style>
     </main>
+    </>
   );
 }

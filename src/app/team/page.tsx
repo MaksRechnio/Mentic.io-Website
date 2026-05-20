@@ -2,10 +2,25 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import SiteMenu from "@/components/SiteMenu";
 
+const SITE_URL = "https://www.mentic.io";
+const TEAM_TITLE = "Team";
+const TEAM_DESCRIPTION =
+  "The team behind Mentic — Maksymilian Rechnio (CEO), Bo Bredenbruecher (CTO) and Miguel Werneck Roale (Founding Engineer).";
+
 export const metadata: Metadata = {
-  title: "Team",
-  description: "The team behind Mentic — Maksymilian Rechnio (CEO), Bo Bredenbruecher (CTO) and Miguel Werneck Roale (Founding Engineer).",
+  title: TEAM_TITLE,
+  description: TEAM_DESCRIPTION,
   alternates: { canonical: "/team" },
+  openGraph: {
+    type: "website",
+    url: `${SITE_URL}/team`,
+    title: `${TEAM_TITLE} | Mentic`,
+    description: TEAM_DESCRIPTION,
+  },
+  twitter: {
+    title: `${TEAM_TITLE} | Mentic`,
+    description: TEAM_DESCRIPTION,
+  },
 };
 
 type Member = {
@@ -41,8 +56,34 @@ const TEAM: Member[] = [
   },
 ];
 
+const teamJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "Team", item: `${SITE_URL}/team` },
+      ],
+    },
+    ...TEAM.map((member) => ({
+      "@type": "Person",
+      name: member.name,
+      jobTitle: member.role,
+      image: member.photo ? `${SITE_URL}${member.photo.src}` : undefined,
+      worksFor: { "@id": `${SITE_URL}/#organization` },
+      sameAs: [member.linkedin, member.instagram],
+    })),
+  ],
+};
+
 export default function TeamPage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(teamJsonLd) }}
+      />
     <main className="use-native-cursor" style={{
       minHeight: "100dvh",
       width: "100%",
@@ -264,5 +305,6 @@ export default function TeamPage() {
         }
       `}</style>
     </main>
+    </>
   );
 }

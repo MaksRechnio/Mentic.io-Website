@@ -1,11 +1,25 @@
 import type { Metadata } from "next";
 import SiteMenu from "@/components/SiteMenu";
 
+const SITE_URL = "https://www.mentic.io";
+const NEWS_TITLE = "News";
+const NEWS_DESCRIPTION =
+  "Mentic news — Mentic.io has been accepted into Batch 001 of Teleport SF, an accelerator for builders shipping autonomous AI.";
+
 export const metadata: Metadata = {
-  title: "News",
-  description:
-    "Mentic news — Mentic.io has been accepted into Batch 001 of Teleport SF, an accelerator for builders shipping autonomous AI.",
+  title: NEWS_TITLE,
+  description: NEWS_DESCRIPTION,
   alternates: { canonical: "/news" },
+  openGraph: {
+    type: "website",
+    url: `${SITE_URL}/news`,
+    title: `${NEWS_TITLE} | Mentic`,
+    description: NEWS_DESCRIPTION,
+  },
+  twitter: {
+    title: `${NEWS_TITLE} | Mentic`,
+    description: NEWS_DESCRIPTION,
+  },
 };
 
 const NEWS = [
@@ -25,8 +39,44 @@ const NEWS = [
   },
 ];
 
+const newsJsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+        { "@type": "ListItem", position: 2, name: "News", item: `${SITE_URL}/news` },
+      ],
+    },
+    ...NEWS.map((item) => {
+      const headline = item.titleParts.map((p) => p.text).join("").trim();
+      return {
+        "@type": "NewsArticle",
+        headline,
+        datePublished: item.isoDate,
+        dateModified: item.isoDate,
+        articleSection: item.tag,
+        description: item.body,
+        image: `${SITE_URL}/opengraph-image`,
+        author: { "@id": `${SITE_URL}/#organization` },
+        publisher: { "@id": `${SITE_URL}/#organization` },
+        mainEntityOfPage: {
+          "@type": "WebPage",
+          "@id": `${SITE_URL}/news`,
+        },
+      };
+    }),
+  ],
+};
+
 export default function NewsPage() {
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(newsJsonLd) }}
+      />
     <main className="use-native-cursor" style={{
       minHeight: "100dvh",
       width: "100%",
@@ -139,5 +189,6 @@ export default function NewsPage() {
         </div>
       </section>
     </main>
+    </>
   );
 }
