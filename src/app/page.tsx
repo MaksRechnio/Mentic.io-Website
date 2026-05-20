@@ -1279,7 +1279,7 @@ export default function PreviewLanding() {
           >Log in</a>
           <button
             type="button"
-            onClick={() => { sfxPress(); setMenuOpen(false); setTimeout(() => openSignup(), 280); }}
+            onClick={() => { sfxPress(); window.location.href = "https://app.mentic.io/signup"; }}
             onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.background = "#00525f"; e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = "#003c46"; e.currentTarget.style.transform = "translateY(0)"; }}
             style={{
@@ -1573,7 +1573,7 @@ export default function PreviewLanding() {
             }}>
               mentic
             </div>
-            <button onClick={() => { sfxPress(); openSignup(); }} id="hero-btn" style={{
+            <button onClick={() => { sfxPress(); window.location.href = "https://app.mentic.io/signup"; }} id="hero-btn" style={{
               position: "absolute",
               top: m ? MY(493) : Y(774), left: m ? MX(177) : X(1164),
               width: m ? MW(165.338) : W(229.913), height: m ? MH(64.838) : H(90.162),
@@ -2166,7 +2166,7 @@ export default function PreviewLanding() {
             }}>
               Alpha releasing <span style={{ fontWeight: 600 }}>soon!</span>
             </div>
-            <button onClick={() => { sfxPress(); openSignup(); }} id="cta-button" style={{
+            <button onClick={() => { sfxPress(); window.location.href = "https://app.mentic.io/signup"; }} id="cta-button" style={{
               position: "absolute",
               top: m ? MY(368) : Y(777), left: m ? MX(99) : X(1190),
               width: m ? MW(195) : W(195), height: m ? MH(78) : H(78),
