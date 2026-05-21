@@ -26,14 +26,14 @@ const MY = (y: number) => `${(y / 852) * 100}%`;
 const MW = (w: number) => `${(w / 393) * 100}%`;
 const MH = (h: number) => `${(h / 852) * 100}%`;
 const MFS = (px: number) => {
-  /* Mobile font sizes: bump the Figma design size by ~15% across the board
-     for readability on phones (the original 393px design read small on real
-     devices) and clamp so text never shrinks on narrow viewports or blows
-     up on tablet-sized viewports still below the 1024 mobile breakpoint. */
-  const bumped = px * 1.15;
-  const vw = ((bumped / 393) * 100).toFixed(3);
-  const min = bumped.toFixed(2);
-  const max = (bumped * 1.25).toFixed(2);
+  /* Mobile font sizes: original Figma design at 393px width. Clamp so text
+     never shrinks below the design size on narrow phones and never blows up
+     on tablet-sized viewports still inside the <1024 mobile branch.
+     NOTE: do not multiply px here — text is absolutely positioned with fixed
+     MW widths, so any scale-up causes wrap/overlap with neighbouring blocks. */
+  const vw = ((px / 393) * 100).toFixed(3);
+  const min = px.toFixed(2);
+  const max = (px * 1.2).toFixed(2);
   return `clamp(${min}px, ${vw}vw, ${max}px)`;
 };
 

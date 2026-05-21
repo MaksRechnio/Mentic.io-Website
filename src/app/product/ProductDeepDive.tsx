@@ -1322,13 +1322,25 @@ function WhyScene() {
 function CtaSection() {
   const ref = useRef<HTMLDivElement>(null);
   const p = useScrollProgress(ref);
-  return (
-    <div ref={ref} style={{ height: "110vh", position: "relative" }}>
-      <div style={{
+  const isMobile = useIsMobile();
+  /* On mobile: render flat with no sticky and treat all reveals as fully
+     visible. Matches the no-locking treatment in PinnedScene / HeroScene. */
+  const effectiveP = isMobile ? 1 : p;
+  const innerStyle: React.CSSProperties = isMobile
+    ? {
+        position: "relative",
+        padding: "clamp(64px, 9vh, 96px) clamp(20px, 5vw, 32px)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        textAlign: "center",
+      }
+    : {
         position: "sticky", top: 0, height: "100dvh",
         display: "flex", alignItems: "center", justifyContent: "center",
         textAlign: "center", padding: "clamp(80px, 12vh, 140px) clamp(20px, 6vw, 96px)",
-      }}>
+      };
+  return (
+    <div ref={ref} style={{ height: isMobile ? "auto" : "110vh", position: "relative" }}>
+      <div style={innerStyle}>
         <div>
           <h2 style={{
             margin: 0,
@@ -1338,9 +1350,9 @@ function CtaSection() {
             letterSpacing: "-0.02em",
             color: TEAL,
           }}>
-            <span style={{ display: "block", fontWeight: 200, ...fadeBlur(p, 0, 0.25) }}>One URL.</span>
-            <span style={{ display: "block", fontWeight: 800, color: CORAL, ...fadeBlur(p, 0.08, 0.32) }}>One team of agents.</span>
-            <span style={{ display: "block", fontWeight: 200, ...fadeBlur(p, 0.18, 0.42) }}>Your whole funnel.</span>
+            <span style={{ display: "block", fontWeight: 200, ...fadeBlur(effectiveP, 0, 0.25) }}>One URL.</span>
+            <span style={{ display: "block", fontWeight: 800, color: CORAL, ...fadeBlur(effectiveP, 0.08, 0.32) }}>One team of agents.</span>
+            <span style={{ display: "block", fontWeight: 200, ...fadeBlur(effectiveP, 0.18, 0.42) }}>Your whole funnel.</span>
           </h2>
           <p style={{
             margin: "28px auto 0",
@@ -1349,14 +1361,14 @@ function CtaSection() {
             fontWeight: 300,
             lineHeight: 1.55,
             color: TEAL_INK,
-            ...fadeBlur(p, 0.3, 0.48, 14, 8),
+            ...fadeBlur(effectiveP, 0.3, 0.48, 14, 8),
           }}>
             Onboarding pilot users now — $997/month including every agency service from EXQDigital free during alpha.
           </p>
           <div style={{
             marginTop: 44,
             display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center",
-            ...fadeUp(p, 0.4, 0.6, 24),
+            ...fadeUp(effectiveP, 0.4, 0.6, 24),
           }}>
             <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={ctaTeal}>
               Book a demo
