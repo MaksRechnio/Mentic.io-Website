@@ -1641,7 +1641,7 @@ export default function PreviewLanding() {
                     <span className="pw" style={{ fontWeight: 600 }}>autonomous</span>
                   </span>
                   <span id="product-line-2" className="product-line" style={{ display: "block", color: "#ff6b5c", fontWeight: 800, fontSize: 44, lineHeight: 0.98, margin: "0.08em 0", letterSpacing: "-0.02em" }}>
-                    {Array.from("AI CMO").map((c, i) => (
+                    {Array.from("AI Advertiser").map((c, i) => (
                       <span key={i} className="pl" style={{ display: "inline-block", whiteSpace: "pre" }}>{c}</span>
                     ))}
                   </span>
@@ -1692,7 +1692,7 @@ export default function PreviewLanding() {
                   }}>
                     <Image
                       src="/mentic-software-screenshot.png"
-                      alt="Mentic application — autonomous AI CMO dashboard"
+                      alt="Mentic application — autonomous AI Advertiser dashboard"
                       fill
                       sizes="100vw"
                       style={{ objectFit: "cover" }}
@@ -1724,7 +1724,7 @@ export default function PreviewLanding() {
                     <span className="pw" style={{ fontWeight: 600 }}>autonomous</span>
                   </span>
                   <span id="product-line-2" className="product-line" style={{ display: "block", color: "#ff6b5c", fontWeight: 800, fontSize: "clamp(48px, 5.4vw, 96px)", lineHeight: 0.96, margin: "0.08em 0", letterSpacing: "-0.025em" }}>
-                    {Array.from("AI CMO").map((c, i) => (
+                    {Array.from("AI Advertiser").map((c, i) => (
                       <span key={i} className="pl" style={{ display: "inline-block", whiteSpace: "pre" }}>{c}</span>
                     ))}
                   </span>
@@ -1775,7 +1775,7 @@ export default function PreviewLanding() {
                   }}>
                     <Image
                       src="/mentic-software-screenshot.png"
-                      alt="Mentic application — autonomous AI CMO dashboard"
+                      alt="Mentic application — autonomous AI Advertiser dashboard"
                       fill
                       sizes="55vw"
                       style={{ objectFit: "cover" }}
