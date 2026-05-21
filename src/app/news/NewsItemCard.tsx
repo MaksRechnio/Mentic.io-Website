@@ -170,6 +170,7 @@ export default function NewsItemCard({
               fontWeight: 400,
               lineHeight: 1.6,
               color: "rgba(0,60,70,0.78)",
+              whiteSpace: "pre-line",
             }}
           >
             {item.body}

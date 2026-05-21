@@ -5,7 +5,7 @@ import NewsItemCard, { type NewsItemData } from "./NewsItemCard";
 const SITE_URL = "https://www.mentic.io";
 const NEWS_TITLE = "News";
 const NEWS_DESCRIPTION =
-  "Mentic news — Mentic team wins the Grand Prize at the SF State Appathon with SnapChef, and joins Batch 001 of Teleport SF.";
+  "Mentic news — Mentic's AI Advertiser launches in alpha, the team wins the Grand Prize at the SF State Appathon with SnapChef, and joins Batch 001 of Teleport SF.";
 
 export const metadata: Metadata = {
   title: NEWS_TITLE,
@@ -24,6 +24,18 @@ export const metadata: Metadata = {
 };
 
 const NEWS: NewsItemData[] = [
+  {
+    date: "21 May 2026",
+    isoDate: "2026-05-21",
+    tag: "Launch",
+    titleParts: [
+      { text: "Mentic is ", weight: 700, color: "#003c46" },
+      { text: "live", weight: 800, color: "#ff6b5c" },
+      { text: ".", weight: 700, color: "#003c46" },
+    ],
+    body:
+      "MENTIC IS LAUNCHING!\n\nWe built an AI Advertiser that:\n\n1. Autonomously launches your ads.\n2. Manages and optimises while you sleep.\n3. Tailors a strategy and executes it.\n\nGive it your URL, your budget, and your goal.\n\nRun the whole thing from Slack or Telegram.\n\nYou own every account, every pixel, every audience.\n\nNo huge retainer, no lock-in.\n\nBuilt for small businesses that want the work done without handing over the keys.\n\nAlpha's open — link in the comments.",
+  },
   {
     date: "20 May 2026",
     isoDate: "2026-05-20",
