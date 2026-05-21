@@ -351,6 +351,42 @@ export default function PreviewLanding() {
 
     const ctx = gsap.context(() => {
 
+      /* ── Mobile: bypass the entire scroll-locked enter/exit animation system.
+         On desktop these run cleanly because each section snaps into view one
+         at a time. On mobile (free scroll, no snap), the exit fade-outs fire
+         while the next section is only partly on-screen, producing flicker,
+         missing content, and a "buggy / locked" feel. Render everything
+         statically visible and skip the ScrollTriggers entirely. ── */
+      if (isMobile) {
+        const layerIds = [
+          "#hero-layer", "#product-layer", "#pain-layer", "#calc-layer",
+          "#sol-layer", "#no-layer", "#how-layer", "#val-layer", "#cta-layer",
+        ];
+        const revealIds = [
+          "#pain-text-1", "#pain-text-2", "#pain-text-3",
+          "#sol-text-1", "#sol-text-2", "#sol-text-3",
+          "#no-text", "#no-item-1", "#no-item-2", "#no-item-3", "#no-item-4", "#no-dot",
+          "#how-step-1", "#how-step-2", "#how-step-3", "#how-mentic", "#how-rest",
+          "#val-one", "#val-every", "#val-all",
+          "#calc-panel", "#calc-heading", "#calc-amount", "#calc-glass",
+          "#calc-fifty", "#calc-fees", "#calc-notads",
+          "#cta-icon", "#cta-sign", "#cta-up", "#cta-now", "#cta-alpha", "#cta-button",
+          "#glass-card", "#video-frame", "#product-shot",
+          "#blob-coral", "#blob-mint", "#scene-coral", "#scene-mint",
+          "#icon-teal",
+        ];
+        gsap.set([...layerIds, ...revealIds, ".product-line .pw", ".product-line .pl"], {
+          opacity: 1,
+          clipPath: "none",
+          clearProps: "transform,filter,x,y,scale,rotation,xPercent,yPercent",
+        });
+        /* Background: each section sets its own bg via the wrapper's section
+           contents on desktop. On mobile, fix a single neutral bg so it never
+           flashes between scenes. */
+        gsap.set("#bg", { backgroundColor: "#f2f2f0" });
+        return;
+      }
+
       /* ── Initial hidden state for product headline words/letters ── */
       gsap.set(".product-line .pw, .product-line .pl", { opacity: 0 });
 
