@@ -74,6 +74,22 @@ function scaleIn(p: number, from: number, to: number, scaleFrom = 0.92, lift = 4
 }
 
 /* ─────────────────────────────────────────────────────────────
+   Hook: viewport-based mobile detection. Returns false on the
+   server / before mount so SSR matches the desktop render, then
+   flips on mount if the viewport is narrower than `breakpoint`.
+   ─────────────────────────────────────────────────────────── */
+function useIsMobile(breakpoint = 1024) {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < breakpoint);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [breakpoint]);
+  return isMobile;
+}
+
+/* ─────────────────────────────────────────────────────────────
    Hook: scroll progress within a tall outer container
    ─────────────────────────────────────────────────────────── */
 function useScrollProgress(ref: React.RefObject<HTMLElement | null>) {
@@ -121,7 +137,28 @@ function PinnedScene({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const progress = useScrollProgress(ref);
+  const isMobile = useIsMobile();
   const hintOpacity = 1 - easeOutCubic(range(progress, 0.72, 0.95));
+
+  /* Mobile: render flat, stacked, no sticky. Pass p=1 so every scroll-driven
+     reveal is in its fully-revealed state. The scene becomes a normal
+     full-bleed section that scrolls naturally with the rest of the page. */
+  if (isMobile) {
+    return (
+      <section
+        style={{
+          width: "100%",
+          padding: "clamp(64px, 9vh, 96px) clamp(20px, 5vw, 32px)",
+          position: "relative",
+        }}
+      >
+        <div style={{ width: "100%", maxWidth: 720, margin: "0 auto" }}>
+          {children(1)}
+        </div>
+      </section>
+    );
+  }
+
   return (
     <div ref={ref} style={{ height: scrollHeight, position: "relative" }}>
       <div
@@ -195,12 +232,12 @@ function SectionHeader({
   p: number;
 }) {
   return (
-    <div style={{
+    <div className="section-head" style={{
       display: "grid",
       gridTemplateColumns: "minmax(0, 1fr) minmax(0, 2fr)",
       gap: "clamp(20px, 3vw, 64px)",
       alignItems: "start",
-    }} className="section-head">
+    }}>
       <div style={fadeUp(p, 0, 0.12)}>
         <div style={{
           fontSize: 11, fontWeight: 700, letterSpacing: "0.3em",
@@ -213,8 +250,8 @@ function SectionHeader({
       <div>
         <h2 style={{
           margin: 0,
-          fontSize: "clamp(30px, 4.6vw, 64px)",
-          lineHeight: 1.04,
+          fontSize: "clamp(28px, 4.6vw, 64px)",
+          lineHeight: 1.06,
           letterSpacing: "-0.02em",
           color: TEAL,
           ...fadeBlur(p, 0.02, 0.18),
@@ -225,10 +262,10 @@ function SectionHeader({
         </h2>
         {body && (
           <p style={{
-            margin: "20px 0 0",
+            margin: "18px 0 0",
             maxWidth: 720,
-            fontSize: "clamp(14px, 1.2vw, 18px)",
-            fontWeight: 300, lineHeight: 1.55,
+            fontSize: "clamp(15px, 1.2vw, 18px)",
+            fontWeight: 300, lineHeight: 1.6,
             color: TEAL_INK,
             ...fadeUp(p, 0.06, 0.22, 24),
           }}>
@@ -236,6 +273,15 @@ function SectionHeader({
           </p>
         )}
       </div>
+
+      <style jsx>{`
+        @media (max-width: 1023px) {
+          .section-head {
+            grid-template-columns: 1fr !important;
+            gap: 18px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
@@ -329,19 +375,23 @@ export default function ProductDeepDive() {
 function HeroScene() {
   const ref = useRef<HTMLDivElement>(null);
   const p = useScrollProgress(ref);
+  const isMobile = useIsMobile();
   /* Fade the hero OUT as we scroll past it instead of in from invisible —
      so it's visible at page load and only dims as the user moves on. */
   const fadeOut = 1 - easeOutCubic(range(p, 0.4, 0.9));
-  return (
-    <div ref={ref} style={{ height: "130vh", position: "relative" }}>
-      <div style={{
+  const outerStyle: React.CSSProperties = isMobile
+    ? { position: "relative", padding: "clamp(120px, 16vh, 180px) clamp(20px, 5vw, 32px) clamp(48px, 8vh, 72px)", display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", minHeight: "auto" }
+    : {
         position: "sticky", top: 0, height: "100dvh",
         display: "flex", alignItems: "center", justifyContent: "center",
         textAlign: "center", padding: "clamp(120px, 18vh, 200px) clamp(20px, 6vw, 96px) 0",
         opacity: 0.2 + 0.8 * fadeOut,
         transform: `translateY(${(1 - fadeOut) * -32}px)`,
         transition: "opacity 0.2s linear",
-      }}>
+      };
+  return (
+    <div ref={ref} style={{ height: isMobile ? "auto" : "130vh", position: "relative" }}>
+      <div style={outerStyle}>
         <div>
           <div className="intro-blur-in" style={{
             display: "inline-flex", alignItems: "center", gap: 10,
@@ -392,8 +442,8 @@ function HeroScene() {
         </div>
       </div>
 
-      {/* Persistent scroll indicator at the bottom of the hero */}
-      <ScrollHint label="Scroll for the deep dive" opacity={fadeOut} />
+      {/* Persistent scroll indicator at the bottom of the hero — desktop only */}
+      {!isMobile && <ScrollHint label="Scroll for the deep dive" opacity={fadeOut} />}
     </div>
   );
 }

@@ -25,7 +25,15 @@ const MX = (x: number) => `${(x / 393) * 100}%`;
 const MY = (y: number) => `${(y / 852) * 100}%`;
 const MW = (w: number) => `${(w / 393) * 100}%`;
 const MH = (h: number) => `${(h / 852) * 100}%`;
-const MFS = (px: number) => `${(px / 393) * 100}vw`;
+const MFS = (px: number) => {
+  /* Clamp mobile font sizes so text never shrinks below its design size on
+     narrow phones (readability) and never blows up on tablet-sized viewports
+     below the 1024 mobile breakpoint. */
+  const vw = ((px / 393) * 100).toFixed(3);
+  const min = px.toFixed(2);
+  const max = (px * 1.25).toFixed(2);
+  return `clamp(${min}px, ${vw}vw, ${max}px)`;
+};
 
 // Layout uses normal-flow sections with ScrollTrigger animations
 
