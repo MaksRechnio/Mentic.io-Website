@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import SiteMenu from "@/components/SiteMenu";
 
 const SITE_URL = "https://www.mentic.io";
 const NEWS_TITLE = "News";
 const NEWS_DESCRIPTION =
-  "Mentic news — Mentic.io has been accepted into Batch 001 of Teleport SF, an accelerator for builders shipping autonomous AI.";
+  "Mentic news — Mentic team wins the Grand Prize at the SF State Appathon with SnapChef, and joins Batch 001 of Teleport SF.";
 
 export const metadata: Metadata = {
   title: NEWS_TITLE,
@@ -22,7 +23,35 @@ export const metadata: Metadata = {
   },
 };
 
-const NEWS = [
+type TitlePart = { text: string; weight: number; color: string };
+type NewsItem = {
+  date: string;
+  isoDate: string;
+  tag: string;
+  titleParts: TitlePart[];
+  body: string;
+  image?: { src: string; alt: string };
+};
+
+const NEWS: NewsItem[] = [
+  {
+    date: "20 May 2026",
+    isoDate: "2026-05-20",
+    tag: "Award",
+    titleParts: [
+      { text: "Mentic team wins the ", weight: 700, color: "#003c46" },
+      { text: "Grand Prize", weight: 800, color: "#ff6b5c" },
+      { text: " at the ", weight: 700, color: "#003c46" },
+      { text: "SF State Appathon", weight: 800, color: "#003c46" },
+      { text: ".", weight: 700, color: "#003c46" },
+    ],
+    body:
+      "Yesterday at San Francisco State University's Appathon — a mobile-apps hackathon — the Mentic team (Brittany Sosa, Bo Bredenbruecher, Maksymilian Rechnio) took first place with SnapChef: a mobile app that turns a single photo of your fridge or pantry into a live food inventory. SnapChef recognises products and their expiry dates, sends notifications before food goes off, and generates recipes from exactly what you already have — with integrations planned for connected kitchen devices like Thermomix.",
+    image: {
+      src: "/news-snapchef-appathon.jpg",
+      alt: "Mentic team receiving the Grand Prize at the SF State Appathon for SnapChef",
+    },
+  },
   {
     date: "7 May 2026",
     isoDate: "2026-05-07",
@@ -167,6 +196,26 @@ export default function NewsPage() {
               }}>
                 {item.body}
               </p>
+
+              {item.image && (
+                <div style={{
+                  marginTop: 20,
+                  borderRadius: 16,
+                  overflow: "hidden",
+                  position: "relative",
+                  aspectRatio: "4 / 5",
+                  background: "#003c46",
+                  boxShadow: "0 8px 24px rgba(0,60,70,0.12)",
+                }}>
+                  <Image
+                    src={item.image.src}
+                    alt={item.image.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 720px"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
+              )}
             </article>
           ))}
 
