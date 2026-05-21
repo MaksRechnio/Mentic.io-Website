@@ -26,12 +26,14 @@ const MY = (y: number) => `${(y / 852) * 100}%`;
 const MW = (w: number) => `${(w / 393) * 100}%`;
 const MH = (h: number) => `${(h / 852) * 100}%`;
 const MFS = (px: number) => {
-  /* Clamp mobile font sizes so text never shrinks below its design size on
-     narrow phones (readability) and never blows up on tablet-sized viewports
-     below the 1024 mobile breakpoint. */
-  const vw = ((px / 393) * 100).toFixed(3);
-  const min = px.toFixed(2);
-  const max = (px * 1.25).toFixed(2);
+  /* Mobile font sizes: bump the Figma design size by ~15% across the board
+     for readability on phones (the original 393px design read small on real
+     devices) and clamp so text never shrinks on narrow viewports or blows
+     up on tablet-sized viewports still below the 1024 mobile breakpoint. */
+  const bumped = px * 1.15;
+  const vw = ((bumped / 393) * 100).toFixed(3);
+  const min = bumped.toFixed(2);
+  const max = (bumped * 1.25).toFixed(2);
   return `clamp(${min}px, ${vw}vw, ${max}px)`;
 };
 
@@ -512,6 +514,11 @@ export default function PreviewLanding() {
 
       /* ── Per-section exit: fade content out quickly ── */
       function exitSection(id: string) {
+        /* Keep the final CTA section visible once entered. Otherwise scrolling
+           past it (into the marquee + footer) fades the Sign UP content out and
+           leaves an empty white block — particularly bad on mobile where the
+           page scrolls naturally without snap. */
+        if (id === "section-cta") return;
         const layer = layerMap[id];
         if (!layer) return;
         gsap.to(layer, { opacity: 0, duration: 0.3, ease: "power2.in" });
