@@ -373,17 +373,19 @@ export default function PreviewLanding() {
         "section-cta": "#ffffff",
       };
 
-      /* ── Mobile: bypass the scroll-locked enter/exit FADE system but keep
-         per-section background colors so the design still reads correctly
-         (calc needs coral, sol/no/how/val/cta need white, etc.). On desktop
-         these animations run cleanly because each section snaps into view
-         one at a time. On mobile (free scroll, no snap), the layer
-         exit-fades fire while the next section is only partly on-screen,
-         producing flicker, missing content, and a "buggy / locked" feel.
-         So: render every layer + reveal element statically visible, drop the
-         scrub-based decorative animations (video frame scale, scene blob
-         drift), but keep cheap onEnter-only ScrollTriggers that animate
-         #bg to the section's mapped background color. ── */
+      /* ── Mobile: ZERO scroll-driven behaviour. No ScrollTriggers, no
+         scrub animations, no enter/exit fades. The desktop design is built
+         around scroll-snap + per-section animation triggers; on mobile that
+         architecture produces flicker, lag, and broken transforms. Instead:
+
+         1. Render every layer + reveal element statically visible.
+         2. Restore the static transforms that GSAP would have set on desktop
+            (most importantly the video-frame translate(-50%, -50%) that
+            centers it inside its section — without this the video sits
+            offset down-and-right by half its size).
+         3. Section backgrounds are applied inline on each <section>
+            element itself (see the m && { background: ... } spreads below),
+            so #bg's colour never needs to change on scroll. */
       if (isMobile) {
         const layerIds = [
           "#hero-layer", "#product-layer", "#pain-layer", "#calc-layer",
@@ -398,7 +400,7 @@ export default function PreviewLanding() {
           "#calc-panel", "#calc-heading", "#calc-amount", "#calc-glass",
           "#calc-fifty", "#calc-fees", "#calc-notads",
           "#cta-icon", "#cta-sign", "#cta-up", "#cta-now", "#cta-alpha", "#cta-button",
-          "#glass-card", "#video-frame", "#product-shot",
+          "#glass-card", "#product-shot",
           "#scene-coral", "#scene-mint",
           "#icon-teal",
         ];
@@ -407,28 +409,15 @@ export default function PreviewLanding() {
           clipPath: "none",
           clearProps: "transform,filter,x,y,scale,rotation,xPercent,yPercent",
         });
-        /* Blob layers stay visible across sections (matches the desktop look
-           after the first enterSection has run) and keep their resting
-           rotation set up in the parallax effect above. */
+        /* Video frame: top:50%/left:50% in the markup expects a -50% / -50%
+           translate from GSAP to center it. Apply that statically here. */
+        gsap.set("#video-frame", { xPercent: -50, yPercent: -50, scale: 1, opacity: 1 });
+        /* Blobs stay visible at their resting rotation (set in the parallax
+           effect above). */
         gsap.set(["#blob-coral", "#blob-mint"], { opacity: 1 });
-
-        /* Initial bg matches the hero. */
+        /* Neutral bg behind everything — each section paints its own bg
+           via an inline style. */
         gsap.set("#bg", { backgroundColor: bgColors["section-hero"] });
-
-        /* Per-section bg color via onEnter-only triggers (no scrub) so the
-           coral calc / white CTA sections render the design they were
-           built for. Cheap — fires a single tween per section transition. */
-        sections.forEach((section) => {
-          const color = bgColors[section.id];
-          if (!color) return;
-          ScrollTrigger.create({
-            trigger: section,
-            start: "top 60%",
-            end: "bottom 40%",
-            onEnter: () => gsap.to("#bg", { backgroundColor: color, duration: 0.35, ease: "power1.out", overwrite: true }),
-            onEnterBack: () => gsap.to("#bg", { backgroundColor: color, duration: 0.35, ease: "power1.out", overwrite: true }),
-          });
-        });
         return;
       }
 
@@ -1462,7 +1451,7 @@ export default function PreviewLanding() {
           }} />
 
           {/* ═══ HERO SECTION ═══ */}
-          <section id="section-hero" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-hero" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", ...(m && { background: "#f2f2f0" }) }}>
           <div id="hero-layer" style={{ position: "absolute", inset: 0, zIndex: 5, pointerEvents: "auto", opacity: 0 }}>
             <div id="hero-card" style={{
               position: "absolute",
@@ -1870,7 +1859,8 @@ export default function PreviewLanding() {
           {/* ═══ VIDEO SECTION ═══ */}
           <section id="section-video" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", background: "#f2f2f0" }}>
           <div id="video-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 1 }}>
-            {/* Video — scaled up by scroll progress */}
+            {/* Video — desktop scales up via scroll progress; mobile is
+                statically centered + at full scale. */}
             <div id="video-frame" style={{
               position: "absolute",
               top: "50%", left: "50%",
@@ -1879,6 +1869,9 @@ export default function PreviewLanding() {
               borderRadius: 24, overflow: "hidden",
               zIndex: 3,
               transformOrigin: "50% 50%",
+              /* Mobile: static center translate so the frame doesn't flash
+                 mis-positioned before the page-load gsap.set runs. */
+              ...(m && { transform: "translate(-50%, -50%)" }),
               boxShadow:
                 "0 30px 80px rgba(0,60,70,0.22), 0 0 120px rgba(139,242,211,0.22)",
             }}>
@@ -1897,7 +1890,7 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ PAIN SECTION ═══ */}
-          <section id="section-pain" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-pain" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", ...(m && { background: "#f2f2f0" }) }}>
           <div id="pain-layer" style={{ position: "absolute", inset: 0, zIndex: 4, opacity: 0 }}>
             {/* Pain ambience handled by the global scene-coral blob — no local blob needed */}
             <div id="pain-text-1" style={{
@@ -1944,7 +1937,7 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ CALC SECTION ═══ */}
-          <section id="section-calc" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-calc" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", ...(m && { background: "#ff6b5c" }) }}>
           <div id="calc-layer" style={{ position: "absolute", inset: 0, zIndex: 6, opacity: 0 }}>
             <div id="calc-panel" style={{
               position: "absolute",
@@ -2020,7 +2013,7 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ SOLUTION SECTION ═══ */}
-          <section id="section-sol" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-sol" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", ...(m && { background: "#ffffff" }) }}>
           <div id="sol-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
             <div id="sol-text-1" style={{
               position: "absolute",
@@ -2060,7 +2053,7 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ NO SECTION ═══ */}
-          <section id="section-no" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-no" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", ...(m && { background: "#ffffff" }) }}>
           <div id="no-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
             <div id="no-text" style={{
               position: "absolute",
@@ -2114,7 +2107,7 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ HOW SECTION ═══ */}
-          <section id="section-how" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-how" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", ...(m && { background: "#ffffff" }) }}>
           <div id="how-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
             <div id="how-step-1" style={{
               position: "absolute",
@@ -2165,7 +2158,7 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ VALUE SECTION ═══ */}
-          <section id="section-val" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-val" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", ...(m && { background: "#ffffff" }) }}>
           <div id="val-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
             <div id="val-one" style={{
               position: "absolute",
@@ -2202,7 +2195,7 @@ export default function PreviewLanding() {
           </section>
 
           {/* ═══ CTA SECTION ═══ */}
-          <section id="section-cta" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden" }}>
+          <section id="section-cta" style={{ position: "relative", width: "100%", height: "100dvh", overflow: "hidden", ...(m && { background: "#ffffff" }) }}>
           <div id="cta-layer" style={{ position: "absolute", inset: 0, zIndex: 3, opacity: 0 }}>
             {/* Orange icon — desktop only, hidden on mobile */}
             <div id="cta-icon" style={{
