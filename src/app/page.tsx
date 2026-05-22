@@ -2299,8 +2299,8 @@ export default function PreviewLanding() {
               {Array.from({ length: 2 }).map((_, copy) => (
                 <div key={copy} style={{ display: "flex", alignItems: "center", gap: "clamp(22px, 3.5vw, 56px)", paddingRight: "clamp(22px, 3.5vw, 56px)", whiteSpace: "nowrap" }}>
                   <span>
-                    <span style={{ fontWeight: 200 }}>Launching </span>
-                    <span style={{ fontWeight: 800, color: "#ff6b5c" }}>18 May 2026</span>
+                    <span style={{ fontWeight: 200 }}>Launched </span>
+                    <span style={{ fontWeight: 800, color: "#ff6b5c" }}>21 May 2026</span>
                   </span>
                   <span style={{ color: "#8bf2d3", fontWeight: 800 }} aria-hidden>✦</span>
                   <span>
@@ -2476,7 +2476,7 @@ export default function PreviewLanding() {
                   fontSize: 11, letterSpacing: "0.08em", textTransform: "uppercase",
                 }}>
                   <span style={{ width: 6, height: 6, borderRadius: 999, background: "#8bf2d3" }} />
-                  Launched 18 May 2026
+                  Launched 21 May 2026
                 </span>
                 <span>Alpha — onboarding pilot users now.</span>
               </div>

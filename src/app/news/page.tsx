@@ -66,7 +66,7 @@ const NEWS: NewsItemData[] = [
       { text: ".", weight: 700, color: "#003c46" },
     ],
     body:
-      "Last Thursday, Mentic.io joined the inaugural cohort of Teleport SF — an accelerator backing teams shipping autonomous AI products. Out of the 001 batch, we're the team carrying the autonomous-advertising flag. Onboarding pilot users right after launch on 18 May.",
+      "Last Thursday, Mentic.io joined the inaugural cohort of Teleport SF — an accelerator backing teams shipping autonomous AI products. Out of the 001 batch, we're the team carrying the autonomous-advertising flag. Onboarding pilot users right after launch on 21 May.",
   },
 ];
 
