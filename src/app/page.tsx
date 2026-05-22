@@ -401,8 +401,6 @@ export default function PreviewLanding() {
           "#calc-fifty", "#calc-fees", "#calc-notads",
           "#cta-icon", "#cta-sign", "#cta-up", "#cta-now", "#cta-alpha", "#cta-button",
           "#glass-card", "#product-shot",
-          "#scene-coral", "#scene-mint",
-          "#icon-teal",
         ];
         gsap.set([...layerIds, ...revealIds, ".product-line .pw", ".product-line .pl"], {
           opacity: 1,
@@ -412,9 +410,14 @@ export default function PreviewLanding() {
         /* Video frame: top:50%/left:50% in the markup expects a -50% / -50%
            translate from GSAP to center it. Apply that statically here. */
         gsap.set("#video-frame", { xPercent: -50, yPercent: -50, scale: 1, opacity: 1 });
-        /* Blobs stay visible at their resting rotation (set in the parallax
-           effect above). */
-        gsap.set(["#blob-coral", "#blob-mint"], { opacity: 1 });
+        /* Decorative blob layers (blob-coral / blob-mint / scene-coral /
+           scene-mint) stay hidden on mobile. They're fixed-position and
+           bleed across every section, which mucks up the coral calc card
+           and the white sol/no/how/val/cta sections. Each mobile section
+           paints its own bg via inline style so the blobs add no value. */
+        gsap.set(["#blob-coral", "#blob-mint", "#scene-coral", "#scene-mint"], { opacity: 0 });
+        /* Teal back-to-top icon: stay at opacity 0 until past the hero
+           (driven by the pastHero state inline in JSX). */
         /* Neutral bg behind everything — each section paints its own bg
            via an inline style. */
         gsap.set("#bg", { backgroundColor: bgColors["section-hero"] });
@@ -1402,10 +1405,15 @@ export default function PreviewLanding() {
               position: "fixed",
               top: m ? MY(25) : Y(53), left: m ? MX(32) : X(61),
               width: m ? MW(65) : W(65), height: "auto",
-              zIndex: 10, opacity: 0,
+              zIndex: 10,
+              /* Desktop: GSAP drives opacity per-section. Mobile: bypass the
+                 trigger system and just appear once you've scrolled past the
+                 hero (otherwise it covers the orange hero icon). */
+              opacity: m ? (pastHero ? 1 : 0) : 0,
+              pointerEvents: m && !pastHero ? "none" : "auto",
               background: "none", border: "none", padding: 0, cursor: "pointer",
               filter: "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.25))",
-              transition: "transform 300ms cubic-bezier(0.165, 0.84, 0.44, 1), filter 300ms ease",
+              transition: "transform 300ms cubic-bezier(0.165, 0.84, 0.44, 1), filter 300ms ease, opacity 250ms ease",
             }}
             onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.transform = "scale(1.12) rotate(-8deg)"; e.currentTarget.style.filter = "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.25)) drop-shadow(0 0 12px rgba(139,242,211,0.4))"; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "scale(1) rotate(0)"; e.currentTarget.style.filter = "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.25))"; }}
