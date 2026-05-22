@@ -292,6 +292,14 @@ export default function PreviewLanding() {
      scrolls the page. GSAP owns the transform so the rotate and the
      xPercent/yPercent drift compose into one matrix. ── */
   useEffect(() => {
+    /* Mobile: skip the parallax scrub entirely. Scrub-based ScrollTriggers
+       fire on every scroll frame and chew GPU/CPU on phones, producing the
+       laggy scroll feel. Set the blobs to their resting rotation once and
+       leave them static. */
+    if (isMobile) {
+      gsap.set(["#blob-coral", "#blob-mint"], { rotation: -134.457 });
+      return;
+    }
     const ctx = gsap.context(() => {
       gsap.set(["#blob-coral", "#blob-mint"], { rotation: -134.457 });
       gsap.to("#blob-coral", {
@@ -310,7 +318,7 @@ export default function PreviewLanding() {
       });
     });
     return () => ctx.revert();
-  }, []);
+  }, [isMobile]);
 
   /* ── Scroll-stop snap: only locks onto a section when the user stops
      within 15% of a section boundary. Debounced so it never fights an
@@ -351,12 +359,31 @@ export default function PreviewLanding() {
 
     const ctx = gsap.context(() => {
 
-      /* ── Mobile: bypass the entire scroll-locked enter/exit animation system.
-         On desktop these run cleanly because each section snaps into view one
-         at a time. On mobile (free scroll, no snap), the exit fade-outs fire
-         while the next section is only partly on-screen, producing flicker,
-         missing content, and a "buggy / locked" feel. Render everything
-         statically visible and skip the ScrollTriggers entirely. ── */
+      /* ── Background colors per section ── */
+      const bgColors: Record<string, string> = {
+        "section-hero": "#f2f2f0",
+        "section-video": "#f2f2f0",
+        "section-product": "#f2f2f0",
+        "section-pain": "#f2f2f0",
+        "section-calc": "#ff6b5c",
+        "section-sol": "#ffffff",
+        "section-no": "#ffffff",
+        "section-how": "#ffffff",
+        "section-val": "#ffffff",
+        "section-cta": "#ffffff",
+      };
+
+      /* ── Mobile: bypass the scroll-locked enter/exit FADE system but keep
+         per-section background colors so the design still reads correctly
+         (calc needs coral, sol/no/how/val/cta need white, etc.). On desktop
+         these animations run cleanly because each section snaps into view
+         one at a time. On mobile (free scroll, no snap), the layer
+         exit-fades fire while the next section is only partly on-screen,
+         producing flicker, missing content, and a "buggy / locked" feel.
+         So: render every layer + reveal element statically visible, drop the
+         scrub-based decorative animations (video frame scale, scene blob
+         drift), but keep cheap onEnter-only ScrollTriggers that animate
+         #bg to the section's mapped background color. ── */
       if (isMobile) {
         const layerIds = [
           "#hero-layer", "#product-layer", "#pain-layer", "#calc-layer",
@@ -372,7 +399,7 @@ export default function PreviewLanding() {
           "#calc-fifty", "#calc-fees", "#calc-notads",
           "#cta-icon", "#cta-sign", "#cta-up", "#cta-now", "#cta-alpha", "#cta-button",
           "#glass-card", "#video-frame", "#product-shot",
-          "#blob-coral", "#blob-mint", "#scene-coral", "#scene-mint",
+          "#scene-coral", "#scene-mint",
           "#icon-teal",
         ];
         gsap.set([...layerIds, ...revealIds, ".product-line .pw", ".product-line .pl"], {
@@ -380,10 +407,28 @@ export default function PreviewLanding() {
           clipPath: "none",
           clearProps: "transform,filter,x,y,scale,rotation,xPercent,yPercent",
         });
-        /* Background: each section sets its own bg via the wrapper's section
-           contents on desktop. On mobile, fix a single neutral bg so it never
-           flashes between scenes. */
-        gsap.set("#bg", { backgroundColor: "#f2f2f0" });
+        /* Blob layers stay visible across sections (matches the desktop look
+           after the first enterSection has run) and keep their resting
+           rotation set up in the parallax effect above. */
+        gsap.set(["#blob-coral", "#blob-mint"], { opacity: 1 });
+
+        /* Initial bg matches the hero. */
+        gsap.set("#bg", { backgroundColor: bgColors["section-hero"] });
+
+        /* Per-section bg color via onEnter-only triggers (no scrub) so the
+           coral calc / white CTA sections render the design they were
+           built for. Cheap — fires a single tween per section transition. */
+        sections.forEach((section) => {
+          const color = bgColors[section.id];
+          if (!color) return;
+          ScrollTrigger.create({
+            trigger: section,
+            start: "top 60%",
+            end: "bottom 40%",
+            onEnter: () => gsap.to("#bg", { backgroundColor: color, duration: 0.35, ease: "power1.out", overwrite: true }),
+            onEnterBack: () => gsap.to("#bg", { backgroundColor: color, duration: 0.35, ease: "power1.out", overwrite: true }),
+          });
+        });
         return;
       }
 
@@ -403,20 +448,6 @@ export default function PreviewLanding() {
         "section-how": "#how-layer",
         "section-val": "#val-layer",
         "section-cta": "#cta-layer",
-      };
-
-      /* ── Background colors per section ── */
-      const bgColors: Record<string, string> = {
-        "section-hero": "#f2f2f0",
-        "section-video": "#f2f2f0",
-        "section-product": "#f2f2f0",
-        "section-pain": "#f2f2f0",
-        "section-calc": "#ff6b5c",
-        "section-sol": "#ffffff",
-        "section-no": "#ffffff",
-        "section-how": "#ffffff",
-        "section-val": "#ffffff",
-        "section-cta": "#ffffff",
       };
 
       /* ── Per-section enter animations ── */
