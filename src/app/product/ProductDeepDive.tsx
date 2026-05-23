@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import SiteMenu from "@/components/SiteMenu";
+import { trackSchedule, trackViewContent } from "@/lib/pixel";
 
 /* ─────────────────────────────────────────────────────────────
    Palette + style helpers
@@ -306,6 +307,14 @@ function ScrollTypewriter({
    Main component
    ─────────────────────────────────────────────────────────── */
 export default function ProductDeepDive() {
+  useEffect(() => {
+    trackViewContent({
+      content_name: "Product deep dive",
+      content_category: "product",
+      content_type: "page",
+    });
+  }, []);
+
   return (
     <main className="use-native-cursor" style={{
       width: "100%",
@@ -436,7 +445,9 @@ function HeroScene() {
             display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center",
             animationDelay: "0.8s",
           }}>
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={ctaTeal}>Book a demo</a>
+            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={ctaTeal}
+              onClick={() => trackSchedule({ content_name: "Book a demo — product hero", source: "product_hero" })}
+            >Book a demo</a>
             <a href="/#signup" style={ctaMint}>Sign up</a>
           </div>
         </div>
@@ -1370,7 +1381,9 @@ function CtaSection() {
             display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center",
             ...fadeUp(effectiveP, 0.4, 0.6, 24),
           }}>
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={ctaTeal}>
+            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={ctaTeal}
+              onClick={() => trackSchedule({ content_name: "Book a demo — product CTA", source: "product_cta" })}
+            >
               Book a demo
             </a>
             <Link href="/pricing" style={ctaOutlined}>See pricing</Link>

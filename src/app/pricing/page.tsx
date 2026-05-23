@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import SiteMenu from "@/components/SiteMenu";
+import TrackedDemoLink from "@/components/TrackedDemoLink";
 
 const SITE_URL = "https://www.mentic.io";
 const PRICING_TITLE = "Pricing";
@@ -358,10 +359,10 @@ export default function PricingPage() {
             </div>
 
             <div className="plan-cta-row" style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
-              <a
+              <TrackedDemoLink
+                source="pricing_alpha_plan"
+                contentName="Book a demo — pricing alpha plan"
                 className="plan-cta"
-                href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
-                target="_blank" rel="noopener noreferrer"
                 style={{
                   display: "inline-flex", alignItems: "center", justifyContent: "center",
                   padding: "14px 24px", borderRadius: 999,
@@ -372,7 +373,7 @@ export default function PricingPage() {
                 }}
               >
                 Book a Demo
-              </a>
+              </TrackedDemoLink>
               <a
                 className="plan-cta"
                 href="/#signup"

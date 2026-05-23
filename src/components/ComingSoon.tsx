@@ -1,4 +1,5 @@
 import SiteMenu from "@/components/SiteMenu";
+import TrackedDemoLink from "@/components/TrackedDemoLink";
 
 export type ComingSoonProps = {
   section: string;
@@ -70,9 +71,9 @@ export default function ComingSoon({ section, blurb }: ComingSoonProps) {
           display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center",
           animationDelay: "0.65s",
         }}>
-          <a
-            href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
-            target="_blank" rel="noopener noreferrer"
+          <TrackedDemoLink
+            source="coming_soon"
+            contentName="Book a demo — coming-soon page"
             style={{
               display: "inline-flex", alignItems: "center",
               padding: "14px 28px", borderRadius: 999,
@@ -83,7 +84,7 @@ export default function ComingSoon({ section, blurb }: ComingSoonProps) {
             }}
           >
             Book a Demo
-          </a>
+          </TrackedDemoLink>
         </div>
       </section>
     </main>

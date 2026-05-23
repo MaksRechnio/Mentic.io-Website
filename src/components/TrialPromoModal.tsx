@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { trackInitiateCheckout, trackLead } from "@/lib/pixel";
 
 /* ─────────────────────────────────────────────────────────────
    7-day-free-trial promo modal.
@@ -22,12 +23,6 @@ const TEAL_INK = "rgba(0,60,70,0.72)";
 const CORAL = "#ff6b5c";
 const MINT = "#8bf2d3";
 const CERAMIC = "#f2f2f0";
-
-declare global {
-  interface Window {
-    fbq?: (action: string, event: string, params?: Record<string, unknown>) => void;
-  }
-}
 
 export default function TrialPromoModal() {
   const [open, setOpen] = useState(false);
@@ -63,7 +58,8 @@ export default function TrialPromoModal() {
   }
 
   function onClaim() {
-    try { window.fbq?.("track", "Lead", { content_name: "7-day free trial promo" }); } catch { /* noop */ }
+    trackLead({ content_name: "7-day free trial promo", source: "trial_promo_modal" });
+    trackInitiateCheckout({ content_name: "7-day free trial promo", source: "trial_promo_modal" });
     try { window.localStorage.setItem(STORAGE_KEY, "1"); } catch { /* noop */ }
   }
 

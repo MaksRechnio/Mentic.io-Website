@@ -3,6 +3,7 @@ import { Nunito_Sans } from "next/font/google";
 import Script from "next/script";
 import TabAttention from "@/components/TabAttention";
 import TrialPromoModal from "@/components/TrialPromoModal";
+import PixelRouteTracker from "@/components/PixelRouteTracker";
 import "./globals.css";
 
 const nunitoSans = Nunito_Sans({
@@ -235,6 +236,7 @@ fbq('init', '1828929531115858');
 fbq('track', 'PageView');`}
         </Script>
         <TabAttention />
+        <PixelRouteTracker />
         {children}
         <TrialPromoModal />
       </body>

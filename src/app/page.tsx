@@ -5,6 +5,13 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 import emailjs from "@emailjs/browser";
+import {
+  trackCompleteRegistration,
+  trackContact,
+  trackInitiateCheckout,
+  trackLead,
+  trackSchedule,
+} from "@/lib/pixel";
 gsap.registerPlugin(ScrollTrigger);
 
 const EMAILJS_PUBLIC_KEY = "vL-JN3gWKUaXsCkWK";
@@ -114,6 +121,11 @@ export default function PreviewLanding() {
     }).catch(() => {});
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_USER, emailParams).catch(() => {});
     emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_TEAM, emailParams).catch(() => {});
+
+    /* Meta Pixel: fire both Lead (qualified interest) and CompleteRegistration
+       (a real sign-up went through) for the homepage form. */
+    trackLead({ content_name: "Homepage signup form", content_category: "signup" });
+    trackCompleteRegistration({ content_name: "Homepage signup form", status: "submitted" });
 
     setFormStatus("success");
     // Animate to success screen
@@ -1353,7 +1365,12 @@ export default function PreviewLanding() {
           >Log in</a>
           <button
             type="button"
-            onClick={() => { sfxPress(); window.location.href = "https://app.mentic.io/signup"; }}
+            onClick={() => {
+              sfxPress();
+              trackInitiateCheckout({ content_name: "Sign up CTA — site menu", source: "site_menu" });
+              trackLead({ content_name: "Sign up CTA — site menu", source: "site_menu" });
+              window.location.href = "https://app.mentic.io/signup";
+            }}
             onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.background = "#00525f"; e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = "#003c46"; e.currentTarget.style.transform = "translateY(0)"; }}
             style={{
@@ -1368,7 +1385,7 @@ export default function PreviewLanding() {
           <a
             href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
             target="_blank" rel="noopener noreferrer"
-            onClick={() => sfxPress()}
+            onClick={() => { sfxPress(); trackSchedule({ content_name: "Book a demo — site menu", source: "site_menu" }); }}
             onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.background = "#a8f7df"; e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = "#8bf2d3"; e.currentTarget.style.transform = "translateY(0)"; }}
             style={{
@@ -1487,7 +1504,7 @@ export default function PreviewLanding() {
                 href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => { sfxPress(); }}
+                onClick={() => { sfxPress(); trackSchedule({ content_name: "Book a demo — hero", source: "hero_header" }); }}
                 onMouseEnter={(e) => {
                   sfxHover();
                   const el = e.currentTarget;
@@ -1652,7 +1669,12 @@ export default function PreviewLanding() {
             }}>
               mentic
             </div>
-            <button onClick={() => { sfxPress(); window.location.href = "https://app.mentic.io/signup"; }} id="hero-btn" style={{
+            <button onClick={() => {
+              sfxPress();
+              trackInitiateCheckout({ content_name: "Sign up CTA — hero", source: "hero_button" });
+              trackLead({ content_name: "Sign up CTA — hero", source: "hero_button" });
+              window.location.href = "https://app.mentic.io/signup";
+            }} id="hero-btn" style={{
               position: "absolute",
               top: m ? MY(493) : Y(774), left: m ? MX(177) : X(1164),
               width: m ? MW(165.338) : W(229.913), height: m ? MH(64.838) : H(90.162),
@@ -2249,7 +2271,12 @@ export default function PreviewLanding() {
             }}>
               Alpha releasing <span style={{ fontWeight: 600 }}>soon!</span>
             </div>
-            <button onClick={() => { sfxPress(); window.location.href = "https://app.mentic.io/signup"; }} id="cta-button" style={{
+            <button onClick={() => {
+              sfxPress();
+              trackInitiateCheckout({ content_name: "Sign up CTA — page CTA", source: "cta_section" });
+              trackLead({ content_name: "Sign up CTA — page CTA", source: "cta_section" });
+              window.location.href = "https://app.mentic.io/signup";
+            }} id="cta-button" style={{
               position: "absolute",
               top: m ? MY(368) : Y(777), left: m ? MX(99) : X(1190),
               width: m ? MW(195) : W(195), height: m ? MH(78) : H(78),
@@ -2415,6 +2442,7 @@ export default function PreviewLanding() {
                       document.body.removeChild(ta);
                     }
                     setEmailCopied(true);
+                    trackContact({ content_name: "Email copy — footer", method: "email_copy" });
                     setTimeout(() => setEmailCopied(false), 1800);
                   }}
                   aria-label="Copy support email address to clipboard"

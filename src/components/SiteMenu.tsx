@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { trackInitiateCheckout, trackLead, trackSchedule } from "@/lib/pixel";
 
 const NAV_ITEMS: Array<{ label: string; href: string; weight: number; color: string }> = [
   { label: "PRODUCT", href: "/product", weight: 800, color: "#003c46" },
@@ -220,6 +221,10 @@ export default function SiteMenu() {
           >Log in</a>
           <a
             href="https://mentic.io/#signup"
+            onClick={() => {
+              trackInitiateCheckout({ content_name: "Sign up CTA — slide-out menu", source: "site_menu_overlay" });
+              trackLead({ content_name: "Sign up CTA — slide-out menu", source: "site_menu_overlay" });
+            }}
             onMouseEnter={(e) => { e.currentTarget.style.background = "#00525f"; e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = "#003c46"; e.currentTarget.style.transform = "translateY(0)"; }}
             style={{
@@ -235,6 +240,7 @@ export default function SiteMenu() {
           <a
             href={CALENDLY}
             target="_blank" rel="noopener noreferrer"
+            onClick={() => trackSchedule({ content_name: "Book a demo — slide-out menu", source: "site_menu_overlay" })}
             onMouseEnter={(e) => { e.currentTarget.style.background = "#a8f7df"; e.currentTarget.style.transform = "translateY(-1px)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.background = "#8bf2d3"; e.currentTarget.style.transform = "translateY(0)"; }}
             style={{
