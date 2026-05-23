@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Nunito_Sans } from "next/font/google";
 import Script from "next/script";
 import TabAttention from "@/components/TabAttention";
+import TrialPromoModal from "@/components/TrialPromoModal";
 import "./globals.css";
 
 const nunitoSans = Nunito_Sans({
@@ -235,6 +236,7 @@ fbq('track', 'PageView');`}
         </Script>
         <TabAttention />
         {children}
+        <TrialPromoModal />
       </body>
     </html>
   );
