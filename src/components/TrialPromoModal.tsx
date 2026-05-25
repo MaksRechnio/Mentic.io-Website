@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { trackInitiateCheckout, trackLead } from "@/lib/pixel";
 
 /* ─────────────────────────────────────────────────────────────
-   7-day-free-trial promo modal.
+   4-day-free-trial promo modal.
    - Appears 5s after mount (per session, only the first time)
    - Dismissal stored in localStorage so it doesn't re-show after close
    - Auto-disabled after the offer deadline
@@ -58,8 +58,8 @@ export default function TrialPromoModal() {
   }
 
   function onClaim() {
-    trackLead({ content_name: "7-day free trial promo", source: "trial_promo_modal" });
-    trackInitiateCheckout({ content_name: "7-day free trial promo", source: "trial_promo_modal" });
+    trackLead({ content_name: "4-day free trial promo", source: "trial_promo_modal" });
+    trackInitiateCheckout({ content_name: "4-day free trial promo", source: "trial_promo_modal" });
     try { window.localStorage.setItem(STORAGE_KEY, "1"); } catch { /* noop */ }
   }
 
@@ -159,7 +159,7 @@ export default function TrialPromoModal() {
           fontWeight: 200,
           color: TEAL,
         }}>
-          <span style={{ display: "block", fontWeight: 800, color: CORAL }}>7 days free</span>
+          <span style={{ display: "block", fontWeight: 800, color: CORAL }}>4 days free</span>
           <span style={{ display: "block", fontWeight: 200 }}>on the autonomous</span>
           <span style={{ display: "block", fontWeight: 800 }}>AI Advertiser.</span>
         </h2>
@@ -173,7 +173,7 @@ export default function TrialPromoModal() {
           color: TEAL_INK,
         }}>
           Plug Mentic into your business and let our agents launch, manage and
-          optimise your ads — on us for a week. No card up front.
+          optimise your ads — on us for 4 days. No card up front.
         </p>
 
         {/* Deadline */}
@@ -213,7 +213,7 @@ export default function TrialPromoModal() {
             onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 14px 32px rgba(0,60,70,0.25)"; }}
             onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
           >
-            Claim your 7 days →
+            Claim your 4 days →
           </a>
           <button
             type="button"
