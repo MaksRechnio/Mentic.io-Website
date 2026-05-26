@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 
 const EFFECTIVE_DATE = "February 24, 2026";
 const CONTACT_EMAIL = "maksymilian@mentic.io";
-const ADDRESS = "251 Little Falls Drive, Wilmington, New Castle County, Delaware 19808, USA";
+const BUSINESS_ADDRESS = "2261 Market Street STE 67152, San Francisco, CA 94114, USA";
 const LEGAL_ENTITY = "Mentic Inc.";
 
 const SITE_URL = "https://www.mentic.io";
@@ -85,8 +85,8 @@ export default function PrivacyPolicyPage() {
               <span>{LEGAL_ENTITY}</span>
             </div>
             <div>
-              <span className="privacy-meta-label">Address</span>
-              <span>{ADDRESS}</span>
+              <span className="privacy-meta-label">Business address</span>
+              <span>{BUSINESS_ADDRESS}</span>
             </div>
             <div>
               <span className="privacy-meta-label">Contact</span>
@@ -101,7 +101,8 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2>1. Overview</h2>
             <p>
-              This Privacy Policy describes how {LEGAL_ENTITY} (&ldquo;Mentic,&rdquo;
+              This Privacy Policy describes how {LEGAL_ENTITY}, a Delaware
+              company (&ldquo;Mentic,&rdquo;
               &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;)
               collects, uses, shares, and protects personal information when
               you visit mentic.io or use the Mentic application (collectively,
@@ -347,7 +348,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <p>
               <span className="privacy-meta-label">Mail</span> {LEGAL_ENTITY},{" "}
-              {ADDRESS}
+              {BUSINESS_ADDRESS}
             </p>
           </section>
 
