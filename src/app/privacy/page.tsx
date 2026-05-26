@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
 };
 
-const EFFECTIVE_DATE = "February 24, 2026";
+const EFFECTIVE_DATE = "May 11, 2026";
 const CONTACT_EMAIL = "maksymilian@mentic.io";
 const BUSINESS_ADDRESS = "2261 Market Street STE 67152, San Francisco, CA 94114, USA";
 const LEGAL_ENTITY = "Mentic Inc.";
@@ -42,7 +42,7 @@ const privacyJsonLd = {
       isPartOf: { "@id": `${SITE_URL}/#website` },
       about: { "@id": `${SITE_URL}/#organization` },
       datePublished: "2026-02-24",
-      dateModified: "2026-02-24",
+      dateModified: "2026-05-11",
       inLanguage: "en-US",
     },
   ],
