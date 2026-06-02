@@ -5,6 +5,7 @@ import TabAttention from "@/components/TabAttention";
 import TrialPromoModal from "@/components/TrialPromoModal";
 import PixelRouteTracker from "@/components/PixelRouteTracker";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next";
 
 const nunitoSans = Nunito_Sans({
   subsets: ["latin"],
@@ -239,6 +240,7 @@ fbq('track', 'PageView');`}
         <PixelRouteTracker />
         {children}
         <TrialPromoModal />
+        <Analytics />
       </body>
     </html>
   );
