@@ -34,7 +34,8 @@ const slackJsonLd = {
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
-        { "@type": "ListItem", position: 2, name: "Slack Integration", item: `${SITE_URL}/integrations/slack` },
+        { "@type": "ListItem", position: 2, name: "Integrations", item: `${SITE_URL}/integrations` },
+        { "@type": "ListItem", position: 3, name: "Slack Integration", item: `${SITE_URL}/integrations/slack` },
       ],
     },
     {
