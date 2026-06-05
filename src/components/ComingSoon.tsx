@@ -8,80 +8,33 @@ export type ComingSoonProps = {
 
 export default function ComingSoon({ section, blurb }: ComingSoonProps) {
   return (
-    <main className="use-native-cursor" style={{
-      minHeight: "100dvh",
-      width: "100%",
-      background: "#f2f2f0",
-      color: "#003c46",
-      fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-      position: "relative",
-      overflow: "hidden",
-      display: "flex",
-      flexDirection: "column",
-    }}>
+    <main className="use-native-cursor min-h-dvh w-full bg-[#f2f2f0] text-dark-teal [font-family:var(--font-nunito),'Nunito_Sans',sans-serif] relative overflow-hidden flex flex-col">
       <SiteMenu />
 
       {/* Corner blobs */}
-      <div aria-hidden className="gradient-blob gradient-blob-coral intro-fade-in" style={{
-        position: "absolute", pointerEvents: "none",
-        width: "min(45vw, 720px)", height: "min(45vw, 720px)",
-        top: "-22vw", left: "-22vw",
-        animationDelay: "0.1s",
-      }} />
-      <div aria-hidden className="gradient-blob gradient-blob-mint intro-fade-in" style={{
-        position: "absolute", pointerEvents: "none",
-        width: "min(55vw, 880px)", height: "min(55vw, 880px)",
-        bottom: "-28vw", right: "-28vw",
-        animationDelay: "0.2s",
-      }} />
+      <div
+        aria-hidden
+        className="gradient-blob gradient-blob-coral intro-fade-in absolute pointer-events-none w-[min(45vw,720px)] h-[min(45vw,720px)] top-[-22vw] left-[-22vw] [animation-delay:0.1s]"
+      />
+      <div
+        aria-hidden
+        className="gradient-blob gradient-blob-mint intro-fade-in absolute pointer-events-none w-[min(55vw,880px)] h-[min(55vw,880px)] bottom-[-28vw] right-[-28vw] [animation-delay:0.2s]"
+      />
 
-      <section style={{
-        flex: 1,
-        position: "relative", zIndex: 2,
-        display: "flex", flexDirection: "column",
-        justifyContent: "center", alignItems: "center",
-        padding: "clamp(76px, 9vh, 120px) clamp(20px, 6vw, 56px) clamp(28px, 4vh, 56px)",
-        textAlign: "center",
-      }}>
-        <h1 className="intro-blur-in" style={{
-          margin: 0,
-          fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-          fontSize: "clamp(56px, 11vw, 168px)",
-          lineHeight: 0.95,
-          fontWeight: 200,
-          letterSpacing: "-0.02em",
-          color: "#003c46",
-          animationDelay: "0.1s",
-        }}>
-          <span className="intro-fade-up" style={{ display: "block", fontWeight: 200, animationDelay: "0.18s" }}>{section}</span>
-          <span className="intro-fade-up" style={{ display: "block", fontWeight: 800, color: "#ff6b5c", animationDelay: "0.32s" }}>coming soon.</span>
+      <section className="flex-1 relative z-[2] flex flex-col justify-center items-center px-[clamp(20px,6vw,56px)] pt-[clamp(76px,9vh,120px)] pb-[clamp(28px,4vh,56px)] text-center">
+        <h1 className="intro-blur-in m-0 [font-family:var(--font-nunito),'Nunito_Sans',sans-serif] text-[clamp(56px,11vw,168px)] leading-[0.95] font-extralight tracking-[-0.02em] text-dark-teal [animation-delay:0.1s]">
+          <span className="intro-fade-up block font-extralight [animation-delay:0.18s]">{section}</span>
+          <span className="intro-fade-up block font-extrabold text-coral [animation-delay:0.32s]">coming soon.</span>
         </h1>
-        <p className="intro-fade-up" style={{
-          marginTop: 28,
-          maxWidth: 560,
-          fontSize: "clamp(15px, 1.4vw, 19px)", fontWeight: 300,
-          lineHeight: 1.55, color: "rgba(0,60,70,0.7)",
-          animationDelay: "0.5s",
-        }}>
+        <p className="intro-fade-up mt-7 max-w-[560px] text-[clamp(15px,1.4vw,19px)] font-light leading-[1.55] text-dark-teal/70 [animation-delay:0.5s]">
           {blurb ?? `The ${section.toLowerCase()} page is in the workshop. We'll flip it on as soon as it's ready. In the meantime, open the menu — or grab a demo below.`}
         </p>
 
-        <div className="intro-fade-up" style={{
-          marginTop: 32,
-          display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center",
-          animationDelay: "0.65s",
-        }}>
+        <div className="intro-fade-up mt-8 flex flex-wrap gap-3 justify-center [animation-delay:0.65s]">
           <TrackedDemoLink
             source="coming_soon"
             contentName="Book a demo — coming-soon page"
-            style={{
-              display: "inline-flex", alignItems: "center",
-              padding: "14px 28px", borderRadius: 999,
-              background: "#003c46", color: "#f2f2f0",
-              fontSize: 13, fontWeight: 700,
-              letterSpacing: "0.18em", textTransform: "uppercase",
-              textDecoration: "none",
-            }}
+            className="inline-flex items-center py-3.5 px-7 rounded-full bg-dark-teal text-[#f2f2f0] text-[13px] font-bold tracking-[0.18em] uppercase no-underline"
           >
             Book a Demo
           </TrackedDemoLink>

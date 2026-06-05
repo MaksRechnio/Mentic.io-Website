@@ -36,15 +36,7 @@ export default function SiteMenu() {
       <Link
         href="/"
         aria-label="Mentic — back to home"
-        className="site-menu-icon-link"
-        style={{
-          position: "fixed",
-          top: "clamp(14px, 2vw, 22px)",
-          left: "clamp(16px, 3vw, 28px)",
-          zIndex: 160,
-          display: "inline-flex", alignItems: "center",
-          textDecoration: "none",
-        }}
+        className="site-menu-icon-link fixed top-[clamp(14px,2vw,22px)] left-[clamp(16px,3vw,28px)] z-[160] inline-flex items-center no-underline"
       >
         <Image
           src="/images/mentic-icon-orange.png"
@@ -52,11 +44,7 @@ export default function SiteMenu() {
           width={56}
           height={56}
           priority
-          style={{
-            width: "clamp(44px, 4.6vw, 56px)",
-            height: "auto",
-            filter: "drop-shadow(1px 1px 14.3px rgba(0,0,0,0.18))",
-          }}
+          className="w-[clamp(44px,4.6vw,56px)] h-auto [filter:drop-shadow(1px_1px_14.3px_rgba(0,0,0,0.18))]"
         />
       </Link>
 
@@ -66,119 +54,83 @@ export default function SiteMenu() {
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close menu" : "Open menu"}
         aria-expanded={open}
-        className="site-menu-hamburger"
+        className="site-menu-hamburger fixed top-[clamp(14px,2vw,22px)] right-[clamp(14px,2vw,24px)] w-12 h-12 rounded-full cursor-pointer flex flex-col items-center justify-center gap-[5px] p-0 z-[180] [font-family:inherit] [transition:background_0.35s_ease,border-color_0.35s_ease,box-shadow_0.35s_ease]"
         style={{
-          position: "fixed",
-          top: "clamp(14px, 2vw, 22px)",
-          right: "clamp(14px, 2vw, 24px)",
-          width: 48, height: 48,
           background: open ? "transparent" : "#003c46",
           border: `1px solid ${open ? "rgba(0,60,70,0)" : "rgba(255,255,255,0.08)"}`,
-          borderRadius: 999,
-          cursor: "pointer",
-          display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "center", gap: 5,
-          padding: 0,
-          zIndex: 180,
           boxShadow: open
             ? "0 0 0 rgba(0,0,0,0)"
             : "0 10px 28px rgba(0,60,70,0.28), 0 2px 6px rgba(0,60,70,0.18)",
-          transition: "background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease",
-          fontFamily: "inherit",
         }}
       >
-        <span style={{
-          display: "block", width: 18, height: 2,
-          background: open ? "#003c46" : "#f2f2f0",
-          borderRadius: 2,
-          transformOrigin: "center",
-          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease",
-          transform: open ? "translateY(7px) rotate(45deg)" : "translateY(0) rotate(0)",
-        }} />
-        <span style={{
-          display: "block", width: 18, height: 2,
-          background: open ? "#003c46" : "#f2f2f0",
-          borderRadius: 2,
-          transition: "opacity 0.2s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease",
-          opacity: open ? 0 : 1,
-          transform: open ? "scaleX(0)" : "scaleX(1)",
-        }} />
-        <span style={{
-          display: "block", width: 18, height: 2,
-          background: open ? "#003c46" : "#f2f2f0",
-          borderRadius: 2,
-          transformOrigin: "center",
-          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease",
-          transform: open ? "translateY(-7px) rotate(-45deg)" : "translateY(0) rotate(0)",
-        }} />
+        <span
+          className="block w-[18px] h-0.5 rounded-[2px] origin-center [transition:transform_0.5s_cubic-bezier(0.16,1,0.3,1),background_0.35s_ease]"
+          style={{
+            background: open ? "#003c46" : "#f2f2f0",
+            transform: open ? "translateY(7px) rotate(45deg)" : "translateY(0) rotate(0)",
+          }}
+        />
+        <span
+          className="block w-[18px] h-0.5 rounded-[2px] [transition:opacity_0.2s_ease,transform_0.4s_cubic-bezier(0.16,1,0.3,1),background_0.35s_ease]"
+          style={{
+            background: open ? "#003c46" : "#f2f2f0",
+            opacity: open ? 0 : 1,
+            transform: open ? "scaleX(0)" : "scaleX(1)",
+          }}
+        />
+        <span
+          className="block w-[18px] h-0.5 rounded-[2px] origin-center [transition:transform_0.5s_cubic-bezier(0.16,1,0.3,1),background_0.35s_ease]"
+          style={{
+            background: open ? "#003c46" : "#f2f2f0",
+            transform: open ? "translateY(-7px) rotate(-45deg)" : "translateY(0) rotate(0)",
+          }}
+        />
       </button>
 
       {/* Backdrop */}
       <div
         onClick={() => setOpen(false)}
+        className="fixed inset-0 bg-dark-teal/34 backdrop-blur-[8px] z-[170] [transition:opacity_0.55s_cubic-bezier(0.16,1,0.3,1)]"
         style={{
-          position: "fixed", inset: 0,
-          background: "rgba(0,60,70,0.34)",
-          backdropFilter: "blur(8px)",
-          WebkitBackdropFilter: "blur(8px)",
           opacity: open ? 1 : 0,
           pointerEvents: open ? "auto" : "none",
-          transition: "opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1)",
-          zIndex: 170,
         }}
       />
 
       {/* Side panel */}
       <aside
         aria-hidden={!open}
+        className="fixed top-0 right-0 w-[min(100vw,max(360px,46vw))] max-w-[620px] h-[100dvh] bg-[#f2f2f0] z-[175] flex flex-col pt-[clamp(96px,14vh,128px)] px-[clamp(28px,5vw,72px)] pb-[clamp(32px,4vh,56px)] [font-family:var(--font-nunito),'Nunito_Sans',sans-serif] overflow-hidden [transition:transform_0.72s_cubic-bezier(0.16,1,0.3,1)]"
         style={{
-          position: "fixed", top: 0, right: 0,
-          width: "min(100vw, max(360px, 46vw))",
-          maxWidth: 620,
-          height: "100dvh",
-          background: "#f2f2f0",
           transform: open ? "translateX(0)" : "translateX(105%)",
-          transition: "transform 0.72s cubic-bezier(0.16, 1, 0.3, 1)",
-          zIndex: 175,
-          display: "flex", flexDirection: "column",
-          padding: "clamp(96px, 14vh, 128px) clamp(28px, 5vw, 72px) clamp(32px, 4vh, 56px)",
           boxShadow: open ? "-30px 0 80px rgba(0,60,70,0.18)" : "none",
-          fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-          overflow: "hidden",
         }}
       >
         {/* Top-right accent line */}
-        <div aria-hidden style={{
-          position: "absolute", top: 0, right: 0,
-          width: open ? "clamp(80px, 14vw, 140px)" : 0, height: 3,
-          background: "linear-gradient(90deg, #ff6b5c 0%, #8bf2d3 100%)",
-          transition: "width 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.25s",
-        }} />
-        <div aria-hidden className="gradient-blob gradient-blob-coral" style={{
-          position: "absolute", width: "70%", height: "70%",
-          bottom: "-35%", left: "-25%",
-          opacity: open ? 0.55 : 0,
-          transition: "opacity 0.9s ease 0.2s",
-          pointerEvents: "none",
-        }} />
+        <div
+          aria-hidden
+          className="absolute top-0 right-0 h-[3px] [background:linear-gradient(90deg,#ff6b5c_0%,#8bf2d3_100%)] [transition:width_0.85s_cubic-bezier(0.16,1,0.3,1)_0.25s]"
+          style={{ width: open ? "clamp(80px, 14vw, 140px)" : 0 }}
+        />
+        <div
+          aria-hidden
+          className="gradient-blob gradient-blob-coral absolute w-[70%] h-[70%] bottom-[-35%] left-[-25%] pointer-events-none [transition:opacity_0.9s_ease_0.2s]"
+          style={{ opacity: open ? 0.55 : 0 }}
+        />
 
         {/* Nav items */}
-        <nav style={{ flex: 1, display: "flex", flexDirection: "column", gap: "clamp(14px, 1.8vw, 22px)", position: "relative", zIndex: 1 }}>
+        <nav className="flex-1 flex flex-col gap-[clamp(14px,1.8vw,22px)] relative z-[1]">
           {NAV_ITEMS.map((item, i) => {
             const arrowColor = item.color === "#ff6b5c" ? "#003c46" : "#ff6b5c";
             return (
               <Link
                 key={item.label}
                 href={item.href}
-                className="menu-nav-link"
+                className="menu-nav-link [font-family:var(--font-nunito),'Nunito_Sans',sans-serif] text-[clamp(32px,5.6vw,60px)] leading-none tracking-[-0.01em] no-underline uppercase inline-flex items-center w-fit cursor-pointer"
                 onClick={() => setOpen(false)}
                 style={{
-                  fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-                  fontSize: "clamp(32px, 5.6vw, 60px)", lineHeight: 1,
-                  fontWeight: item.weight, letterSpacing: "-0.01em",
+                  fontWeight: item.weight,
                   color: item.color,
-                  textDecoration: "none", textTransform: "uppercase",
-                  display: "inline-flex", alignItems: "center",
                   opacity: open ? 1 : 0,
                   transform: open ? "translateX(0)" : "translateX(48px)",
                   filter: open ? "blur(0px)" : "blur(8px)",
@@ -186,8 +138,6 @@ export default function SiteMenu() {
                   transitionDuration: "0.7s, 0.75s, 0.6s, 0.25s",
                   transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
                   transitionDelay: `${0.22 + i * 0.07}s, ${0.22 + i * 0.07}s, ${0.22 + i * 0.07}s, 0s`,
-                  width: "fit-content",
-                  cursor: "pointer",
                 }}
               >
                 <span className="menu-nav-arrow" aria-hidden style={{ color: arrowColor }} />
@@ -198,26 +148,16 @@ export default function SiteMenu() {
         </nav>
 
         {/* Bottom CTAs */}
-        <div style={{
-          display: "flex", flexDirection: "column", gap: 12,
-          position: "relative", zIndex: 1,
-          opacity: open ? 1 : 0,
-          transform: open ? "translateY(0)" : "translateY(28px)",
-          transition: "opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.6s, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.6s",
-        }}>
+        <div
+          className="flex flex-col gap-3 relative z-[1] [transition:opacity_0.7s_cubic-bezier(0.16,1,0.3,1)_0.6s,transform_0.7s_cubic-bezier(0.16,1,0.3,1)_0.6s]"
+          style={{
+            opacity: open ? 1 : 0,
+            transform: open ? "translateY(0)" : "translateY(28px)",
+          }}
+        >
           <a
             href="https://app.mentic.io/login"
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#003c46"; e.currentTarget.style.color = "#f2f2f0"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#003c46"; e.currentTarget.style.transform = "translateY(0)"; }}
-            style={{
-              background: "transparent", color: "#003c46",
-              border: "1.5px solid #003c46", borderRadius: 999,
-              padding: "15px 28px", fontSize: 13, fontWeight: 700,
-              letterSpacing: "0.18em", textTransform: "uppercase",
-              textDecoration: "none", textAlign: "center",
-              cursor: "pointer", fontFamily: "inherit",
-              transition: "background 0.25s ease, color 0.25s ease, transform 0.25s ease",
-            }}
+            className="bg-transparent text-dark-teal border-[1.5px] border-solid border-dark-teal rounded-full py-[15px] px-7 text-[13px] font-bold tracking-[0.18em] uppercase no-underline text-center cursor-pointer [font-family:inherit] [transition:background_0.25s_ease,color_0.25s_ease,transform_0.25s_ease] hover:bg-dark-teal hover:text-[#f2f2f0] hover:-translate-y-px"
           >Log in</a>
           <a
             href="https://mentic.io/#signup"
@@ -225,33 +165,13 @@ export default function SiteMenu() {
               trackInitiateCheckout({ content_name: "Sign up CTA — slide-out menu", source: "site_menu_overlay" });
               trackLead({ content_name: "Sign up CTA — slide-out menu", source: "site_menu_overlay" });
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#00525f"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#003c46"; e.currentTarget.style.transform = "translateY(0)"; }}
-            style={{
-              background: "#003c46", color: "#f2f2f0",
-              border: "none", borderRadius: 999,
-              padding: "15px 28px", fontSize: 13, fontWeight: 700,
-              letterSpacing: "0.18em", textTransform: "uppercase",
-              textDecoration: "none", textAlign: "center",
-              cursor: "pointer", fontFamily: "inherit",
-              transition: "background 0.25s ease, transform 0.25s ease",
-            }}
+            className="bg-dark-teal text-[#f2f2f0] border-none rounded-full py-[15px] px-7 text-[13px] font-bold tracking-[0.18em] uppercase no-underline text-center cursor-pointer [font-family:inherit] [transition:background_0.25s_ease,transform_0.25s_ease] hover:bg-[#00525f] hover:-translate-y-px"
           >Sign up</a>
           <a
             href={CALENDLY}
             target="_blank" rel="noopener noreferrer"
             onClick={() => trackSchedule({ content_name: "Book a demo — slide-out menu", source: "site_menu_overlay" })}
-            onMouseEnter={(e) => { e.currentTarget.style.background = "#a8f7df"; e.currentTarget.style.transform = "translateY(-1px)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "#8bf2d3"; e.currentTarget.style.transform = "translateY(0)"; }}
-            style={{
-              background: "#8bf2d3", color: "#003c46",
-              border: "none", borderRadius: 999,
-              padding: "15px 28px", fontSize: 13, fontWeight: 700,
-              letterSpacing: "0.18em", textTransform: "uppercase",
-              textDecoration: "none", textAlign: "center",
-              cursor: "pointer", fontFamily: "inherit",
-              transition: "background 0.25s ease, transform 0.25s ease",
-            }}
+            className="bg-mint text-dark-teal border-none rounded-full py-[15px] px-7 text-[13px] font-bold tracking-[0.18em] uppercase no-underline text-center cursor-pointer [font-family:inherit] [transition:background_0.25s_ease,transform_0.25s_ease] hover:bg-[#a8f7df] hover:-translate-y-px"
           >Book a Demo</a>
         </div>
       </aside>

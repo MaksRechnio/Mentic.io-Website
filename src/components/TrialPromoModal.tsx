@@ -19,10 +19,6 @@ const SHOW_AFTER_MS = 5000;
 const SIGNUP_URL = "https://app.mentic.io/signup";
 
 const TEAL = "#003c46";
-const TEAL_INK = "rgba(0,60,70,0.72)";
-const CORAL = "#ff6b5c";
-const MINT = "#8bf2d3";
-const CERAMIC = "#f2f2f0";
 
 export default function TrialPromoModal() {
   const [open, setOpen] = useState(false);
@@ -71,63 +67,28 @@ export default function TrialPromoModal() {
       aria-modal="true"
       aria-labelledby="trial-promo-title"
       onClick={dismiss}
-      style={{
-        position: "fixed", inset: 0, zIndex: 9999,
-        background: "rgba(0,30,36,0.55)",
-        backdropFilter: "blur(6px)",
-        WebkitBackdropFilter: "blur(6px)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        padding: "clamp(16px, 4vw, 32px)",
-        fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-        animation: "trialPromoFadeIn 240ms cubic-bezier(0.165, 0.84, 0.44, 1) both",
-      }}
+      className="fixed inset-0 z-[9999] bg-[rgba(0,30,36,0.55)] backdrop-blur-[6px] flex items-center justify-center p-[clamp(16px,4vw,32px)] [font-family:var(--font-nunito),'Nunito_Sans',sans-serif] [animation:trialPromoFadeIn_240ms_cubic-bezier(0.165,0.84,0.44,1)_both]"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        style={{
-          position: "relative",
-          width: "100%",
-          maxWidth: 460,
-          background: CERAMIC,
-          color: TEAL,
-          borderRadius: 28,
-          padding: "clamp(28px, 5vw, 44px) clamp(24px, 4.5vw, 40px) clamp(24px, 4vw, 36px)",
-          boxShadow:
-            "0 1px 2px rgba(0,0,0,0.04), 0 24px 56px rgba(0,30,36,0.22), 0 60px 120px -20px rgba(0,30,36,0.4), 0 0 0 1px rgba(0,60,70,0.06)",
-          overflow: "hidden",
-          animation: "trialPromoPop 360ms cubic-bezier(0.165, 0.84, 0.44, 1) both",
-        }}
+        className="relative w-full max-w-[460px] bg-[#f2f2f0] text-dark-teal rounded-[28px] pt-[clamp(28px,5vw,44px)] px-[clamp(24px,4.5vw,40px)] pb-[clamp(24px,4vw,36px)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_24px_56px_rgba(0,30,36,0.22),0_60px_120px_-20px_rgba(0,30,36,0.4),0_0_0_1px_rgba(0,60,70,0.06)] overflow-hidden [animation:trialPromoPop_360ms_cubic-bezier(0.165,0.84,0.44,1)_both]"
       >
         {/* Soft brand blobs */}
-        <span aria-hidden style={{
-          position: "absolute", width: 320, height: 320, borderRadius: 999,
-          top: -160, left: -120,
-          background: `radial-gradient(circle, ${CORAL}55, ${CORAL}00 70%)`,
-          pointerEvents: "none",
-        }} />
-        <span aria-hidden style={{
-          position: "absolute", width: 360, height: 360, borderRadius: 999,
-          bottom: -200, right: -140,
-          background: `radial-gradient(circle, ${MINT}66, ${MINT}00 70%)`,
-          pointerEvents: "none",
-        }} />
+        <span
+          aria-hidden
+          className="absolute w-80 h-80 rounded-full top-[-160px] left-[-120px] [background:radial-gradient(circle,#ff6b5c55,#ff6b5c00_70%)] pointer-events-none"
+        />
+        <span
+          aria-hidden
+          className="absolute w-[360px] h-[360px] rounded-full bottom-[-200px] right-[-140px] [background:radial-gradient(circle,#8bf2d366,#8bf2d300_70%)] pointer-events-none"
+        />
 
         {/* Close */}
         <button
           type="button"
           aria-label="Dismiss"
           onClick={dismiss}
-          style={{
-            position: "absolute", top: 14, right: 14,
-            width: 32, height: 32, borderRadius: 999,
-            display: "inline-flex", alignItems: "center", justifyContent: "center",
-            background: "rgba(0,60,70,0.06)",
-            color: TEAL,
-            border: "none", cursor: "pointer",
-            transition: "background 180ms ease, transform 180ms ease",
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,60,70,0.12)"; e.currentTarget.style.transform = "scale(1.06)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = "rgba(0,60,70,0.06)"; e.currentTarget.style.transform = "scale(1)"; }}
+          className="absolute top-[14px] right-[14px] w-8 h-8 rounded-full inline-flex items-center justify-center bg-dark-teal/6 text-dark-teal border-none cursor-pointer [transition:background_180ms_ease,transform_180ms_ease] hover:bg-dark-teal/12 hover:scale-[1.06]"
         >
           <svg width={12} height={12} viewBox="0 0 12 12" fill="none" aria-hidden>
             <path d="M2 2L10 10M10 2L2 10" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
@@ -135,57 +96,26 @@ export default function TrialPromoModal() {
         </button>
 
         {/* Eyebrow */}
-        <div style={{
-          position: "relative", zIndex: 1,
-          display: "inline-flex", alignItems: "center", gap: 8,
-          padding: "5px 12px", borderRadius: 999,
-          background: "rgba(255,107,92,0.12)",
-          color: CORAL,
-          fontSize: 11, fontWeight: 800, letterSpacing: "0.22em",
-          textTransform: "uppercase",
-          marginBottom: 22,
-        }}>
-          <span aria-hidden style={{ width: 6, height: 6, borderRadius: 999, background: CORAL }} />
+        <div className="relative z-[1] inline-flex items-center gap-2 py-[5px] px-3 rounded-full bg-coral/12 text-coral text-[11px] font-extrabold tracking-[0.22em] uppercase mb-[22px]">
+          <span aria-hidden className="w-1.5 h-1.5 rounded-full bg-coral" />
           Limited offer
         </div>
 
         {/* Headline */}
-        <h2 id="trial-promo-title" style={{
-          position: "relative", zIndex: 1,
-          margin: 0,
-          fontSize: "clamp(34px, 7vw, 46px)",
-          lineHeight: 1.02,
-          letterSpacing: "-0.02em",
-          fontWeight: 200,
-          color: TEAL,
-        }}>
-          <span style={{ display: "block", fontWeight: 800, color: CORAL }}>4 days free</span>
-          <span style={{ display: "block", fontWeight: 200 }}>on the autonomous</span>
-          <span style={{ display: "block", fontWeight: 800 }}>AI Advertiser.</span>
+        <h2 id="trial-promo-title" className="relative z-[1] m-0 text-[clamp(34px,7vw,46px)] leading-[1.02] tracking-[-0.02em] font-extralight text-dark-teal">
+          <span className="block font-extrabold text-coral">4 days free</span>
+          <span className="block font-extralight">on the autonomous</span>
+          <span className="block font-extrabold">AI Advertiser.</span>
         </h2>
 
         {/* Body */}
-        <p style={{
-          position: "relative", zIndex: 1,
-          margin: "18px 0 0",
-          fontSize: "clamp(14px, 1.6vw, 16px)",
-          fontWeight: 400, lineHeight: 1.55,
-          color: TEAL_INK,
-        }}>
+        <p className="relative z-[1] mt-[18px] mx-0 mb-0 text-[clamp(14px,1.6vw,16px)] font-normal leading-[1.55] text-dark-teal/72">
           Plug Mentic into your business and let our agents launch, manage and
           optimise your ads — on us for 4 days. No card up front.
         </p>
 
         {/* Deadline */}
-        <div style={{
-          position: "relative", zIndex: 1,
-          marginTop: 18,
-          display: "inline-flex", alignItems: "center", gap: 8,
-          fontSize: 12, fontWeight: 700, color: TEAL,
-          letterSpacing: "0.12em", textTransform: "uppercase",
-          padding: "8px 14px", borderRadius: 999,
-          background: "rgba(0,60,70,0.06)",
-        }}>
+        <div className="relative z-[1] mt-[18px] inline-flex items-center gap-2 text-xs font-bold text-dark-teal tracking-[0.12em] uppercase py-2 px-[14px] rounded-full bg-dark-teal/6">
           <svg width={12} height={12} viewBox="0 0 12 12" fill="none" aria-hidden>
             <circle cx="6" cy="6" r="5" stroke={TEAL} strokeWidth="1.4" />
             <path d="M6 3v3l2 1" stroke={TEAL} strokeWidth="1.4" strokeLinecap="round" />
@@ -194,40 +124,18 @@ export default function TrialPromoModal() {
         </div>
 
         {/* Actions */}
-        <div style={{
-          position: "relative", zIndex: 1,
-          marginTop: 26,
-          display: "flex", flexDirection: "column", gap: 10,
-        }}>
+        <div className="relative z-[1] mt-[26px] flex flex-col gap-2.5">
           <a
             href={SIGNUP_URL}
             onClick={onClaim}
-            style={{
-              display: "inline-flex", alignItems: "center", justifyContent: "center",
-              padding: "16px 22px", borderRadius: 14,
-              background: TEAL, color: MINT,
-              fontSize: 15, fontWeight: 800, letterSpacing: "0.04em",
-              textDecoration: "none",
-              transition: "transform 200ms ease, box-shadow 200ms ease, background 200ms ease",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 14px 32px rgba(0,60,70,0.25)"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "none"; }}
+            className="inline-flex items-center justify-center py-4 px-[22px] rounded-[14px] bg-dark-teal text-mint text-[15px] font-extrabold tracking-[0.04em] no-underline [transition:transform_200ms_ease,box-shadow_200ms_ease,background_200ms_ease] hover:-translate-y-px hover:shadow-[0_14px_32px_rgba(0,60,70,0.25)]"
           >
             Claim your 4 days →
           </a>
           <button
             type="button"
             onClick={dismiss}
-            style={{
-              background: "transparent", border: "none", padding: "8px 0",
-              color: TEAL_INK,
-              fontSize: 13, fontWeight: 500,
-              cursor: "pointer",
-              fontFamily: "inherit",
-              transition: "color 180ms ease",
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = TEAL; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = TEAL_INK; }}
+            className="bg-transparent border-none py-2 px-0 text-dark-teal/72 text-[13px] font-medium cursor-pointer [font-family:inherit] [transition:color_180ms_ease] hover:text-dark-teal"
           >
             Maybe later
           </button>

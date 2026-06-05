@@ -146,14 +146,8 @@ function PinnedScene({
      full-bleed section that scrolls naturally with the rest of the page. */
   if (isMobile) {
     return (
-      <section
-        style={{
-          width: "100%",
-          padding: "clamp(64px, 9vh, 96px) clamp(20px, 5vw, 32px)",
-          position: "relative",
-        }}
-      >
-        <div style={{ width: "100%", maxWidth: 720, margin: "0 auto" }}>
+      <section className="relative w-full px-[clamp(20px,5vw,32px)] py-[clamp(64px,9vh,96px)]">
+        <div className="mx-auto w-full max-w-[720px]">
           {children(1)}
         </div>
       </section>
@@ -161,20 +155,9 @@ function PinnedScene({
   }
 
   return (
-    <div ref={ref} style={{ height: scrollHeight, position: "relative" }}>
-      <div
-        style={{
-          position: "sticky",
-          top: 0,
-          height: "100dvh",
-          width: "100%",
-          overflow: "hidden",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <div style={{ width: "100%", maxWidth: 1400, padding: "clamp(80px, 12vh, 140px) clamp(20px, 6vw, 96px) clamp(60px, 10vh, 100px)" }}>
+    <div ref={ref} className="relative" style={{ height: scrollHeight }}>
+      <div className="sticky top-0 flex h-[100dvh] w-full items-center justify-center overflow-hidden">
+        <div className="w-full max-w-[1400px] px-[clamp(20px,6vw,96px)] pt-[clamp(80px,12vh,140px)] pb-[clamp(60px,10vh,100px)]">
           {children(progress)}
         </div>
         {!hideHint && <ScrollHint opacity={hintOpacity} />}
@@ -188,25 +171,11 @@ function PinnedScene({
    ─────────────────────────────────────────────────────────── */
 function ScrollHint({ label = "Keep scrolling", opacity = 1 }: { label?: string; opacity?: number }) {
   return (
-    <div style={{
-      position: "absolute",
-      bottom: "clamp(20px, 4vh, 36px)",
-      left: "50%",
-      transform: "translateX(-50%)",
-      display: "inline-flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 8,
-      color: TEAL_MUTED,
-      opacity: clamp(opacity, 0, 1),
-      transition: "opacity 0.25s linear",
-      pointerEvents: "none",
-      zIndex: 2,
-    }}>
-      <span style={{
-        fontSize: 10, fontWeight: 700, letterSpacing: "0.3em",
-        textTransform: "uppercase", whiteSpace: "nowrap",
-      }}>
+    <div
+      className="pointer-events-none absolute bottom-[clamp(20px,4vh,36px)] left-1/2 z-[2] inline-flex -translate-x-1/2 flex-col items-center gap-2 text-dark-teal/55 transition-opacity duration-[250ms] ease-linear"
+      style={{ opacity: clamp(opacity, 0, 1) }}
+    >
+      <span className="whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.3em]">
         {label}
       </span>
       <svg width={16} height={24} viewBox="0 0 16 24" fill="none" aria-hidden>
@@ -233,43 +202,27 @@ function SectionHeader({
   p: number;
 }) {
   return (
-    <div className="section-head" style={{
-      display: "grid",
-      gridTemplateColumns: "minmax(0, 1fr) minmax(0, 2fr)",
-      gap: "clamp(20px, 3vw, 64px)",
-      alignItems: "start",
-    }}>
+    <div className="section-head grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)] items-start gap-[clamp(20px,3vw,64px)]">
       <div style={fadeUp(p, 0, 0.12)}>
-        <div style={{
-          fontSize: 11, fontWeight: 700, letterSpacing: "0.3em",
-          color: CORAL, textTransform: "uppercase",
-        }}>
+        <div className="text-[11px] font-bold uppercase tracking-[0.3em] text-coral">
           {number} ◆ {eyebrow}
         </div>
-        <div style={{ height: 1, background: "rgba(0,60,70,0.12)", maxWidth: 80, marginTop: 14 }} />
+        <div className="mt-3.5 h-px max-w-[80px] bg-dark-teal/12" />
       </div>
       <div>
-        <h2 style={{
-          margin: 0,
-          fontSize: "clamp(28px, 4.6vw, 64px)",
-          lineHeight: 1.06,
-          letterSpacing: "-0.02em",
-          color: TEAL,
-          ...fadeBlur(p, 0.02, 0.18),
-        }}>
+        <h2
+          className="m-0 text-[clamp(28px,4.6vw,64px)] leading-[1.06] tracking-[-0.02em] text-dark-teal"
+          style={fadeBlur(p, 0.02, 0.18)}
+        >
           {parts.map((part, i) => (
             <span key={i} style={{ fontWeight: part.weight, color: part.color }}>{part.text}</span>
           ))}
         </h2>
         {body && (
-          <p style={{
-            margin: "18px 0 0",
-            maxWidth: 720,
-            fontSize: "clamp(15px, 1.2vw, 18px)",
-            fontWeight: 300, lineHeight: 1.6,
-            color: TEAL_INK,
-            ...fadeUp(p, 0.06, 0.22, 24),
-          }}>
+          <p
+            className="mt-[18px] mb-0 max-w-[720px] text-[clamp(15px,1.2vw,18px)] font-light leading-[1.6] text-dark-teal/72"
+            style={fadeUp(p, 0.06, 0.22, 24)}
+          >
             {body}
           </p>
         )}
@@ -296,7 +249,7 @@ function ScrollTypewriter({
   const t = clamp(range(p, from, to));
   const shown = Math.floor(t * text.length);
   return (
-    <span style={{ fontFamily: "ui-monospace, SFMono-Regular, Menlo, monospace" }}>
+    <span className="font-[ui-monospace,SFMono-Regular,Menlo,monospace]">
       {text.slice(0, shown)}
       {shown < text.length && <span className="typewriter-caret" />}
     </span>
@@ -316,31 +269,13 @@ export default function ProductDeepDive() {
   }, []);
 
   return (
-    <main className="use-native-cursor" style={{
-      width: "100%",
-      background: CERAMIC,
-      color: TEAL,
-      fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-      position: "relative",
-      /* No overflow:hidden — would break position:sticky inside */
-    }}>
+    <main className="use-native-cursor relative w-full bg-[#f2f2f0] font-sans text-dark-teal">
+      {/* No overflow:hidden — would break position:sticky inside */}
       <SiteMenu />
 
       {/* Global corner blobs — fixed so they bleed continuously */}
-      <div aria-hidden className="gradient-blob gradient-blob-coral" style={{
-        position: "fixed", pointerEvents: "none",
-        width: "min(45vw, 720px)", height: "min(45vw, 720px)",
-        top: "-22vw", left: "-22vw",
-        opacity: 0.65,
-        zIndex: 0,
-      }} />
-      <div aria-hidden className="gradient-blob gradient-blob-mint" style={{
-        position: "fixed", pointerEvents: "none",
-        width: "min(55vw, 880px)", height: "min(55vw, 880px)",
-        bottom: "-32vw", right: "-28vw",
-        opacity: 0.65,
-        zIndex: 0,
-      }} />
+      <div aria-hidden className="gradient-blob gradient-blob-coral pointer-events-none fixed! top-[-22vw] left-[-22vw] z-0 h-[min(45vw,720px)] w-[min(45vw,720px)] opacity-65" />
+      <div aria-hidden className="gradient-blob gradient-blob-mint pointer-events-none fixed! right-[-28vw] bottom-[-32vw] z-0 h-[min(55vw,880px)] w-[min(55vw,880px)] opacity-65" />
 
       {/* ── HERO ─────────────────────────────────────────────── */}
       <HeroScene />
@@ -399,56 +334,38 @@ function HeroScene() {
         transition: "opacity 0.2s linear",
       };
   return (
-    <div ref={ref} style={{ height: isMobile ? "auto" : "130vh", position: "relative" }}>
+    <div ref={ref} className="relative" style={{ height: isMobile ? "auto" : "130vh" }}>
       <div style={outerStyle}>
         <div>
-          <div className="intro-blur-in" style={{
-            display: "inline-flex", alignItems: "center", gap: 10,
-            padding: "6px 14px", borderRadius: 999,
-            background: "rgba(0,60,70,0.06)",
-            fontSize: 11, fontWeight: 700, letterSpacing: "0.28em",
-            textTransform: "uppercase", color: TEAL,
-            animationDelay: "0.05s",
-          }}>
+          <div
+            className="intro-blur-in inline-flex items-center gap-2.5 rounded-full bg-dark-teal/6 px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.28em] text-dark-teal"
+            style={{ animationDelay: "0.05s" }}
+          >
             ◆ The product
           </div>
-          <h1 style={{
-            margin: "28px 0 0",
-            fontSize: "clamp(44px, 8.5vw, 132px)",
-            lineHeight: 0.95,
-            fontWeight: 200,
-            letterSpacing: "-0.025em",
-            color: TEAL,
-            maxWidth: 1200,
-          }}>
-            <span className="intro-blur-in" style={{ display: "block", fontWeight: 200, animationDelay: "0.15s" }}>Give Mentic</span>
-            <span className="intro-blur-in" style={{ display: "block", fontWeight: 800, color: CORAL, animationDelay: "0.3s" }}>your URL.</span>
-            <span className="intro-blur-in" style={{ display: "block", fontWeight: 200, animationDelay: "0.45s" }}>
+          <h1 className="mx-0 mt-7 mb-0 max-w-[1200px] text-[clamp(44px,8.5vw,132px)] font-extralight leading-[0.95] tracking-[-0.025em] text-dark-teal">
+            <span className="intro-blur-in block font-extralight" style={{ animationDelay: "0.15s" }}>Give Mentic</span>
+            <span className="intro-blur-in block font-extrabold text-coral" style={{ animationDelay: "0.3s" }}>your URL.</span>
+            <span className="intro-blur-in block font-extralight" style={{ animationDelay: "0.45s" }}>
               Get back an
-              <span style={{ fontWeight: 800, color: TEAL }}> agency</span>.
+              <span className="font-extrabold text-dark-teal"> agency</span>.
             </span>
           </h1>
-          <p className="intro-fade-up" style={{
-            margin: "36px auto 0",
-            maxWidth: 640,
-            fontSize: "clamp(15px, 1.4vw, 20px)",
-            fontWeight: 300,
-            lineHeight: 1.6,
-            color: TEAL_INK,
-            animationDelay: "0.65s",
-          }}>
+          <p
+            className="intro-fade-up mx-auto mt-9 mb-0 max-w-[640px] text-[clamp(15px,1.4vw,20px)] font-light leading-[1.6] text-dark-teal/72"
+            style={{ animationDelay: "0.65s" }}
+          >
             21 specialised agents read your business, design the strategy, launch campaigns on Meta
             and keep optimising — humans in the loop where it counts.
           </p>
-          <div className="intro-fade-up" style={{
-            marginTop: 44,
-            display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center",
-            animationDelay: "0.8s",
-          }}>
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={ctaTeal}
+          <div
+            className="intro-fade-up mt-11 flex flex-wrap justify-center gap-3"
+            style={{ animationDelay: "0.8s" }}
+          >
+            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className={ctaTeal}
               onClick={() => trackSchedule({ content_name: "Book a demo — product hero", source: "product_hero" })}
             >Book a demo</a>
-            <a href="/#signup" style={ctaMint}>Sign up</a>
+            <a href="/#signup" className={ctaMint}>Sign up</a>
           </div>
         </div>
       </div>
@@ -481,52 +398,25 @@ function OnboardingScene() {
             p={p}
           />
 
-          <div style={{
-            marginTop: "clamp(36px, 5vh, 64px)",
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.1fr)",
-            gap: "clamp(24px, 4vw, 64px)",
-            alignItems: "center",
-          }} className="onboarding-grid">
+          <div className="onboarding-grid mt-[clamp(36px,5vh,64px)] grid grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] items-center gap-[clamp(24px,4vw,64px)]">
             {/* Left — browser-style URL bar */}
-            <div style={{
-              background: "#ffffff",
-              borderRadius: 22,
-              padding: "clamp(18px, 2.4vw, 32px)",
-              boxShadow:
-                "0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(0,60,70,0.08), 0 40px 80px -20px rgba(0,60,70,0.18), 0 0 0 1px rgba(0,60,70,0.04)",
-              ...scaleIn(p, 0.12, 0.32),
-            }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 18 }}>
-                <span style={{ width: 11, height: 11, borderRadius: 999, background: "#ff5f57" }} />
-                <span style={{ width: 11, height: 11, borderRadius: 999, background: "#febc2e" }} />
-                <span style={{ width: 11, height: 11, borderRadius: 999, background: "#28c840" }} />
+            <div
+              className="rounded-[22px] bg-white p-[clamp(18px,2.4vw,32px)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_12px_32px_rgba(0,60,70,0.08),0_40px_80px_-20px_rgba(0,60,70,0.18),0_0_0_1px_rgba(0,60,70,0.04)]"
+              style={scaleIn(p, 0.12, 0.32)}
+            >
+              <div className="mb-[18px] flex items-center gap-1.5">
+                <span className="h-[11px] w-[11px] rounded-full bg-[#ff5f57]" />
+                <span className="h-[11px] w-[11px] rounded-full bg-[#febc2e]" />
+                <span className="h-[11px] w-[11px] rounded-full bg-[#28c840]" />
               </div>
-              <div style={{
-                padding: "14px 18px",
-                borderRadius: 12,
-                background: CERAMIC,
-                fontSize: "clamp(16px, 1.5vw, 22px)",
-                fontWeight: 500,
-                color: TEAL,
-                letterSpacing: "-0.01em",
-                minHeight: 56,
-                display: "flex", alignItems: "center",
-              }}>
+              <div className="flex min-h-[56px] items-center rounded-xl bg-[#f2f2f0] px-[18px] py-3.5 text-[clamp(16px,1.5vw,22px)] font-medium tracking-[-0.01em] text-dark-teal">
                 <ScrollTypewriter text="https://yourbrand.com" from={0.18} to={0.45} p={p} />
               </div>
-              <div style={{
-                marginTop: 16,
-                display: "flex", alignItems: "center", gap: 10,
-                fontSize: 12, fontWeight: 500, color: TEAL_MUTED,
-                letterSpacing: "0.02em",
-                ...fadeUp(p, 0.42, 0.52, 12),
-              }}>
-                <span style={{
-                  display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  width: 18, height: 18, borderRadius: 999, background: MINT, color: TEAL,
-                  flexShrink: 0,
-                }}>
+              <div
+                className="mt-4 flex items-center gap-2.5 text-[12px] font-medium tracking-[0.02em] text-dark-teal/55"
+                style={fadeUp(p, 0.42, 0.52, 12)}
+              >
+                <span className="inline-flex h-[18px] w-[18px] flex-shrink-0 items-center justify-center rounded-full bg-mint text-dark-teal">
                   <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
@@ -536,7 +426,7 @@ function OnboardingScene() {
             </div>
 
             {/* Right — extracted profile cards, each appears in sequence */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div className="flex flex-col gap-3">
               {[
                 { label: "Niche", value: "Skincare for sensitive skin", from: 0.45 },
                 { label: "ICP", value: "Women, 28–44, busy professionals", from: 0.52 },
@@ -545,19 +435,13 @@ function OnboardingScene() {
               ].map((row) => (
                 <div
                   key={row.label}
-                  style={{
-                    background: "#ffffff",
-                    borderRadius: 14,
-                    padding: "14px 18px",
-                    boxShadow:
-                      "0 1px 2px rgba(0,0,0,0.04), 0 6px 16px rgba(0,60,70,0.06), 0 0 0 1px rgba(0,60,70,0.04)",
-                    ...fadeFrom("right", p, row.from, row.from + 0.12, 60),
-                  }}
+                  className="rounded-[14px] bg-white px-[18px] py-3.5 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_6px_16px_rgba(0,60,70,0.06),0_0_0_1px_rgba(0,60,70,0.04)]"
+                  style={fadeFrom("right", p, row.from, row.from + 0.12, 60)}
                 >
-                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.24em", color: CORAL, textTransform: "uppercase", marginBottom: 4 }}>
+                  <div className="mb-1 text-[10px] font-bold uppercase tracking-[0.24em] text-coral">
                     {row.label}
                   </div>
-                  <div style={{ fontSize: "clamp(13px, 1.05vw, 16px)", fontWeight: 500, color: TEAL }}>
+                  <div className="text-[clamp(13px,1.05vw,16px)] font-medium text-dark-teal">
                     {row.value}
                   </div>
                 </div>
@@ -605,31 +489,17 @@ function ResearchScene() {
             body="Two live rounds of web search plus a Meta Ad Library scan. The agent learns what your competitors are running, who your buyer is, and which channels actually convert in your niche."
             p={p}
           />
-          <div style={{
-            marginTop: "clamp(36px, 5vh, 56px)",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: 14,
-          }} className="research-grid">
+          <div className="research-grid mt-[clamp(36px,5vh,56px)] grid grid-cols-[repeat(3,minmax(0,1fr))] gap-3.5">
             {cards.map((c) => (
               <div
                 key={c.tag}
-                style={{
-                  background: "#ffffff",
-                  borderRadius: 18,
-                  padding: "clamp(16px, 1.8vw, 24px)",
-                  boxShadow:
-                    "0 1px 2px rgba(0,0,0,0.04), 0 10px 24px rgba(0,60,70,0.06), 0 0 0 1px rgba(0,60,70,0.04)",
-                  ...scaleIn(p, c.from, c.from + 0.14, 0.9, 26),
-                }}
+                className="rounded-[18px] bg-white p-[clamp(16px,1.8vw,24px)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_24px_rgba(0,60,70,0.06),0_0_0_1px_rgba(0,60,70,0.04)]"
+                style={scaleIn(p, c.from, c.from + 0.14, 0.9, 26)}
               >
-                <div style={{
-                  fontSize: 11, fontWeight: 700, letterSpacing: "0.22em",
-                  color: CORAL, textTransform: "uppercase", marginBottom: 8,
-                }}>
+                <div className="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-coral">
                   {c.tag}
                 </div>
-                <div style={{ fontSize: "clamp(13px, 1vw, 15px)", fontWeight: 400, lineHeight: 1.5, color: TEAL }}>
+                <div className="text-[clamp(13px,1vw,15px)] font-normal leading-[1.5] text-dark-teal">
                   {c.body}
                 </div>
               </div>
@@ -676,17 +546,8 @@ function StrategyScene() {
             body="Not a black box. Mentic spells out platforms, layers, creative briefs and timeline before a single ad runs. Read it, edit it, ship it."
             p={p}
           />
-          <div style={{
-            marginTop: "clamp(36px, 5vh, 56px)",
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 5fr) minmax(0, 7fr)",
-            gap: "clamp(24px, 4vw, 64px)",
-            alignItems: "center",
-          }} className="strategy-grid">
-            <ol style={{
-              listStyle: "none", margin: 0, padding: 0,
-              display: "flex", flexDirection: "column", gap: 8,
-            }}>
+          <div className="strategy-grid mt-[clamp(36px,5vh,56px)] grid grid-cols-[minmax(0,5fr)_minmax(0,7fr)] items-center gap-[clamp(24px,4vw,64px)]">
+            <ol className="m-0 flex list-none flex-col gap-2 p-0">
               {phases.map((phase, i) => {
                 /* each phase activates between 0.18 and 0.62 of progress */
                 const phaseFrom = 0.18 + i * 0.05;
@@ -695,32 +556,26 @@ function StrategyScene() {
                 return (
                   <li
                     key={phase}
+                    className="flex items-center gap-3.5 rounded-[14px] px-4 py-2.5 transition-[background,border-color] duration-[400ms] ease-[ease]"
                     style={{
-                      display: "flex", alignItems: "center", gap: 14,
-                      padding: "10px 16px",
-                      borderRadius: 14,
                       background: active ? "rgba(139,242,211,0.22)" : "rgba(0,60,70,0.04)",
                       border: active ? "1px solid rgba(139,242,211,0.45)" : "1px solid rgba(0,60,70,0.06)",
-                      transition: "background 0.4s ease, border-color 0.4s ease",
                       ...fadeFrom("left", p, phaseFrom - 0.04, phaseFrom + 0.02, 32),
                     }}
                   >
-                    <span style={{
-                      display: "inline-flex", alignItems: "center", justifyContent: "center",
-                      width: 22, height: 22, borderRadius: 999,
-                      background: active ? MINT : "rgba(0,60,70,0.08)",
-                      color: TEAL, flexShrink: 0,
-                      transition: "background 0.4s ease",
-                    }}>
+                    <span
+                      className="inline-flex h-[22px] w-[22px] flex-shrink-0 items-center justify-center rounded-full text-dark-teal transition-[background] duration-[400ms] ease-[ease]"
+                      style={{ background: active ? MINT : "rgba(0,60,70,0.08)" }}
+                    >
                       {active ? (
                         <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       ) : (
-                        <span style={{ fontSize: 10, fontWeight: 700, color: TEAL_MUTED }}>{i + 1}</span>
+                        <span className="text-[10px] font-bold text-dark-teal/55">{i + 1}</span>
                       )}
                     </span>
-                    <span style={{ fontSize: "clamp(13px, 1vw, 15px)", fontWeight: active ? 700 : 500, color: TEAL }}>
+                    <span className="text-[clamp(13px,1vw,15px)] text-dark-teal" style={{ fontWeight: active ? 700 : 500 }}>
                       {phase}
                     </span>
                   </li>
@@ -728,24 +583,16 @@ function StrategyScene() {
               })}
             </ol>
 
-            <div style={{
-              position: "relative",
-              borderRadius: 22,
-              overflow: "hidden",
-              width: "100%",
-              maxWidth: "min(100%, calc((48vh) * 1366 / 768))",
-              aspectRatio: "1366 / 768",
-              margin: "0 auto",
-              boxShadow:
-                "0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(0,60,70,0.10), 0 50px 100px -20px rgba(0,60,70,0.22), 0 0 0 1px rgba(0,60,70,0.04)",
-              ...scaleIn(p, 0.35, 0.62, 0.94, 40),
-            }}>
+            <div
+              className="relative mx-auto aspect-[1366/768] w-full max-w-[min(100%,calc((48vh)*1366/768))] overflow-hidden rounded-[22px] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_14px_36px_rgba(0,60,70,0.10),0_50px_100px_-20px_rgba(0,60,70,0.22),0_0_0_1px_rgba(0,60,70,0.04)]"
+              style={scaleIn(p, 0.35, 0.62, 0.94, 40)}
+            >
               <Image
                 src="/images/product-strategy.png"
                 alt="Mentic strategy generation in progress"
                 fill
                 sizes="(max-width: 880px) 100vw, 60vw"
-                style={{ objectFit: "cover" }}
+                className="object-cover"
               />
             </div>
           </div>
@@ -779,54 +626,35 @@ function LaunchScene() {
             body="Mentic doesn't just recommend — it ships. A deterministic builder turns the strategy into campaigns, ad sets, creatives and ads with every Meta field sourced from our internal spec, and a validate-only preflight before money moves."
             p={p}
           />
-          <div style={{
-            position: "relative",
-            borderRadius: 24,
-            overflow: "hidden",
-            width: "100%",
-            maxWidth: "min(1180px, calc((42vh) * 1366 / 768))",
-            aspectRatio: "1366 / 768",
-            margin: "clamp(24px, 4vh, 40px) auto 0",
-            boxShadow:
-              "0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(0,60,70,0.10), 0 50px 100px -20px rgba(0,60,70,0.24), 0 0 0 1px rgba(0,60,70,0.04)",
-            ...scaleIn(p, 0.2, 0.5, 0.9, 60),
-          }}>
+          <div
+            className="relative mx-auto mt-[clamp(24px,4vh,40px)] aspect-[1366/768] w-full max-w-[min(1180px,calc((42vh)*1366/768))] overflow-hidden rounded-3xl shadow-[0_1px_2px_rgba(0,0,0,0.04),0_14px_36px_rgba(0,60,70,0.10),0_50px_100px_-20px_rgba(0,60,70,0.24),0_0_0_1px_rgba(0,60,70,0.04)]"
+            style={scaleIn(p, 0.2, 0.5, 0.9, 60)}
+          >
             <Image
               src="/images/product-campaigns.png"
               alt="Live Meta campaigns inside Mentic"
               fill
               sizes="(max-width: 1180px) 100vw, 1180px"
-              style={{ objectFit: "cover" }}
+              className="object-cover"
             />
           </div>
-          <div style={{
-            marginTop: 20,
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(200px, 100%), 1fr))",
-            gap: 12,
-            maxWidth: 1180, marginLeft: "auto", marginRight: "auto",
-          }}>
+          <div className="mx-auto mt-5 grid max-w-[1180px] grid-cols-[repeat(auto-fit,minmax(min(200px,100%),1fr))] gap-3">
             {[
               { stat: "1", unit: "click", body: "Strategy → live campaigns on your ad account.", from: 0.5 },
               { stat: "validate", suffix: "_only", body: "Preflight every change before money moves.", from: 0.58 },
               { stat: "0", unit: "guessed values", body: "Every Meta API field sourced from the internal spec.", from: 0.66 },
             ].map((s, i) => (
-              <div key={i} style={{
-                padding: "16px 18px",
-                borderRadius: 14,
-                background: "#ffffff",
-                boxShadow: "0 1px 2px rgba(0,0,0,0.04), 0 8px 20px rgba(0,60,70,0.05), 0 0 0 1px rgba(0,60,70,0.04)",
-                ...scaleIn(p, s.from, s.from + 0.14, 0.92, 28),
-              }}>
-                <div style={{
-                  fontSize: "clamp(22px, 2.4vw, 32px)", fontWeight: 800,
-                  color: TEAL, letterSpacing: "-0.02em", lineHeight: 1,
-                }}>
+              <div
+                key={i}
+                className="rounded-[14px] bg-white px-[18px] py-4 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_20px_rgba(0,60,70,0.05),0_0_0_1px_rgba(0,60,70,0.04)]"
+                style={scaleIn(p, s.from, s.from + 0.14, 0.92, 28)}
+              >
+                <div className="text-[clamp(22px,2.4vw,32px)] font-extrabold leading-none tracking-[-0.02em] text-dark-teal">
                   {s.stat}
-                  {s.unit && <span style={{ color: TEAL_MUTED, fontWeight: 500, fontSize: 12, marginLeft: 6 }}>{s.unit}</span>}
-                  {s.suffix && <span style={{ color: CORAL, fontWeight: 800, fontSize: "clamp(22px, 2.4vw, 32px)" }}>{s.suffix}</span>}
+                  {s.unit && <span className="ml-1.5 text-[12px] font-medium text-dark-teal/55">{s.unit}</span>}
+                  {s.suffix && <span className="text-[clamp(22px,2.4vw,32px)] font-extrabold text-coral">{s.suffix}</span>}
                 </div>
-                <p style={{ margin: "8px 0 0", fontSize: 13, color: TEAL_INK, lineHeight: 1.5 }}>{s.body}</p>
+                <p className="mt-2 mb-0 text-[13px] leading-[1.5] text-dark-teal/72">{s.body}</p>
               </div>
             ))}
           </div>
@@ -887,53 +715,36 @@ function AgentRosterScene() {
             body="Each agent owns a slice of the work — research, strategy, creative, platform reactive loops, budget, predictive — and reports to a central decision-maker that orders fixes by impact."
             p={p}
           />
-          <div style={{
-            marginTop: "clamp(28px, 4vh, 44px)",
-            display: "flex", flexWrap: "wrap", gap: 14, justifyContent: "center",
-            alignItems: "center", flexDirection: "row",
-          }}>
+          <div className="mt-[clamp(28px,4vh,44px)] flex flex-row flex-wrap items-center justify-center gap-3.5">
             {/* Status legend */}
             {[
               { label: "Built", swatch: "#003c46" },
               { label: "MVP", swatch: "#8bf2d3" },
               { label: "Planned", swatch: "rgba(0,60,70,0.18)" },
             ].map((l, i) => (
-              <div key={l.label} style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                fontSize: 11, fontWeight: 700, letterSpacing: "0.16em",
-                textTransform: "uppercase", color: TEAL_MUTED,
-                ...fadeUp(p, 0.05 + i * 0.02, 0.18 + i * 0.02, 12),
-              }}>
-                <span style={{ width: 10, height: 10, borderRadius: 999, background: l.swatch }} />
+              <div
+                key={l.label}
+                className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.16em] text-dark-teal/55"
+                style={fadeUp(p, 0.05 + i * 0.02, 0.18 + i * 0.02, 12)}
+              >
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: l.swatch }} />
                 {l.label}
               </div>
             ))}
           </div>
 
-          <div className="agent-grid" style={{
-            marginTop: "clamp(24px, 3vh, 36px)",
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))",
-            gap: "clamp(8px, 1vw, 12px)",
-          }}>
+          <div className="agent-grid mt-[clamp(24px,3vh,36px)] grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-[clamp(8px,1vw,12px)]">
             {ROSTER.map((agent, i) => {
               const s = statusStyle(agent.status);
               const from = 0.18 + (i / ROSTER.length) * 0.5;
               return (
                 <div
                   key={agent.name}
+                  className="flex min-h-[56px] items-center rounded-[14px] px-3.5 py-3 text-[12.5px] font-semibold leading-[1.25] tracking-[-0.005em]"
                   style={{
-                    padding: "12px 14px",
-                    borderRadius: 14,
                     background: s.bg,
                     color: s.color,
                     border: `1px solid ${s.border}`,
-                    fontSize: 12.5,
-                    fontWeight: 600,
-                    letterSpacing: "-0.005em",
-                    lineHeight: 1.25,
-                    minHeight: 56,
-                    display: "flex", alignItems: "center",
                     ...scaleIn(p, from, from + 0.1, 0.85, 16),
                   }}
                 >
@@ -982,46 +793,24 @@ function OptimisationScene() {
             body="Inside the Meta reactive loop, five sub-agents watch their own slice of the account in parallel. A coordinator resolves their conflicts and orders fixes by impact before surfacing the recommendation to you."
             p={p}
           />
-          <div style={{
-            marginTop: "clamp(36px, 5vh, 56px)",
-            background: "#ffffff",
-            borderRadius: 24,
-            padding: "clamp(28px, 4vw, 56px)",
-            boxShadow:
-              "0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(0,60,70,0.10), 0 50px 100px -20px rgba(0,60,70,0.20), 0 0 0 1px rgba(0,60,70,0.04)",
-            ...scaleIn(p, 0.12, 0.32, 0.94),
-          }}>
-            <div className="pipeline-grid" style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
-              gap: "clamp(12px, 2vw, 24px)",
-            }}>
+          <div
+            className="mt-[clamp(36px,5vh,56px)] rounded-3xl bg-white p-[clamp(28px,4vw,56px)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_14px_36px_rgba(0,60,70,0.10),0_50px_100px_-20px_rgba(0,60,70,0.20),0_0_0_1px_rgba(0,60,70,0.04)]"
+            style={scaleIn(p, 0.12, 0.32, 0.94)}
+          >
+            <div className="pipeline-grid grid grid-cols-[repeat(5,minmax(0,1fr))] gap-[clamp(12px,2vw,24px)]">
               {agents.map((a) => (
-                <div key={a.name} style={{
-                  display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
-                  textAlign: "center",
-                  ...scaleIn(p, a.from, a.from + 0.12, 0.7, 24),
-                }}>
-                  <div style={{
-                    width: "clamp(60px, 7.4vw, 96px)",
-                    height: "clamp(60px, 7.4vw, 96px)",
-                    borderRadius: 999,
-                    background: `radial-gradient(circle at 30% 25%, ${a.color}66, ${a.color} 75%)`,
-                    boxShadow: "0 12px 28px rgba(0,60,70,0.18)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    color: TEAL,
-                    fontSize: "clamp(10px, 0.95vw, 12px)",
-                    fontWeight: 800, letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                  }}>
+                <div
+                  key={a.name}
+                  className="flex flex-col items-center gap-3 text-center"
+                  style={scaleIn(p, a.from, a.from + 0.12, 0.7, 24)}
+                >
+                  <div
+                    className="flex h-[clamp(60px,7.4vw,96px)] w-[clamp(60px,7.4vw,96px)] items-center justify-center rounded-full text-[clamp(10px,0.95vw,12px)] font-extrabold uppercase tracking-[0.12em] text-dark-teal shadow-[0_12px_28px_rgba(0,60,70,0.18)]"
+                    style={{ background: `radial-gradient(circle at 30% 25%, ${a.color}66, ${a.color} 75%)` }}
+                  >
                     {a.name}
                   </div>
-                  <p style={{
-                    margin: 0,
-                    fontSize: "clamp(10px, 0.85vw, 12px)",
-                    fontWeight: 400, lineHeight: 1.4, color: TEAL_INK,
-                    maxWidth: 160,
-                  }}>
+                  <p className="m-0 max-w-[160px] text-[clamp(10px,0.85vw,12px)] font-normal leading-[1.4] text-dark-teal/72">
                     {a.role}
                   </p>
                 </div>
@@ -1029,30 +818,22 @@ function OptimisationScene() {
             </div>
 
             {/* Coordinator */}
-            <div style={{ marginTop: 32, display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-              <div style={{
-                width: 2, height: 40, background: TEAL,
-                ...scaleIn(p, 0.55, 0.62, 0.1),
-                transformOrigin: "top center",
-              }} />
-              <div style={{
-                padding: "14px 24px",
-                borderRadius: 999,
-                background: TEAL, color: CERAMIC,
-                fontSize: "clamp(11px, 1vw, 13px)",
-                fontWeight: 800, letterSpacing: "0.2em", textTransform: "uppercase",
-                display: "inline-flex", alignItems: "center", gap: 10,
-                boxShadow: "0 12px 28px rgba(0,60,70,0.25)",
-                ...scaleIn(p, 0.6, 0.72, 0.7, 24),
-              }}>
-                <span style={{ width: 8, height: 8, borderRadius: 999, background: MINT }} />
+            <div className="mt-8 flex flex-col items-center gap-3">
+              <div
+                className="h-10 w-0.5 origin-top bg-dark-teal"
+                style={scaleIn(p, 0.55, 0.62, 0.1)}
+              />
+              <div
+                className="inline-flex items-center gap-2.5 rounded-full bg-dark-teal px-6 py-3.5 text-[clamp(11px,1vw,13px)] font-extrabold uppercase tracking-[0.2em] text-[#f2f2f0] shadow-[0_12px_28px_rgba(0,60,70,0.25)]"
+                style={scaleIn(p, 0.6, 0.72, 0.7, 24)}
+              >
+                <span className="h-2 w-2 rounded-full bg-mint" />
                 Coordinator
               </div>
-              <p style={{
-                margin: "6px auto 0", maxWidth: 480,
-                fontSize: "clamp(11px, 0.95vw, 13px)", color: TEAL_INK, textAlign: "center", lineHeight: 1.5,
-                ...fadeUp(p, 0.68, 0.78, 16),
-              }}>
+              <p
+                className="mx-auto mt-1.5 mb-0 max-w-[480px] text-center text-[clamp(11px,0.95vw,13px)] leading-[1.5] text-dark-teal/72"
+                style={fadeUp(p, 0.68, 0.78, 16)}
+              >
                 Resolves conflicts, orders fixes by impact, asks you to approve the writes that matter.
               </p>
             </div>
@@ -1088,24 +869,16 @@ function DashboardScene() {
             body="One page tells you whether your money is working: active spend, results, cost-per-result, CTR and the trend underneath. Health flags surface what to look at first."
             p={p}
           />
-          <div style={{
-            position: "relative",
-            borderRadius: 24,
-            overflow: "hidden",
-            width: "100%",
-            maxWidth: "min(1180px, calc((48vh) * 1366 / 768))",
-            aspectRatio: "1366 / 768",
-            margin: "clamp(24px, 4vh, 40px) auto 0",
-            boxShadow:
-              "0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(0,60,70,0.10), 0 50px 100px -20px rgba(0,60,70,0.24), 0 0 0 1px rgba(0,60,70,0.04)",
-            ...scaleIn(p, 0.18, 0.5, 0.9, 60),
-          }}>
+          <div
+            className="relative mx-auto mt-[clamp(24px,4vh,40px)] aspect-[1366/768] w-full max-w-[min(1180px,calc((48vh)*1366/768))] overflow-hidden rounded-3xl shadow-[0_1px_2px_rgba(0,0,0,0.04),0_14px_36px_rgba(0,60,70,0.10),0_50px_100px_-20px_rgba(0,60,70,0.24),0_0_0_1px_rgba(0,60,70,0.04)]"
+            style={scaleIn(p, 0.18, 0.5, 0.9, 60)}
+          >
             <Image
               src="/images/product-dashboard.png"
               alt="Mentic dashboard — overview of live campaigns"
               fill
               sizes="(max-width: 1180px) 100vw, 1180px"
-              style={{ objectFit: "cover" }}
+              className="object-cover"
             />
           </div>
         </>
@@ -1134,13 +907,7 @@ function ApprovalScene() {
             body="Nothing big ships without you. Mentic asks for approval in Slack, Telegram or its sidebar chat — with a one-line summary of what, why, and the exact changes — before scaling, pausing or creating anything new."
             p={p}
           />
-          <div className="approval-grid" style={{
-            marginTop: "clamp(36px, 5vh, 56px)",
-            display: "grid",
-            gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
-            gap: "clamp(20px, 3vw, 36px)",
-            alignItems: "start",
-          }}>
+          <div className="approval-grid mt-[clamp(36px,5vh,56px)] grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] items-start gap-[clamp(20px,3vw,36px)]">
             <SlackApprovalCard p={p} fromTitle={0.18} fromBody={0.26} fromActions={0.35} />
             <TelegramApprovalCard p={p} fromTitle={0.42} fromBody={0.5} fromActions={0.58} />
           </div>
@@ -1155,49 +922,39 @@ function ApprovalScene() {
 
 function SlackApprovalCard({ p, fromTitle, fromBody, fromActions }: { p: number; fromTitle: number; fromBody: number; fromActions: number }) {
   return (
-    <div style={{
-      background: "#ffffff",
-      borderRadius: 20,
-      padding: "clamp(18px, 2vw, 26px)",
-      boxShadow:
-        "0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(0,60,70,0.10), 0 50px 100px -20px rgba(0,60,70,0.20), 0 0 0 1px rgba(0,60,70,0.04)",
-      ...fadeFrom("left", p, fromTitle, fromTitle + 0.14, 60),
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+    <div
+      className="rounded-[20px] bg-white p-[clamp(18px,2vw,26px)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_14px_36px_rgba(0,60,70,0.10),0_50px_100px_-20px_rgba(0,60,70,0.20),0_0_0_1px_rgba(0,60,70,0.04)]"
+      style={fadeFrom("left", p, fromTitle, fromTitle + 0.14, 60)}
+    >
+      <div className="mb-4 flex items-center gap-2.5">
         <svg width={20} height={20} viewBox="0 0 24 24" fill="#003c46" aria-hidden>
           <path d="M5.042 15.165a2.528 2.528 0 1 1-2.52-2.528h2.52v2.528zm1.27 0a2.528 2.528 0 1 1 5.055 0v6.307A2.528 2.528 0 1 1 6.31 21.472v-6.307zM8.835 5.042a2.528 2.528 0 1 1 2.528-2.52v2.52H8.836zm0 1.27a2.528 2.528 0 1 1 0 5.055H2.523a2.528 2.528 0 1 1 0-5.056h6.312zm10.122 2.523a2.528 2.528 0 1 1 2.52 2.528h-2.52V8.835zm-1.27 0a2.528 2.528 0 1 1-5.055 0V2.528a2.528 2.528 0 1 1 5.055 0v6.307zm-2.527 10.122a2.528 2.528 0 1 1-2.528 2.52v-2.52h2.528zm0-1.27a2.528 2.528 0 1 1 0-5.055h6.31a2.528 2.528 0 1 1 0 5.056h-6.31z" />
         </svg>
-        <span style={{ fontSize: 12, fontWeight: 700, color: TEAL }}>#mentic — Slack</span>
+        <span className="text-[12px] font-bold text-dark-teal">#mentic — Slack</span>
       </div>
-      <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-        <div style={{
-          flexShrink: 0,
-          width: 30, height: 30, borderRadius: 8, background: CORAL,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          color: "#fff", fontSize: 13, fontWeight: 800,
-        }}>M</div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: "flex", alignItems: "baseline", gap: 8, marginBottom: 4 }}>
-            <span style={{ fontSize: 13, fontWeight: 700, color: TEAL }}>Mentic</span>
-            <span style={{ fontSize: 10, color: TEAL_MUTED }}>APP · 11:42 AM</span>
+      <div className="flex items-start gap-2.5">
+        <div className="flex h-[30px] w-[30px] flex-shrink-0 items-center justify-center rounded-lg bg-coral text-[13px] font-extrabold text-white">M</div>
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex items-baseline gap-2">
+            <span className="text-[13px] font-bold text-dark-teal">Mentic</span>
+            <span className="text-[10px] text-dark-teal/55">APP · 11:42 AM</span>
           </div>
-          <p style={{
-            margin: 0,
-            fontSize: 13.5, fontWeight: 500, color: TEAL, lineHeight: 1.5,
-            ...fadeUp(p, fromBody, fromBody + 0.1, 16),
-          }}>
-            About to scale <strong style={{ color: CORAL }}>PostExhibition · Leads</strong> from
-            <span style={{ display: "inline-block", margin: "0 4px", padding: "2px 8px", borderRadius: 6, background: "rgba(0,60,70,0.06)", fontSize: 12, fontWeight: 600 }}>$40/day</span>
+          <p
+            className="m-0 text-[13.5px] font-medium leading-[1.5] text-dark-teal"
+            style={fadeUp(p, fromBody, fromBody + 0.1, 16)}
+          >
+            About to scale <strong className="text-coral">PostExhibition · Leads</strong> from
+            <span className="mx-1 inline-block rounded-md bg-dark-teal/6 px-2 py-0.5 text-[12px] font-semibold">$40/day</span>
             to
-            <span style={{ display: "inline-block", margin: "0 4px", padding: "2px 8px", borderRadius: 6, background: "rgba(139,242,211,0.25)", fontSize: 12, fontWeight: 700, color: TEAL }}>$80/day</span>
+            <span className="mx-1 inline-block rounded-md bg-mint/25 px-2 py-0.5 text-[12px] font-bold text-dark-teal">$80/day</span>
             after CPL dropped 38% over 3 days.
           </p>
-          <div style={{
-            marginTop: 12, display: "flex", gap: 8,
-            ...fadeUp(p, fromActions, fromActions + 0.1, 16),
-          }}>
-            <span style={chipBtn(MINT, TEAL)}>Approve</span>
-            <span style={chipBtn("rgba(0,60,70,0.06)", TEAL)}>Hold</span>
+          <div
+            className="mt-3 flex gap-2"
+            style={fadeUp(p, fromActions, fromActions + 0.1, 16)}
+          >
+            <span className={`${chipBase} bg-mint text-dark-teal`}>Approve</span>
+            <span className={`${chipBase} bg-dark-teal/6 text-dark-teal`}>Hold</span>
           </div>
         </div>
       </div>
@@ -1207,43 +964,35 @@ function SlackApprovalCard({ p, fromTitle, fromBody, fromActions }: { p: number;
 
 function TelegramApprovalCard({ p, fromTitle, fromBody, fromActions }: { p: number; fromTitle: number; fromBody: number; fromActions: number }) {
   return (
-    <div style={{
-      background: "#ffffff",
-      borderRadius: 20,
-      padding: "clamp(18px, 2vw, 26px)",
-      boxShadow:
-        "0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(0,60,70,0.10), 0 50px 100px -20px rgba(0,60,70,0.20), 0 0 0 1px rgba(0,60,70,0.04)",
-      ...fadeFrom("right", p, fromTitle, fromTitle + 0.14, 60),
-    }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+    <div
+      className="rounded-[20px] bg-white p-[clamp(18px,2vw,26px)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_14px_36px_rgba(0,60,70,0.10),0_50px_100px_-20px_rgba(0,60,70,0.20),0_0_0_1px_rgba(0,60,70,0.04)]"
+      style={fadeFrom("right", p, fromTitle, fromTitle + 0.14, 60)}
+    >
+      <div className="mb-4 flex items-center gap-2.5">
         <svg width={20} height={20} viewBox="0 0 24 24" fill="#003c46" aria-hidden>
           <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.643.135-.953l11.566-4.458c.538-.196 1.006.128.832.94z" />
         </svg>
-        <span style={{ fontSize: 12, fontWeight: 700, color: TEAL }}>Telegram — DM</span>
+        <span className="text-[12px] font-bold text-dark-teal">Telegram — DM</span>
       </div>
-      <div style={{
-        background: "rgba(139,242,211,0.18)",
-        borderRadius: 16,
-        padding: "12px 14px",
-        maxWidth: "92%",
-        marginLeft: "auto",
-        ...fadeUp(p, fromBody, fromBody + 0.1, 18),
-      }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: TEAL, marginBottom: 8, letterSpacing: "0.02em" }}>
+      <div
+        className="ml-auto max-w-[92%] rounded-2xl bg-mint/18 px-3.5 py-3"
+        style={fadeUp(p, fromBody, fromBody + 0.1, 18)}
+      >
+        <div className="mb-2 text-[11px] font-bold tracking-[0.02em] text-dark-teal">
           New creative for review
         </div>
-        <p style={{ margin: 0, fontSize: 13, fontWeight: 500, color: TEAL, lineHeight: 1.5 }}>
+        <p className="m-0 text-[13px] font-medium leading-[1.5] text-dark-teal">
           Audience-Agent flagged hook fatigue on <strong>Variation B</strong>.
           Drafted three new openings — want me to ship the top-scoring one to a 5% test budget?
         </p>
-        <div style={{
-          marginTop: 10, display: "flex", gap: 8,
-          ...fadeUp(p, fromActions, fromActions + 0.1, 14),
-        }}>
-          <span style={chipBtn(TEAL, CERAMIC)}>Ship it</span>
-          <span style={chipBtn("rgba(0,60,70,0.08)", TEAL)}>Show me first</span>
+        <div
+          className="mt-2.5 flex gap-2"
+          style={fadeUp(p, fromActions, fromActions + 0.1, 14)}
+        >
+          <span className={`${chipBase} bg-dark-teal text-[#f2f2f0]`}>Ship it</span>
+          <span className={`${chipBase} bg-dark-teal/8 text-dark-teal`}>Show me first</span>
         </div>
-        <div style={{ marginTop: 6, fontSize: 10, color: TEAL_MUTED, textAlign: "right" }}>11:43</div>
+        <div className="mt-1.5 text-right text-[10px] text-dark-teal/55">11:43</div>
       </div>
     </div>
   );
@@ -1284,35 +1033,18 @@ function WhyScene() {
             ]}
             p={p}
           />
-          <div className="why-grid" style={{
-            marginTop: "clamp(28px, 4vh, 48px)",
-            display: "grid",
-            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-            gap: "clamp(14px, 2vw, 22px)",
-          }}>
+          <div className="why-grid mt-[clamp(28px,4vh,48px)] grid grid-cols-[repeat(3,minmax(0,1fr))] gap-[clamp(14px,2vw,22px)]">
             {cards.map((card) => (
-              <div key={card.title} style={{
-                background: "#ffffff",
-                borderRadius: 20,
-                padding: "clamp(20px, 2.4vw, 32px)",
-                boxShadow:
-                  "0 1px 2px rgba(0,0,0,0.04), 0 10px 28px rgba(0,60,70,0.07), 0 0 0 1px rgba(0,60,70,0.04)",
-                display: "flex", flexDirection: "column", gap: 12,
-                ...scaleIn(p, card.from, card.from + 0.16, 0.92, 30),
-              }}>
-                <div style={{ width: 36, height: 4, borderRadius: 999, background: card.accent }} />
-                <h3 style={{
-                  margin: 0,
-                  fontSize: "clamp(16px, 1.5vw, 21px)",
-                  fontWeight: 700, color: TEAL, letterSpacing: "-0.005em",
-                }}>
+              <div
+                key={card.title}
+                className="flex flex-col gap-3 rounded-[20px] bg-white p-[clamp(20px,2.4vw,32px)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_10px_28px_rgba(0,60,70,0.07),0_0_0_1px_rgba(0,60,70,0.04)]"
+                style={scaleIn(p, card.from, card.from + 0.16, 0.92, 30)}
+              >
+                <div className="h-1 w-9 rounded-full" style={{ background: card.accent }} />
+                <h3 className="m-0 text-[clamp(16px,1.5vw,21px)] font-bold tracking-[-0.005em] text-dark-teal">
                   {card.title}
                 </h3>
-                <p style={{
-                  margin: 0,
-                  fontSize: "clamp(13px, 1vw, 15px)",
-                  fontWeight: 400, lineHeight: 1.55, color: TEAL_INK,
-                }}>
+                <p className="m-0 text-[clamp(13px,1vw,15px)] font-normal leading-[1.55] text-dark-teal/72">
                   {card.body}
                 </p>
               </div>
@@ -1350,43 +1082,30 @@ function CtaSection() {
         textAlign: "center", padding: "clamp(80px, 12vh, 140px) clamp(20px, 6vw, 96px)",
       };
   return (
-    <div ref={ref} style={{ height: isMobile ? "auto" : "110vh", position: "relative" }}>
+    <div ref={ref} className="relative" style={{ height: isMobile ? "auto" : "110vh" }}>
       <div style={innerStyle}>
         <div>
-          <h2 style={{
-            margin: 0,
-            fontSize: "clamp(40px, 6.4vw, 96px)",
-            lineHeight: 0.98,
-            fontWeight: 200,
-            letterSpacing: "-0.02em",
-            color: TEAL,
-          }}>
-            <span style={{ display: "block", fontWeight: 200, ...fadeBlur(effectiveP, 0, 0.25) }}>One URL.</span>
-            <span style={{ display: "block", fontWeight: 800, color: CORAL, ...fadeBlur(effectiveP, 0.08, 0.32) }}>One team of agents.</span>
-            <span style={{ display: "block", fontWeight: 200, ...fadeBlur(effectiveP, 0.18, 0.42) }}>Your whole funnel.</span>
+          <h2 className="m-0 text-[clamp(40px,6.4vw,96px)] font-extralight leading-[0.98] tracking-[-0.02em] text-dark-teal">
+            <span className="block font-extralight" style={fadeBlur(effectiveP, 0, 0.25)}>One URL.</span>
+            <span className="block font-extrabold text-coral" style={fadeBlur(effectiveP, 0.08, 0.32)}>One team of agents.</span>
+            <span className="block font-extralight" style={fadeBlur(effectiveP, 0.18, 0.42)}>Your whole funnel.</span>
           </h2>
-          <p style={{
-            margin: "28px auto 0",
-            maxWidth: 540,
-            fontSize: "clamp(15px, 1.3vw, 18px)",
-            fontWeight: 300,
-            lineHeight: 1.55,
-            color: TEAL_INK,
-            ...fadeBlur(effectiveP, 0.3, 0.48, 14, 8),
-          }}>
+          <p
+            className="mx-auto mt-7 mb-0 max-w-[540px] text-[clamp(15px,1.3vw,18px)] font-light leading-[1.55] text-dark-teal/72"
+            style={fadeBlur(effectiveP, 0.3, 0.48, 14, 8)}
+          >
             Onboarding pilot users now — $997/month including every agency service from EXQDigital free during alpha.
           </p>
-          <div style={{
-            marginTop: 44,
-            display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center",
-            ...fadeUp(effectiveP, 0.4, 0.6, 24),
-          }}>
-            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" style={ctaTeal}
+          <div
+            className="mt-11 flex flex-wrap justify-center gap-3"
+            style={fadeUp(effectiveP, 0.4, 0.6, 24)}
+          >
+            <a href={CALENDLY} target="_blank" rel="noopener noreferrer" className={ctaTeal}
               onClick={() => trackSchedule({ content_name: "Book a demo — product CTA", source: "product_cta" })}
             >
               Book a demo
             </a>
-            <Link href="/pricing" style={ctaOutlined}>See pricing</Link>
+            <Link href="/pricing" className={ctaOutlined}>See pricing</Link>
           </div>
         </div>
       </div>
@@ -1397,33 +1116,10 @@ function CtaSection() {
 /* ─────────────────────────────────────────────────────────────
    Inline button styles
    ─────────────────────────────────────────────────────────── */
-const ctaTeal: React.CSSProperties = {
-  display: "inline-flex", alignItems: "center", justifyContent: "center",
-  padding: "16px 30px", borderRadius: 999,
-  background: TEAL, color: CERAMIC,
-  fontSize: 13, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase",
-  textDecoration: "none",
-};
-const ctaMint: React.CSSProperties = {
-  display: "inline-flex", alignItems: "center", justifyContent: "center",
-  padding: "16px 30px", borderRadius: 999,
-  background: MINT, color: TEAL,
-  fontSize: 13, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase",
-  textDecoration: "none",
-};
-const ctaOutlined: React.CSSProperties = {
-  display: "inline-flex", alignItems: "center", justifyContent: "center",
-  padding: "16px 30px", borderRadius: 999,
-  background: "transparent", color: TEAL,
-  border: `1.5px solid ${TEAL}`,
-  fontSize: 13, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase",
-  textDecoration: "none",
-};
-function chipBtn(bg: string, fg: string): React.CSSProperties {
-  return {
-    display: "inline-flex", alignItems: "center", justifyContent: "center",
-    padding: "6px 14px", borderRadius: 999,
-    background: bg, color: fg,
-    fontSize: 11, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase",
-  };
-}
+const ctaBase =
+  "inline-flex items-center justify-center rounded-full px-[30px] py-4 text-[13px] font-bold uppercase tracking-[0.18em] no-underline";
+const ctaTeal = `${ctaBase} bg-dark-teal text-[#f2f2f0]`;
+const ctaMint = `${ctaBase} bg-mint text-dark-teal`;
+const ctaOutlined = `${ctaBase} border-[1.5px] border-dark-teal bg-transparent text-dark-teal`;
+const chipBase =
+  "inline-flex items-center justify-center rounded-full px-3.5 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em]";

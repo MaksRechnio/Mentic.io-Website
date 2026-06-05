@@ -84,57 +84,25 @@ export default function TeamPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(teamJsonLd) }}
       />
-    <main className="use-native-cursor" style={{
-      minHeight: "100dvh",
-      width: "100%",
-      background: "#f2f2f0",
-      color: "#003c46",
-      fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-      position: "relative",
-      overflow: "hidden",
-      display: "flex",
-      flexDirection: "column",
-    }}>
+    <main className="use-native-cursor min-h-[100dvh] w-full bg-[#f2f2f0] text-dark-teal font-sans relative overflow-hidden flex flex-col">
       <SiteMenu />
 
       {/* Corner blobs */}
-      <div aria-hidden className="gradient-blob gradient-blob-coral intro-fade-in" style={{
-        position: "absolute", pointerEvents: "none",
-        width: "min(45vw, 720px)", height: "min(45vw, 720px)",
-        top: "-22vw", left: "-22vw",
+      <div aria-hidden className="gradient-blob gradient-blob-coral intro-fade-in absolute pointer-events-none w-[min(45vw,720px)] h-[min(45vw,720px)] top-[-22vw] left-[-22vw]" style={{
         animationDelay: "0.1s",
       }} />
-      <div aria-hidden className="gradient-blob gradient-blob-mint intro-fade-in" style={{
-        position: "absolute", pointerEvents: "none",
-        width: "min(55vw, 880px)", height: "min(55vw, 880px)",
-        bottom: "-28vw", right: "-28vw",
+      <div aria-hidden className="gradient-blob gradient-blob-mint intro-fade-in absolute pointer-events-none w-[min(55vw,880px)] h-[min(55vw,880px)] bottom-[-28vw] right-[-28vw]" style={{
         animationDelay: "0.2s",
       }} />
 
       {/* Heading */}
-      <section style={{
-        position: "relative", zIndex: 2,
-        padding: "clamp(96px, 12vh, 140px) clamp(20px, 6vw, 56px) clamp(20px, 3vw, 32px)",
-        textAlign: "center",
-      }}>
-        <h1 className="intro-fade-up" style={{
-          margin: 0,
-          fontSize: "clamp(40px, 6vw, 80px)",
-          lineHeight: 1.02,
-          fontWeight: 200,
-          letterSpacing: "-0.02em",
-          color: "#003c46",
+      <section className="relative z-[2] px-[clamp(20px,6vw,56px)] pt-[clamp(96px,12vh,140px)] pb-[clamp(20px,3vw,32px)] text-center">
+        <h1 className="intro-fade-up m-0 text-[clamp(40px,6vw,80px)] leading-[1.02] font-extralight tracking-[-0.02em] text-dark-teal" style={{
           animationDelay: "0.05s",
         }}>
-          The <span style={{ fontWeight: 800, color: "#ff6b5c" }}>team</span>.
+          The <span className="font-extrabold text-coral">team</span>.
         </h1>
-        <p className="intro-fade-up" style={{
-          margin: "16px auto 0",
-          maxWidth: 560,
-          fontSize: "clamp(15px, 1.2vw, 17px)",
-          fontWeight: 300,
-          lineHeight: 1.55,
-          color: "rgba(0,60,70,0.7)",
+        <p className="intro-fade-up mt-4 mx-auto max-w-[560px] text-[clamp(15px,1.2vw,17px)] font-light leading-[1.55] text-dark-teal/70" style={{
           animationDelay: "0.18s",
         }}>
           Founders and the founding engineer behind the autonomous agent.
@@ -142,126 +110,62 @@ export default function TeamPage() {
       </section>
 
       {/* Team grid */}
-      <section style={{
-        flex: 1,
-        position: "relative", zIndex: 2,
-        padding: "clamp(16px, 2vw, 32px) clamp(20px, 5vw, 56px) clamp(40px, 6vw, 80px)",
-        display: "flex", justifyContent: "center",
-      }}>
-        <div className="team-grid" style={{
-          width: "100%",
-          maxWidth: 1320,
-          display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-          gap: "clamp(20px, 2.6vw, 36px)",
-          alignItems: "start",
-        }}>
+      <section className="flex-1 relative z-[2] px-[clamp(20px,5vw,56px)] pt-[clamp(16px,2vw,32px)] pb-[clamp(40px,6vw,80px)] flex justify-center">
+        <div className="team-grid w-full max-w-[1320px] grid grid-cols-[repeat(3,minmax(0,1fr))] gap-[clamp(20px,2.6vw,36px)] items-start">
           {TEAM.map((member, i) => (
             <article
               key={member.name}
-              className="intro-scale-in team-card"
+              className="intro-scale-in team-card flex flex-col gap-4"
               style={{
-                display: "flex", flexDirection: "column",
-                gap: 16,
                 animationDelay: `${0.3 + i * 0.12}s`,
               }}
             >
               {/* Photo / placeholder */}
-              <div style={{
-                position: "relative",
-                width: "100%",
-                aspectRatio: "3 / 4",
-                borderRadius: 24,
-                overflow: "hidden",
-                background: "#003c46",
-                boxShadow:
-                  "0 1px 2px rgba(0,0,0,0.04), 0 14px 36px rgba(0,60,70,0.10), 0 40px 80px -20px rgba(0,60,70,0.22), 0 0 0 1px rgba(0,60,70,0.04)",
-              }} className="team-photo">
+              <div className="team-photo relative w-full aspect-[3/4] rounded-3xl overflow-hidden bg-dark-teal shadow-[0_1px_2px_rgba(0,0,0,0.04),0_14px_36px_rgba(0,60,70,0.10),0_40px_80px_-20px_rgba(0,60,70,0.22),0_0_0_1px_rgba(0,60,70,0.04)]">
                 {member.photo ? (
                   <Image
                     src={member.photo.src}
                     alt={member.photo.alt}
                     fill
                     sizes="(max-width: 880px) 100vw, 33vw"
-                    style={{ objectFit: "cover" }}
+                    className="object-cover"
                     priority={i < 2}
                   />
                 ) : (
-                  <div aria-hidden style={{
-                    position: "absolute", inset: 0,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    background:
-                      "radial-gradient(circle at 30% 20%, rgba(139,242,211,0.25), transparent 55%), radial-gradient(circle at 80% 90%, rgba(255,107,92,0.25), transparent 60%), #003c46",
-                  }}>
-                    <span style={{
-                      fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-                      fontSize: "clamp(60px, 10vw, 130px)",
-                      fontWeight: 800,
-                      color: "rgba(242,242,240,0.95)",
-                      letterSpacing: "-0.04em",
-                    }}>
+                  <div aria-hidden className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle_at_30%_20%,rgba(139,242,211,0.25),transparent_55%),radial-gradient(circle_at_80%_90%,rgba(255,107,92,0.25),transparent_60%),#003c46]">
+                    <span className="font-sans text-[clamp(60px,10vw,130px)] font-extrabold text-[rgba(242,242,240,0.95)] tracking-[-0.04em]">
                       {member.initials}
                     </span>
                   </div>
                 )}
 
                 {/* Mint mentic icon — top-right */}
-                <div style={{
-                  position: "absolute",
-                  top: "clamp(10px, 1.4vw, 16px)",
-                  right: "clamp(10px, 1.4vw, 16px)",
-                  width: "clamp(22px, 2.6vw, 34px)",
-                  height: "clamp(22px, 2.6vw, 34px)",
-                  filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.25))",
-                }}>
+                <div className="absolute top-[clamp(10px,1.4vw,16px)] right-[clamp(10px,1.4vw,16px)] w-[clamp(22px,2.6vw,34px)] h-[clamp(22px,2.6vw,34px)] [filter:drop-shadow(0_4px_12px_rgba(0,0,0,0.25))]">
                   <Image
                     src="/images/mentic-icon-mint.png"
                     alt=""
                     fill
                     sizes="34px"
-                    style={{ objectFit: "contain" }}
+                    className="object-contain"
                   />
                 </div>
               </div>
 
               {/* Name + role + socials */}
-              <div style={{ padding: "0 4px" }}>
-                <div style={{
-                  fontSize: 11, fontWeight: 700, letterSpacing: "0.24em",
-                  color: "#ff6b5c", textTransform: "uppercase",
-                  marginBottom: 6,
-                }}>
+              <div className="px-1">
+                <div className="text-[11px] font-bold tracking-[0.24em] text-coral uppercase mb-1.5">
                   {member.role}
                 </div>
-                <h2 style={{
-                  margin: 0,
-                  fontSize: "clamp(22px, 2vw, 30px)",
-                  fontWeight: 700,
-                  letterSpacing: "-0.01em",
-                  color: "#003c46",
-                  lineHeight: 1.15,
-                }}>
+                <h2 className="m-0 text-[clamp(22px,2vw,30px)] font-bold tracking-[-0.01em] text-dark-teal leading-[1.15]">
                   {member.name}
                 </h2>
-                <div style={{
-                  marginTop: 14,
-                  display: "flex", gap: 10, alignItems: "center",
-                }}>
+                <div className="mt-3.5 flex gap-2.5 items-center">
                   <a
                     href={member.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${member.name} on LinkedIn`}
-                    className="team-social"
-                    style={{
-                      display: "inline-flex", alignItems: "center", justifyContent: "center",
-                      width: 36, height: 36,
-                      borderRadius: 999,
-                      background: "rgba(0,60,70,0.06)",
-                      color: "#003c46",
-                      textDecoration: "none",
-                      transition: "background 0.25s ease, color 0.25s ease, transform 0.25s ease",
-                    }}
+                    className="team-social inline-flex items-center justify-center w-9 h-9 rounded-[999px] bg-[rgba(0,60,70,0.06)] text-dark-teal no-underline transition-[background,color,transform] duration-[250ms] ease-[ease]"
                   >
                     <svg width={18} height={18} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
                       <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.95v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z" />
@@ -272,16 +176,7 @@ export default function TeamPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${member.name} on Instagram`}
-                    className="team-social"
-                    style={{
-                      display: "inline-flex", alignItems: "center", justifyContent: "center",
-                      width: 36, height: 36,
-                      borderRadius: 999,
-                      background: "rgba(0,60,70,0.06)",
-                      color: "#003c46",
-                      textDecoration: "none",
-                      transition: "background 0.25s ease, color 0.25s ease, transform 0.25s ease",
-                    }}
+                    className="team-social inline-flex items-center justify-center w-9 h-9 rounded-[999px] bg-[rgba(0,60,70,0.06)] text-dark-teal no-underline transition-[background,color,transform] duration-[250ms] ease-[ease]"
                   >
                     <svg width={18} height={18} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                       <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />

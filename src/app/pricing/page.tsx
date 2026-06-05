@@ -144,153 +144,71 @@ export default function PricingPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingJsonLd) }}
       />
-    <main className="use-native-cursor" style={{
-      minHeight: "100dvh",
-      width: "100%",
-      background: "#f2f2f0",
-      color: "#003c46",
-      fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-      position: "relative",
-      overflow: "hidden",
-      display: "flex",
-      flexDirection: "column",
-    }}>
+    <main className="use-native-cursor min-h-[100dvh] w-full bg-[#f2f2f0] text-dark-teal font-sans relative overflow-hidden flex flex-col">
       <SiteMenu />
 
       {/* Corner blobs */}
-      <div aria-hidden className="gradient-blob gradient-blob-coral intro-fade-in" style={{
-        position: "absolute", pointerEvents: "none",
-        width: "min(45vw, 720px)", height: "min(45vw, 720px)",
-        top: "-22vw", left: "-22vw",
+      <div aria-hidden className="gradient-blob gradient-blob-coral intro-fade-in absolute pointer-events-none w-[min(45vw,720px)] h-[min(45vw,720px)] top-[-22vw] left-[-22vw]" style={{
         animationDelay: "0.1s",
       }} />
-      <div aria-hidden className="gradient-blob gradient-blob-mint intro-fade-in" style={{
-        position: "absolute", pointerEvents: "none",
-        width: "min(55vw, 880px)", height: "min(55vw, 880px)",
-        bottom: "-28vw", right: "-28vw",
+      <div aria-hidden className="gradient-blob gradient-blob-mint intro-fade-in absolute pointer-events-none w-[min(55vw,880px)] h-[min(55vw,880px)] bottom-[-28vw] right-[-28vw]" style={{
         animationDelay: "0.2s",
       }} />
 
       {/* Pricing cards */}
-      <section className="pricing-section" style={{
-        flex: 1,
-        position: "relative", zIndex: 2,
-        display: "flex", justifyContent: "center", alignItems: "center",
-        padding: "clamp(96px, 12vh, 140px) clamp(16px, 4vw, 56px) clamp(40px, 6vh, 72px)",
-      }}>
-        <div className="pricing-cards" style={{
-          width: "100%", maxWidth: 1240,
-          display: "grid",
-          gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1fr)",
-          gap: "clamp(20px, 2.4vw, 32px)",
-          alignItems: "stretch",
-        }}>
+      <section className="pricing-section flex-1 relative z-[2] flex justify-center items-center px-[clamp(16px,4vw,56px)] pt-[clamp(96px,12vh,140px)] pb-[clamp(40px,6vh,72px)]">
+        <div className="pricing-cards w-full max-w-[1240px] grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-[clamp(20px,2.4vw,32px)] items-stretch">
           {/* ── Simplicity tier ── */}
-          <article className="intro-scale-in pricing-card" style={{
-            position: "relative",
-            background: "#ffffff",
-            borderRadius: 28,
-            padding: "clamp(28px, 3.6vw, 52px)",
-            boxShadow:
-              "0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,60,70,0.06), 0 24px 56px -16px rgba(0,60,70,0.12), 0 0 0 1px rgba(0,60,70,0.04)",
+          <article className="intro-scale-in pricing-card relative bg-white rounded-[28px] p-[clamp(28px,3.6vw,52px)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_24px_rgba(0,60,70,0.06),0_24px_56px_-16px_rgba(0,60,70,0.12),0_0_0_1px_rgba(0,60,70,0.04)] flex flex-col" style={{
             animationDelay: "0.1s",
-            display: "flex", flexDirection: "column",
           }}>
-            <div className="plan-badge" style={{
-              display: "inline-flex", alignItems: "center", gap: 8, alignSelf: "flex-start",
-              padding: "6px 14px", borderRadius: 999,
-              background: "#e3fbf2", color: "#007a64",
-              fontSize: 11, fontWeight: 700, letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              maxWidth: "100%",
-            }}>
-              <span aria-hidden style={{ flexShrink: 0, width: 6, height: 6, borderRadius: 999, background: "#007a64" }} />
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Self-serve</span>
+            <div className="plan-badge inline-flex items-center gap-2 self-start py-1.5 px-3.5 rounded-[999px] bg-[#e3fbf2] text-[#007a64] text-[11px] font-bold tracking-[0.16em] uppercase max-w-full">
+              <span aria-hidden className="shrink-0 w-1.5 h-1.5 rounded-[999px] bg-[#007a64]" />
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis">Self-serve</span>
             </div>
 
-            <h2 className="plan-title" style={{
-              margin: "22px 0 10px",
-              fontSize: "clamp(30px, 3.4vw, 48px)",
-              fontWeight: 800, letterSpacing: "-0.015em",
-              lineHeight: 1.02, color: "#003c46",
-            }}>
+            <h2 className="plan-title mt-[22px] mb-2.5 mx-0 text-[clamp(30px,3.4vw,48px)] font-extrabold tracking-[-0.015em] leading-[1.02] text-dark-teal">
               Advertising Simplicity
             </h2>
-            <p style={{
-              margin: 0,
-              fontSize: "clamp(14px, 1.05vw, 16px)",
-              fontWeight: 300, color: "rgba(0,60,70,0.7)",
-              lineHeight: 1.6, maxWidth: 440,
-            }}>
+            <p className="m-0 text-[clamp(14px,1.05vw,16px)] font-light text-dark-teal/70 leading-[1.6] max-w-[440px]">
               Full Mentic.io access, no human media buyers in the loop. The autonomous agent on its own —
               you drive, it executes.
             </p>
 
-            <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "28px 0 6px", flexWrap: "wrap" }}>
-              <span className="plan-price" style={{
-                fontSize: "clamp(44px, 5.4vw, 72px)",
-                fontWeight: 800, color: "#003c46",
-                lineHeight: 0.95, letterSpacing: "-0.025em",
-              }}>
+            <div className="flex items-baseline gap-2.5 mt-7 mb-1.5 mx-0 flex-wrap">
+              <span className="plan-price text-[clamp(44px,5.4vw,72px)] font-extrabold text-dark-teal leading-[0.95] tracking-[-0.025em]">
                 $247
               </span>
-              <span style={{
-                fontSize: 16, fontWeight: 400, color: "rgba(0,60,70,0.65)",
-                letterSpacing: "0.02em",
-              }}>
+              <span className="text-[16px] font-normal text-dark-teal/65 tracking-[0.02em]">
                 / month
               </span>
             </div>
-            <div style={{ fontSize: 13, fontWeight: 500, color: "rgba(0,60,70,0.6)", letterSpacing: "0.02em" }}>
+            <div className="text-[13px] font-medium text-dark-teal/60 tracking-[0.02em]">
               No agency services. Just the agent.
             </div>
 
-            <div className="plan-cta-row" style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
+            <div className="plan-cta-row flex gap-3 mt-7 flex-wrap">
               <a
-                className="plan-cta"
-                href="/#signup"
-                style={{
-                  display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  padding: "14px 24px", borderRadius: 999,
-                  background: "#003c46", color: "#f2f2f0",
-                  fontSize: 13, fontWeight: 700,
-                  letterSpacing: "0.18em", textTransform: "uppercase",
-                  textDecoration: "none",
-                }}
+                className="plan-cta inline-flex items-center justify-center py-3.5 px-6 rounded-[999px] bg-dark-teal text-[#f2f2f0] text-[13px] font-bold tracking-[0.18em] uppercase no-underline"
+                href="https://app.mentic.io/signup"
               >
                 Sign up
               </a>
             </div>
 
-            <div style={{
-              fontSize: 11, fontWeight: 700, letterSpacing: "0.3em",
-              color: "rgba(0,60,70,0.55)", textTransform: "uppercase",
-              margin: "36px 0 16px",
-            }}>
+            <div className="text-[11px] font-bold tracking-[0.3em] text-dark-teal/55 uppercase mt-9 mb-4 mx-0">
               What you get
             </div>
-            <ul style={{
-              margin: 0, padding: 0, listStyle: "none",
-              display: "flex", flexDirection: "column", gap: 14,
-              fontSize: "clamp(14px, 1vw, 15px)",
-              fontWeight: 400, lineHeight: 1.6,
-              color: "#003c46",
-            }}>
+            <ul className="m-0 p-0 list-none flex flex-col gap-3.5 text-[clamp(14px,1vw,15px)] font-normal leading-[1.6] text-dark-teal">
               {SIMPLICITY_BENEFITS.map((item) => (
-                <li key={item.bold} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                  <span aria-hidden style={{
-                    flexShrink: 0,
-                    display: "inline-flex", alignItems: "center", justifyContent: "center",
-                    width: 22, height: 22, borderRadius: 999,
-                    background: "#e3fbf2", color: "#003c46",
-                    marginTop: 1,
-                  }}>
+                <li key={item.bold} className="flex items-start gap-3">
+                  <span aria-hidden className="shrink-0 inline-flex items-center justify-center w-[22px] h-[22px] rounded-[999px] bg-[#e3fbf2] text-dark-teal mt-px">
                     <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   </span>
                   <span>
-                    <strong style={{ fontWeight: 700 }}>{item.bold}</strong>
+                    <strong className="font-bold">{item.bold}</strong>
                     {item.rest}
                   </span>
                 </li>
@@ -299,139 +217,71 @@ export default function PricingPage() {
           </article>
 
           {/* ── Alpha plan (featured) ── */}
-          <article className="intro-scale-in pricing-card" style={{
-            position: "relative",
-            background: "#ffffff",
-            borderRadius: 28,
-            padding: "clamp(28px, 3.6vw, 52px)",
-            boxShadow:
-              "0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(0,60,70,0.08), 0 40px 80px -20px rgba(0,60,70,0.18), 0 0 0 2px #ff6b5c",
+          <article className="intro-scale-in pricing-card relative bg-white rounded-[28px] p-[clamp(28px,3.6vw,52px)] shadow-[0_1px_2px_rgba(0,0,0,0.04),0_12px_32px_rgba(0,60,70,0.08),0_40px_80px_-20px_rgba(0,60,70,0.18),0_0_0_2px_#ff6b5c] flex flex-col" style={{
             animationDelay: "0.15s",
-            display: "flex", flexDirection: "column",
           }}>
-            <div className="plan-badge" style={{
-              display: "inline-flex", alignItems: "center", gap: 8, alignSelf: "flex-start",
-              padding: "6px 14px", borderRadius: 999,
-              background: "#fff3f2", color: "#ff6b5c",
-              fontSize: 11, fontWeight: 700, letterSpacing: "0.16em",
-              textTransform: "uppercase",
-              maxWidth: "100%",
-            }}>
-              <span aria-hidden style={{ flexShrink: 0, width: 6, height: 6, borderRadius: 999, background: "#ff6b5c" }} />
-              <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Limited — pilot users only</span>
+            <div className="plan-badge inline-flex items-center gap-2 self-start py-1.5 px-3.5 rounded-[999px] bg-[#fff3f2] text-coral text-[11px] font-bold tracking-[0.16em] uppercase max-w-full">
+              <span aria-hidden className="shrink-0 w-1.5 h-1.5 rounded-[999px] bg-coral" />
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis">Limited — pilot users only</span>
             </div>
 
-            <h1 className="plan-title" style={{
-              margin: "22px 0 10px",
-              fontSize: "clamp(30px, 3.4vw, 48px)",
-              fontWeight: 800, letterSpacing: "-0.015em",
-              lineHeight: 1.02, color: "#003c46",
-            }}>
+            <h1 className="plan-title mt-[22px] mb-2.5 mx-0 text-[clamp(30px,3.4vw,48px)] font-extrabold tracking-[-0.015em] leading-[1.02] text-dark-teal">
               Alpha plan
             </h1>
-            <p style={{
-              margin: 0,
-              fontSize: "clamp(14px, 1.05vw, 16px)",
-              fontWeight: 300, color: "rgba(0,60,70,0.7)",
-              lineHeight: 1.6, maxWidth: 440,
-            }}>
+            <p className="m-0 text-[clamp(14px,1.05vw,16px)] font-light text-dark-teal/70 leading-[1.6] max-w-[440px]">
               The autonomous agent, supervised end-to-end by a real ad agency. One plan, one price,
               no fine print.
             </p>
 
-            <div style={{ display: "flex", alignItems: "baseline", gap: 10, margin: "28px 0 6px", flexWrap: "wrap" }}>
-              <span className="plan-price" style={{
-                fontSize: "clamp(44px, 5.4vw, 72px)",
-                fontWeight: 800, color: "#003c46",
-                lineHeight: 0.95, letterSpacing: "-0.025em",
-              }}>
+            <div className="flex items-baseline gap-2.5 mt-7 mb-1.5 mx-0 flex-wrap">
+              <span className="plan-price text-[clamp(44px,5.4vw,72px)] font-extrabold text-dark-teal leading-[0.95] tracking-[-0.025em]">
                 $997
               </span>
-              <span style={{
-                fontSize: 16, fontWeight: 400, color: "rgba(0,60,70,0.65)",
-                letterSpacing: "0.02em",
-              }}>
+              <span className="text-[16px] font-normal text-dark-teal/65 tracking-[0.02em]">
                 / month
               </span>
             </div>
-            <div style={{ fontSize: 13, fontWeight: 500, color: "#ff6b5c", letterSpacing: "0.02em" }}>
+            <div className="text-[13px] font-medium text-coral tracking-[0.02em]">
               $0 for every agency service on top.
             </div>
 
-            <div className="plan-cta-row" style={{ display: "flex", gap: 12, marginTop: 28, flexWrap: "wrap" }}>
+            <div className="plan-cta-row flex gap-3 mt-7 flex-wrap">
               <TrackedDemoLink
                 source="pricing_alpha_plan"
                 contentName="Book a demo — pricing alpha plan"
-                className="plan-cta"
-                style={{
-                  display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  padding: "14px 24px", borderRadius: 999,
-                  background: "#003c46", color: "#f2f2f0",
-                  fontSize: 13, fontWeight: 700,
-                  letterSpacing: "0.18em", textTransform: "uppercase",
-                  textDecoration: "none",
-                }}
+                className="plan-cta inline-flex items-center justify-center py-3.5 px-6 rounded-[999px] bg-dark-teal text-[#f2f2f0] text-[13px] font-bold tracking-[0.18em] uppercase no-underline"
               >
                 Book a Demo
               </TrackedDemoLink>
               <a
-                className="plan-cta"
-                href="/#signup"
-                style={{
-                  display: "inline-flex", alignItems: "center", justifyContent: "center",
-                  padding: "14px 24px", borderRadius: 999,
-                  background: "#8bf2d3", color: "#003c46",
-                  fontSize: 13, fontWeight: 700,
-                  letterSpacing: "0.18em", textTransform: "uppercase",
-                  textDecoration: "none",
-                }}
+                className="plan-cta inline-flex items-center justify-center py-3.5 px-6 rounded-[999px] bg-mint text-dark-teal text-[13px] font-bold tracking-[0.18em] uppercase no-underline"
+                href="https://app.mentic.io/signup"
               >
                 Sign up
               </a>
             </div>
 
-            <div style={{
-              fontSize: 11, fontWeight: 700, letterSpacing: "0.3em",
-              color: "rgba(0,60,70,0.55)", textTransform: "uppercase",
-              margin: "36px 0 16px",
-            }}>
+            <div className="text-[11px] font-bold tracking-[0.3em] text-dark-teal/55 uppercase mt-9 mb-4 mx-0">
               What you get
             </div>
-            <ul style={{
-              margin: 0, padding: 0, listStyle: "none",
-              display: "flex", flexDirection: "column", gap: 14,
-              fontSize: "clamp(14px, 1vw, 15px)",
-              fontWeight: 400, lineHeight: 1.6,
-              color: "#003c46",
-            }}>
+            <ul className="m-0 p-0 list-none flex flex-col gap-3.5 text-[clamp(14px,1vw,15px)] font-normal leading-[1.6] text-dark-teal">
               {ALPHA_BENEFITS.map((item) => (
-                <li key={item.bold} style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
-                  <span aria-hidden style={{
-                    flexShrink: 0,
-                    display: "inline-flex", alignItems: "center", justifyContent: "center",
-                    width: 22, height: 22, borderRadius: 999,
-                    background: "#e3fbf2", color: "#003c46",
-                    marginTop: 1,
-                  }}>
+                <li key={item.bold} className="flex items-start gap-3">
+                  <span aria-hidden className="shrink-0 inline-flex items-center justify-center w-[22px] h-[22px] rounded-[999px] bg-[#e3fbf2] text-dark-teal mt-px">
                     <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   </span>
                   <span>
-                    <strong style={{ fontWeight: 700 }}>{item.bold}</strong>
+                    <strong className="font-bold">{item.bold}</strong>
                     {item.rest}
                   </span>
                 </li>
               ))}
             </ul>
 
-            <div style={{
-              marginTop: 24, padding: "16px 18px",
-              borderRadius: 16, background: "#f2f2f0",
-              fontSize: 13, fontWeight: 400, lineHeight: 1.6,
-              color: "rgba(0,60,70,0.72)",
-            }}>
-              <strong style={{ fontWeight: 700, color: "#003c46" }}>Why so much agency support?</strong>{" "}
+            <div className="mt-6 py-4 px-[18px] rounded-2xl bg-[#f2f2f0] text-[13px] font-normal leading-[1.6] text-dark-teal/72">
+              <strong className="font-bold text-dark-teal">Why so much agency support?</strong>{" "}
               We're in alpha and would rather have humans in the loop than let early users hit a rough
               edge alone. The free agency wrap-around is a thank-you for piloting with us — it ends
               when we exit alpha.

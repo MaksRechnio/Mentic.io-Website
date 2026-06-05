@@ -55,45 +55,49 @@ export default function PrivacyPolicyPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(privacyJsonLd) }}
       />
-    <main className="privacy-page">
-      <div className="privacy-shell">
-        <header className="privacy-header">
-          <Link href="/" aria-label="Back to Mentic home" className="privacy-back">
+    <main className="use-native-cursor min-h-dvh w-full bg-off-white font-sans text-near-black px-[clamp(16px,5vw,48px)] py-[clamp(24px,6vw,64px)]">
+      <div className="mx-auto max-w-[760px]">
+        <header className="mb-[clamp(32px,6vw,56px)] flex items-center justify-between gap-4">
+          <Link
+            href="/"
+            aria-label="Back to Mentic home"
+            className="inline-flex items-center gap-2 rounded-full border border-dark-teal/15 bg-white/60 px-3 py-2 text-sm font-semibold text-dark-teal no-underline transition-[background-color,transform] duration-200 ease-premium hover:-translate-x-0.5 hover:bg-white"
+          >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             <span>Back to home</span>
           </Link>
-          <div className="privacy-brand">
+          <div className="inline-flex items-center gap-2.5">
             <Image src="/images/mentic-icon-teal.png" alt="" width={36} height={36} priority />
-            <span className="font-qurova privacy-wordmark">mentic</span>
+            <span className="font-qurova text-[28px] leading-none text-dark-teal">mentic</span>
           </div>
         </header>
 
-        <article className="privacy-article">
-          <p className="privacy-eyebrow">Legal</p>
-          <h1 className="privacy-title">
-            Privacy <span>Policy</span>
+        <article className="rounded-3xl border border-dark-teal/[0.06] bg-white p-[clamp(28px,6vw,64px)] shadow-[0_1px_0_rgba(0,60,70,0.04),0_24px_60px_-32px_rgba(0,60,70,0.18)] [&_section]:mt-9 [&_section:first-of-type]:mt-0 [&_h2]:mb-3 [&_h2]:text-[clamp(20px,2.4vw,24px)] [&_h2]:font-bold [&_h2]:tracking-[-0.01em] [&_h2]:text-dark-teal [&_h3]:mt-5 [&_h3]:mb-2 [&_h3]:text-base [&_h3]:font-bold [&_h3]:text-dark-teal [&_p]:mb-3 [&_p]:text-[15.5px] [&_p]:leading-[1.65] [&_p]:text-near-black [&_ul]:mt-2 [&_ul]:mb-4 [&_ul]:pl-[22px] [&_ul]:text-[15.5px] [&_ul]:leading-[1.65] [&_ul]:text-near-black [&_ol]:mt-2 [&_ol]:mb-4 [&_ol]:pl-[22px] [&_ol]:text-[15.5px] [&_ol]:leading-[1.65] [&_ol]:text-near-black [&_li]:mb-1.5 [&_li]:marker:text-coral [&_a]:text-dark-teal [&_a]:underline [&_a]:decoration-coral/45 [&_a]:underline-offset-[3px] [&_a]:transition-colors [&_a]:duration-200 [&_a]:ease-premium [&_a:hover]:text-coral [&_a:hover]:decoration-coral">
+          <p className="font-bold uppercase tracking-[0.14em]">Legal</p>
+          <h1 className="mb-3 text-[clamp(36px,6vw,56px)] font-light leading-[1.05] tracking-[-0.01em] text-dark-teal">
+            Privacy <span className="font-bold">Policy</span>
           </h1>
-          <p className="privacy-effective">
-            Effective date: <strong>{EFFECTIVE_DATE}</strong>
+          <p>
+            Effective date: <strong className="font-semibold">{EFFECTIVE_DATE}</strong>
           </p>
 
-          <div className="privacy-meta">
-            <div>
-              <span className="privacy-meta-label">Company</span>
+          <div className="mb-10 grid grid-cols-1 gap-x-6 gap-y-3 rounded-[14px] border border-dark-teal/[0.08] bg-off-white px-6 py-5 text-sm leading-normal sm:grid-cols-[max-content_1fr]">
+            <div className="flex flex-col gap-[2px]">
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-dark-teal/55">Company</span>
               <span>{LEGAL_ENTITY}</span>
             </div>
-            <div>
-              <span className="privacy-meta-label">Business address</span>
+            <div className="flex flex-col gap-[2px]">
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-dark-teal/55">Business address</span>
               <span>{BUSINESS_ADDRESS}</span>
             </div>
-            <div>
-              <span className="privacy-meta-label">Contact</span>
+            <div className="flex flex-col gap-[2px]">
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-dark-teal/55">Contact</span>
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </div>
-            <div>
-              <span className="privacy-meta-label">Website</span>
+            <div className="flex flex-col gap-[2px]">
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-dark-teal/55">Website</span>
               <a href="https://mentic.io">https://mentic.io</a>
             </div>
           </div>
@@ -343,17 +347,17 @@ export default function PrivacyPolicyPage() {
               privacy practices, please contact us:
             </p>
             <p>
-              <span className="privacy-meta-label">Email</span>{" "}
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-dark-teal/55">Email</span>{" "}
               <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
             </p>
             <p>
-              <span className="privacy-meta-label">Mail</span> {LEGAL_ENTITY},{" "}
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-dark-teal/55">Mail</span> {LEGAL_ENTITY},{" "}
               {BUSINESS_ADDRESS}
             </p>
           </section>
 
-          <footer className="privacy-footer">
-            <Link href="/" className="privacy-home-link">
+          <footer className="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-dark-teal/10 pt-6 text-[13px] text-near-black/60">
+            <Link href="/" className="font-semibold">
               ← Return to mentic.io
             </Link>
             <span>© {new Date().getFullYear()} {LEGAL_ENTITY}</span>

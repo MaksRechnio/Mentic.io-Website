@@ -108,59 +108,32 @@ export default function NewsPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(newsJsonLd) }}
       />
-    <main className="use-native-cursor" style={{
-      minHeight: "100dvh",
-      width: "100%",
-      background: "#f2f2f0",
-      color: "#003c46",
-      fontFamily: "var(--font-nunito), 'Nunito Sans', sans-serif",
-      position: "relative",
-      overflow: "hidden",
-      display: "flex",
-      flexDirection: "column",
-    }}>
+    <main className="use-native-cursor min-h-[100dvh] w-full bg-[#f2f2f0] text-dark-teal font-sans relative overflow-hidden flex flex-col">
       <SiteMenu />
 
       {/* Corner blobs */}
-      <div aria-hidden className="gradient-blob gradient-blob-coral intro-fade-in" style={{
-        position: "absolute", pointerEvents: "none",
-        width: "min(45vw, 720px)", height: "min(45vw, 720px)",
-        top: "-22vw", left: "-22vw",
+      <div aria-hidden className="gradient-blob gradient-blob-coral intro-fade-in absolute pointer-events-none w-[min(45vw,720px)] h-[min(45vw,720px)] top-[-22vw] left-[-22vw]" style={{
         animationDelay: "0.1s",
       }} />
-      <div aria-hidden className="gradient-blob gradient-blob-mint intro-fade-in" style={{
-        position: "absolute", pointerEvents: "none",
-        width: "min(55vw, 880px)", height: "min(55vw, 880px)",
-        bottom: "-28vw", right: "-28vw",
+      <div aria-hidden className="gradient-blob gradient-blob-mint intro-fade-in absolute pointer-events-none w-[min(55vw,880px)] h-[min(55vw,880px)] bottom-[-28vw] right-[-28vw]" style={{
         animationDelay: "0.2s",
       }} />
 
       {/* News list */}
-      <section style={{
-        flex: 1,
-        position: "relative", zIndex: 2,
-        display: "flex", justifyContent: "center", alignItems: "center",
-        padding: "clamp(76px, 9vh, 120px) clamp(16px, 4vw, 56px) clamp(28px, 4vh, 56px)",
-      }}>
-        <div style={{
-          width: "100%", maxWidth: 880,
-          display: "flex", flexDirection: "column", gap: 12,
-        }}>
+      <section className="flex-1 relative z-[2] flex justify-center items-center px-[clamp(16px,4vw,56px)] pt-[clamp(76px,9vh,120px)] pb-[clamp(28px,4vh,56px)]">
+        <div className="w-full max-w-[880px] flex flex-col gap-3">
           {NEWS.map((item, i) => (
             <NewsItemCard key={item.isoDate + i} item={item} index={i} defaultOpen={i === 0} />
           ))}
 
-          <p className="intro-fade-up" style={{
-            margin: "8px auto 0",
-            fontSize: 13, fontWeight: 300,
-            color: "rgba(0,60,70,0.5)", textAlign: "center",
+          <p className="intro-fade-up mt-2 mx-auto text-[13px] font-light text-dark-teal/50 text-center" style={{
             animationDelay: `${0.25 + NEWS.length * 0.1}s`,
           }}>
             More updates as we ship. Follow{" "}
             <a
               href="https://www.linkedin.com/company/mentic-io"
               target="_blank" rel="noopener noreferrer"
-              style={{ color: "#003c46", fontWeight: 600 }}
+              className="text-dark-teal font-semibold"
             >
               @mentic-io on LinkedIn
             </a>{" "}
