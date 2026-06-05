@@ -334,8 +334,8 @@ export default function SlackIntegrationPage() {
               Bring your ad accounts <span className="font-extrabold text-mint">into Slack</span>.
             </h2>
             <p className="m-0 mt-3 relative mx-auto max-w-[480px] text-[15px] font-light leading-[1.6] text-[#f2f2f0]/75">
-              Free with every Mentic plan. Install in under a minute and
-              uninstall any time from your Slack workspace settings.
+              Free with every Mentic plan. Install in under a minute and your
+              whole team can start working with the agent today.
             </p>
             <div className="mt-7 relative flex justify-center">
               <AddToSlackButton />

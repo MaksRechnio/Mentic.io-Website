@@ -3,6 +3,7 @@ import { Nunito_Sans } from "next/font/google";
 import Script from "next/script";
 import TabAttention from "@/components/TabAttention";
 import TrialPromoModal from "@/components/TrialPromoModal";
+import SiteFooter from "@/components/SiteFooter";
 import PixelRouteTracker from "@/components/PixelRouteTracker";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
@@ -239,6 +240,7 @@ fbq('track', 'PageView');`}
         <TabAttention />
         <PixelRouteTracker />
         {children}
+        <SiteFooter />
         <TrialPromoModal />
         <Analytics />
       </body>
