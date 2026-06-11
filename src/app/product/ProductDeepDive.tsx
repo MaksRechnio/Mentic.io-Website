@@ -623,7 +623,7 @@ function LaunchScene() {
               { text: "ad accounts", color: TEAL, weight: 800 },
               { text: ".", color: TEAL, weight: 200 },
             ]}
-            body="Mentic doesn't just recommend — it ships. A deterministic builder turns the strategy into campaigns, ad sets, creatives and ads with every Meta field sourced from our internal spec, and a validate-only preflight before money moves."
+            body="Mentic doesn't just recommend — it ships. Your strategy becomes campaigns, ad sets, creatives and ads, launched directly on your ad account through the official Meta API."
             p={p}
           />
           <div
@@ -641,8 +641,6 @@ function LaunchScene() {
           <div className="mx-auto mt-5 grid max-w-[1180px] grid-cols-[repeat(auto-fit,minmax(min(200px,100%),1fr))] gap-3">
             {[
               { stat: "1", unit: "click", body: "Strategy → live campaigns on your ad account.", from: 0.5 },
-              { stat: "validate", suffix: "_only", body: "Preflight every change before money moves.", from: 0.58 },
-              { stat: "0", unit: "guessed values", body: "Every Meta API field sourced from the internal spec.", from: 0.66 },
             ].map((s, i) => (
               <div
                 key={i}
@@ -652,7 +650,6 @@ function LaunchScene() {
                 <div className="text-[clamp(22px,2.4vw,32px)] font-extrabold leading-none tracking-[-0.02em] text-dark-teal">
                   {s.stat}
                   {s.unit && <span className="ml-1.5 text-[12px] font-medium text-dark-teal/55">{s.unit}</span>}
-                  {s.suffix && <span className="text-[clamp(22px,2.4vw,32px)] font-extrabold text-coral">{s.suffix}</span>}
                 </div>
                 <p className="mt-2 mb-0 text-[13px] leading-[1.5] text-dark-teal/72">{s.body}</p>
               </div>

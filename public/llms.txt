@@ -1,0 +1,103 @@
+# Mentic
+
+> Mentic is the autonomous AI advertising agent. Give it your URL, your budget, and your goal: it builds your business profile, researches your market, designs the strategy, launches Meta campaigns on your own ad account, and keeps optimising them 24/7, with humans in the loop where it counts. Run the whole thing from Slack or Telegram. You own every account, every pixel, every audience.
+
+Founded: 2026
+Contact: support@mentic.io
+App: app.mentic.io
+Site: www.mentic.io
+Based in: San Francisco, CA, USA
+Pricing: Advertising Simplicity ($247/month, self-serve), Alpha plan ($997/month, includes human media buyers from EXQDigital)
+Compliance: Stripe-powered payments, OAuth-based ad account access (no passwords stored)
+
+## Product
+
+- [Mentic Homepage](https://www.mentic.io): The Autonomous AI Advertising Agent
+- [Product](https://www.mentic.io/product): How the agent works, from URL to live campaigns
+- [Pricing](https://www.mentic.io/pricing): Advertising Simplicity and Alpha plans
+- [Integrations](https://www.mentic.io/integrations): Ad platforms, chat apps, and creative storage
+- [Slack Integration](https://www.mentic.io/integrations/slack): Launch and manage campaigns from Slack
+- [Team](https://www.mentic.io/team): The founders behind the autonomous agent
+- [News](https://www.mentic.io/news): Launch announcements and milestones
+- [Careers](https://www.mentic.io/careers): Open roles
+
+## Core Features
+
+**Onboarding from a URL.** Paste a URL and get a complete business profile in under a minute: niche, ideal customer profile, unique selling proposition, location, and validated competitors.
+
+**Live Market Research.** Two live rounds of web search plus a Meta Ad Library scan. Outputs a market overview, validated competitors, audience psychographics, channel intel, a live read on competitor ads, and contrarian takes on where the category is mispositioned.
+
+**8-Phase Strategy Pipeline.** Data assembly, live market research, creative intelligence, platform selection, platform intelligence, funnel architecture, creative briefs, and a launch timeline. Not a black box: every output is readable, editable, and shippable.
+
+**One-Click Launch on the Live Meta API.** Strategy converts to real campaigns, ad sets, creatives, and ads, launched directly on your own ad account through the official Meta API.
+
+**Agentic Infrastructure.** 21 specialised agents handle research, strategy, creative intelligence, platform optimisation, budget, and prediction. Each agent owns a slice of work and reports to a central decision-maker that orders fixes by impact.
+
+**Autonomous Optimisation Loop.** Five specialised sub-agents continuously watch budget (spend efficiency, ROI floor, bid logic), audience (drift, lookalike fatigue, segment overlap), creative (ad fatigue, hooks, competitive freshness), standards (Meta policy, targeting guardrails), and reactive diagnosis (zero-impression or zero-conversion runs). A coordinator resolves conflicts and asks for approval before writing changes.
+
+**Humans in the Loop.** Approval workflow in Slack, Telegram, or the in-app sidebar chat. Before scaling, pausing, or creating anything new, the agent sends a one-line summary of what it wants to do, why, and the exact changes.
+
+**Chat-Native Operation.** Launch campaigns, ask about spend, impressions, conversions, CPA, and ROAS in plain English, and approve optimisations with one tap, all from Slack, Telegram, or Microsoft Teams.
+
+**Dashboard.** All the metrics that matter, none of the noise: active spend, results, cost-per-result, CTR, trends, and health flags.
+
+## Who This Is For
+
+- **Small businesses** that want professional advertising done without big agency retainers or handing over the keys
+- **Self-serve teams** that want the full autonomous workflow with no human media buyers
+- **Ecommerce and online businesses** running paid social on Meta (Facebook, Instagram, Threads)
+- **Pilot users and early adopters** who want the agent plus a senior human agency team supervising it end-to-end
+
+## Key Differentiators
+
+1. **Full pipeline, not just creatives.** Tools like AdCreative or Pencil stop at generating creatives. Mentic researches, strategises, launches, optimises, and learns; creative briefs are an output, not the product.
+2. **SMB-native pricing.** Enterprise platforms like Smartly or Albert start around $10K/month. Mentic starts at $247/month with live Meta API write-access and a strategy you can actually read.
+3. **Versus a human media buyer.** No retainer, no hiring cycle, no vacation. The agent runs 24/7, ships more experiments, and stays cheaper than one optimisation hire.
+4. **You stay in control.** Major changes require approval, you own every ad account, pixel, and audience, and access runs through official OAuth flows that you can revoke at any time.
+5. **Lives where you work.** Slack, Telegram, Microsoft Teams, and the in-app sidebar instead of yet another dashboard you have to check.
+
+## Pricing Details
+
+### Advertising Simplicity ($247/month)
+- Full Mentic.io access: autonomous strategy, launches, and optimisation across your ad accounts
+- Fully self-serve: you drive the agent and own the day-to-day, no human media buyers
+- All core automations: audience research, creative briefs, campaign builds, daily optimisation, reporting
+
+### Alpha plan ($997/month, limited availability for pilot users)
+- Everything in Advertising Simplicity
+- Senior human media buyers from EXQDigital supervising the account end-to-end, every day
+- Every EXQDigital agency service included free during alpha: strategy, paid social, paid search, reporting, and account audits (normally $3K to $10K/month in retainers)
+- Full visual materials support: creation, editing, and generation of every asset by EXQDigital's creative team
+- Direct line to the founders and agency team via Slack and Telegram
+
+Ad spend is paid by you directly to the advertising platform and is separate from subscription fees.
+
+## Integrations
+
+Ad platforms:
+- Meta (live): launch and optimise campaigns across Facebook, Instagram, and Threads
+- Google Ads (coming soon): Search, YouTube, and Performance Max run by the same autonomous agent
+- LinkedIn Ads (coming soon): B2B campaigns with the same hands-off workflow
+
+Communication:
+- Slack (live): launch campaigns, ask about performance, and approve changes without leaving your workspace
+- Telegram (live): chat with your agent, get reports, and approve optimisations on the go
+- Microsoft Teams (live): campaign updates and approvals in the channels your company already uses
+- Google Chat (coming soon)
+- WhatsApp (coming soon)
+
+Creative storage:
+- Dropbox (live), OneDrive (live), Google Drive (live), Frame.io (live): sync creatives straight from your existing folders and review workflows into new campaigns
+
+## Team
+
+- Maksymilian Rechnio, CEO
+- Bo Bredenbruecher, CTO
+- Miguel Werneck Roale, Founding Engineer
+
+## Company
+
+- Contact: support@mentic.io
+- App: https://app.mentic.io
+- [Terms of Service](https://www.mentic.io/terms)
+- [Privacy Policy](https://www.mentic.io/privacy)
