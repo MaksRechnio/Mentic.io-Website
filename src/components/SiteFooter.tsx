@@ -149,6 +149,13 @@ export default function SiteFooter() {
           >
             Privacy
           </a>
+          <a
+            href="/terms"
+            onMouseEnter={() => sfx("hover")}
+            className="text-inherit no-underline transition-colors duration-200 hover:text-[#f2f2f0]"
+          >
+            Terms
+          </a>
           <span>© {new Date().getFullYear()} Mentic Inc. All rights reserved.</span>
         </div>
       </div>
