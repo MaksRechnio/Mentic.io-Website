@@ -16,7 +16,7 @@ const CORAL = "#ff6b5c";
 const MINT = "#8bf2d3";
 const CERAMIC = "#f2f2f0";
 const CALENDLY =
-  "https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user";
+  "https://calendly.com/maksymilian-mentic/mentic-io-demo-onboarding-meeting";
 
 /* ─────────────────────────────────────────────────────────────
    Maths helpers

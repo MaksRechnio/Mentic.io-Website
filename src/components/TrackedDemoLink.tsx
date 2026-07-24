@@ -8,7 +8,7 @@ import { trackSchedule } from "@/lib/pixel";
    server tree stays server while the click handler runs on the client. */
 
 const CALENDLY =
-  "https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user";
+  "https://calendly.com/maksymilian-mentic/mentic-io-demo-onboarding-meeting";
 
 export default function TrackedDemoLink({
   source,

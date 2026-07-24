@@ -1394,7 +1394,7 @@ export default function PreviewLanding() {
             }}
           >Sign up</button>
           <a
-            href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
+            href="https://calendly.com/maksymilian-mentic/mentic-io-demo-onboarding-meeting"
             target="_blank" rel="noopener noreferrer"
             onClick={() => { sfxPress(); trackSchedule({ content_name: "Book a demo — site menu", source: "site_menu" }); }}
             onMouseEnter={(e) => { sfxHover(); e.currentTarget.style.background = "#a8f7df"; e.currentTarget.style.transform = "translateY(-1px)"; }}
@@ -1512,7 +1512,7 @@ export default function PreviewLanding() {
             }}>
               {/* Book a Demo */}
               <a
-                href="https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user"
+                href="https://calendly.com/maksymilian-mentic/mentic-io-demo-onboarding-meeting"
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => { sfxPress(); trackSchedule({ content_name: "Book a demo — hero", source: "hero_header" }); }}

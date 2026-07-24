@@ -13,7 +13,7 @@ const NAV_ITEMS: Array<{ label: string; href: string; weight: number; color: str
   { label: "CAREERS", href: "/careers", weight: 600, color: "#003c46" },
 ];
 
-const CALENDLY = "https://calendly.com/maksymilian-mentic/mentic-alpha-access-onboarding-pilot-user";
+const CALENDLY = "https://calendly.com/maksymilian-mentic/mentic-io-demo-onboarding-meeting";
 
 export default function SiteMenu() {
   const [open, setOpen] = useState(false);
