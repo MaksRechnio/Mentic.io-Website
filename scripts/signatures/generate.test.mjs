@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { validateRoster, renderSignature, renderPage } from './generate.mjs';
 
 const roster = {
-  baseUrl: 'https://mentic.io',
+  baseUrl: 'https://www.mentic.io',
   logoPath: '/images/logo.png',
   cta: { text: 'Book a demo →', url: 'https://example.com/cal' },
   people: [{
@@ -18,11 +18,11 @@ const person = roster.people[0];
 
 test('renderSignature contains headshot, name, escaped title, links, logo, CTA', () => {
   const html = renderSignature(person, roster);
-  assert.match(html, /https:\/\/mentic\.io\/team\/maksymilian\.jpg/);
+  assert.match(html, /https:\/\/www\.mentic\.io\/team\/maksymilian\.jpg/);
   assert.match(html, /Maksymilian Rechnio/);
   assert.match(html, /Co-Founder &amp; CEO/);
   assert.match(html, /mailto:maksymilian@mentic\.io/);
-  assert.match(html, /https:\/\/mentic\.io\/images\/logo\.png/);
+  assert.match(html, /https:\/\/www\.mentic\.io\/images\/logo\.png/);
   assert.match(html, /https:\/\/example\.com\/cal/);
   assert.match(html, /Book a demo →/);
 });
@@ -49,4 +49,8 @@ test('renderPage wraps signature with paste instructions', () => {
 test('validateRoster throws on missing fields', () => {
   assert.throws(() => validateRoster({ ...roster, people: [{ slug: 'x' }] }), /missing/i);
   assert.throws(() => validateRoster({ ...roster, cta: {} }), /cta/i);
+});
+
+test('validateRoster throws on empty people array', () => {
+  assert.throws(() => validateRoster({ ...roster, people: [] }), /non-empty array/i);
 });

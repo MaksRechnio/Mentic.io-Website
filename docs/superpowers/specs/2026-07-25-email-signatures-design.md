@@ -43,7 +43,8 @@ public/team/
     "text": "Book a demo →",
     "url": "https://calendly.com/maksymilian-mentic/mentic-io-demo-onboarding-meeting"
   },
-  "baseUrl": "https://mentic.io",
+  "baseUrl": "https://www.mentic.io",
+  "logoPath": "/images/logo.png",
   "people": [
     {
       "slug": "maksymilian",
@@ -89,12 +90,13 @@ person, writes `output/<slug>.html`. Each output file contains:
   - Right cell: **Name** (bold, ~16px, near-black), title (~13px, gray),
     links row: `mentic.io · maksymilian@mentic.io` (brand-colored links,
     `mailto:` on the email).
-  - Below: Mentic horizontal logo
-    (`https://mentic.io/mentic-horizontal-logo-transparent.png`, already in
-    `/public`), height ~20px.
+  - Below: Mentic logo, served from `https://www.mentic.io/images/logo.png`
+    (path configurable via the roster `logoPath` field), height ~20px.
   - CTA banner strip: bordered/tinted rounded box with the CTA text linking
     to the Calendly URL. Rendered from the global `cta` config.
-- All image URLs are absolute `https://mentic.io/...` URLs.
+- All image URLs are absolute `https://www.mentic.io/...` URLs (the apex
+  domain 307-redirects to `www`, so `baseUrl` must use `www` to avoid
+  routing signature assets through a redirect).
 
 ## Assets
 

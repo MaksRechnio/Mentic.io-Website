@@ -31,6 +31,9 @@ export function validateRoster(roster) {
   if (!roster.cta.text || !roster.cta.url) {
     throw new Error('roster.json: cta needs "text" and "url"');
   }
+  if (!Array.isArray(roster.people) || roster.people.length === 0) {
+    throw new Error('roster.json: "people" must be a non-empty array');
+  }
   for (const p of roster.people) {
     for (const key of ['slug', 'name', 'title', 'email', 'photo']) {
       if (!p[key]) throw new Error(`roster.json: person "${p.slug ?? p.name ?? '?'}" missing "${key}"`);
@@ -46,14 +49,14 @@ export function renderSignature(person, roster) {
   return `<table cellpadding="0" cellspacing="0" border="0" style="font-family:${FONT};">
 <tbody>
 <tr>
-<td style="padding-right:14px;vertical-align:middle;"><img src="${url(person.photo)}" width="72" height="72" alt="${esc(person.name)}" style="display:block;border-radius:50%;"></td>
+<td style="padding-right:14px;vertical-align:middle;"><img src="${esc(url(person.photo))}" width="72" height="72" alt="${esc(person.name)}" style="display:block;border-radius:50%;"></td>
 <td style="vertical-align:middle;">
 <div style="font-size:16px;font-weight:700;color:${COLORS.ink};line-height:1.3;">${esc(person.name)}</div>
 <div style="font-size:13px;color:${COLORS.muted};line-height:1.4;">${esc(person.title)}</div>
-<div style="font-size:13px;line-height:1.6;padding-top:4px;"><a href="${roster.baseUrl}" style="color:${COLORS.link};text-decoration:none;">mentic.io</a><span style="color:${COLORS.dot};">&nbsp;&middot;&nbsp;</span><a href="mailto:${esc(person.email)}" style="color:${COLORS.link};text-decoration:none;">${esc(person.email)}</a>${phoneRow}</div>
+<div style="font-size:13px;line-height:1.6;padding-top:4px;"><a href="${esc(roster.baseUrl)}" style="color:${COLORS.link};text-decoration:none;">mentic.io</a><span style="color:${COLORS.dot};">&nbsp;&middot;&nbsp;</span><a href="mailto:${esc(person.email)}" style="color:${COLORS.link};text-decoration:none;">${esc(person.email)}</a>${phoneRow}</div>
 </td>
 </tr>
-<tr><td colspan="2" style="padding-top:14px;"><img src="${url(roster.logoPath)}" alt="Mentic" height="20" style="display:block;height:20px;width:auto;"></td></tr>
+<tr><td colspan="2" style="padding-top:14px;"><img src="${esc(url(roster.logoPath))}" alt="Mentic" height="20" style="display:block;height:20px;width:auto;"></td></tr>
 <tr><td colspan="2" style="padding-top:10px;"><a href="${esc(roster.cta.url)}" style="display:inline-block;background-color:${COLORS.ink};color:${COLORS.ctaText};font-family:${FONT};font-size:13px;font-weight:700;text-decoration:none;padding:8px 16px;border-radius:6px;">${esc(roster.cta.text)}</a></td></tr>
 </tbody>
 </table>`;
@@ -70,7 +73,7 @@ export function renderPage(person, roster) {
 <div style="max-width:560px;margin:0 auto;">
 <h1 style="font-size:18px;">Your Mentic email signature</h1>
 <ol style="font-size:14px;line-height:1.7;">
-<li>Select the whole signature in the box below (click just before the photo, then <b>shift-click</b> after the "Book a demo" button) and press <b>Cmd/Ctrl-C</b> to copy.</li>
+<li>Select the whole signature in the box below (click just before the photo, then <b>shift-click</b> after the "${esc(roster.cta.text)}" button) and press <b>Cmd/Ctrl-C</b> to copy.</li>
 <li>Open <b>Gmail → Settings (gear) → See all settings → General → Signature</b>.</li>
 <li>Create a signature named "Mentic" and paste with <b>Cmd/Ctrl-V</b>.</li>
 <li>Set it as default for new emails and replies, then <b>Save Changes</b> at the bottom.</li>
