@@ -1,0 +1,24 @@
+{
+  "baseUrl": "https://mentic.io",
+  "logoPath": "/images/logo.png",
+  "cta": {
+    "text": "Book a demo →",
+    "url": "https://calendly.com/maksymilian-mentic/mentic-io-demo-onboarding-meeting"
+  },
+  "people": [
+    {
+      "slug": "maksymilian",
+      "name": "Maksymilian Rechnio",
+      "title": "Co-Founder & CEO",
+      "email": "maksymilian@mentic.io",
+      "photo": "/team/maksymilian.jpg"
+    },
+    {
+      "slug": "bo",
+      "name": "Bo Bredenbruecher",
+      "title": "Co-Founder & COO",
+      "email": "bo@mentic.io",
+      "photo": "/team/bo.jpg"
+    }
+  ]
+}
